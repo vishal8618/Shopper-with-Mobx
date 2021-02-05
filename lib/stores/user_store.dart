@@ -42,9 +42,9 @@ abstract class _UserStore with Store {
       this.userImage = value ?? "";
     });
 
-    repository.getAddress.then((value) {
-      if (value != null) this.address = Address.fromJson(jsonDecode(value));
-    });
+    // repository.getAddress.then((value) {
+    //   if (value != null) this.address = Address.fromJson(jsonDecode(value));
+    // });
   }
 
   // store variables:-----------------------------------------------------------
@@ -70,7 +70,7 @@ abstract class _UserStore with Store {
   String uid = "";
   String name = "";
   String userImage = "";
-  Address address;
+  // Address address;
 
   @observable
   File image;
@@ -133,7 +133,8 @@ abstract class _UserStore with Store {
       _repository.saveImage(user.buyer.buyerPhoto);
       _repository.saveName(
           "${user.buyer.firstName.toString()} ${user.buyer.lastName.toString()}");
-      _repository.saveAddress(jsonEncode(user.buyer.address.toJson()));
+
+      // _repository.saveAddress(jsonEncode(user.buyer.address.toJson()));
 
       this.user = user.buyer;
       this.success = true;

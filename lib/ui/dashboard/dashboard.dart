@@ -48,9 +48,9 @@ class _DashboardState extends State<DashboardScreen> {
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==
           _scrollController.position.pixels) {
-        if (!_merchantStore.loading) {
-          _merchantStore.getMerchants(tab: "Online", paginated: true);
-        }
+        // if (!_merchantStore.loading) {
+        //   _merchantStore.getMerchants(tab: "Online", paginated: true);
+        // }
       }
     });
 

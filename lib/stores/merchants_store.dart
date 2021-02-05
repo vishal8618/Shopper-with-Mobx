@@ -45,17 +45,21 @@ abstract class _MerchantStore with Store {
   // actions:-------------------------------------------------------------------
   @action
   Future getMerchants({String search, String tab, bool paginated}) async {
-    if (paginated) offset += 5;
+    // if (paginated) offset += 5;
+
+    // final future = _repository.getMerchants(
+    //     search: search, tab: tab, offset: offset, limit: limit);
 
     final future = _repository.getMerchants(
-        search: search, tab: tab, offset: offset, limit: limit);
+        search: search, tab: tab);
 
-    if (!paginated) fetchMerchantsFuture = ObservableFuture(future);
+    // if (!paginated)
+      fetchMerchantsFuture = ObservableFuture(future);
 
     future.then((merchantsList) {
-      if (paginated)
-        this.merchantsList.addAll(merchantsList);
-      else
+      // if (paginated)
+      //   this.merchantsList.addAll(merchantsList);
+      // else
         this.merchantsList = merchantsList;
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
