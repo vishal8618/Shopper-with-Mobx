@@ -1,0 +1,8 @@
+{
+  "asset": "asset:greetings_world_shopper/lib/ui/checkout/checkout.dart",
+  "summary": {
+    "injector": [],
+    "module": [],
+    "injectable": []
+  }
+}

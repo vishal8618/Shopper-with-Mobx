@@ -1,0 +1,160 @@
+name: greetings_world_shopper
+description: Shoppers app of Greetings World
+
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_localizations:
+    sdk: flutter
+  flutter_cupertino_localizations: ^1.0.1
+
+  cupertino_icons: ^1.0.0
+
+  # The following adds the shared pref as a dependency in your application
+  shared_preferences: ^0.5.10
+
+  # A composable, Future-based library for making HTTP requests.
+  http: ^0.12.2
+
+  # to scale text and views, alternate of MediaQuery
+  flutter_screen_scaler: ^2.0.0
+
+
+  # Flogs, a powerful logging framework
+  f_logs: ^1.2.2
+
+  # MobX is a library for reactively managing the state of your applications. Use the power of
+  # observables, actions, and reactions to supercharge your Dart and Flutter apps.
+  mobx: ^1.2.1+2
+  flutter_mobx: ^1.1.0+2
+
+
+  # An helper to easily exposes a value using InheritedWidget without having to write one.
+  provider: ^4.3.2+1
+
+  # String validation and sanitization for Dart. Dart 2-compatible version of validator
+  validators: ^2.0.1
+
+  # A powerful Http client for Dart
+  dio: 3.0.10
+
+  # A flexible widget for user notification. Customize your text, button, duration, animations
+  # and much more. For Android devs, it is made to replace Snackbars and Toasts.
+  flushbar: ^1.10.4
+
+  # Material Dialog
+  material_dialog: ^0.0.9
+
+  # search bar
+  flutter_typeahead: ^2.0.0
+  webview_flutter: ^1.0.7
+
+  credit_card_type_detector: ^1.1.0
+
+
+
+
+  image_picker: ^0.6.7+22
+
+  stripe_payment: ^1.0.9
+  flutter_credit_card: ^0.1.4
+
+
+
+  # To use animations as Json, provided by Lottie files
+  lottie: ^0.7.0+1
+
+  # for dotted border in signup
+  dotted_border: ^1.0.5
+
+  page_transition: ^1.1.7+6
+
+  flutter_rating_bar: ^3.2.0+1
+  flutter_share: ^1.0.5
+
+  image_cropper: ^1.2.3
+  like_button: ^1.0.4
+
+  photo_view: ^0.10.3
+  url_launcher: ^5.7.10
+  flutter_google_places: ^0.2.6
+
+
+
+
+
+
+  # This package provides internationalization and localization facilities, including message
+  # translation, plurals and genders, date/number formatting and parsing, and bidirectional text.
+  intl: ^0.16.1
+
+  # Dependency injection
+  inject:
+    git:
+      url: https://github.com/google/inject.dart.git
+      path: package/inject
+      ref: 7c3cbf6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  mobx_codegen: ^1.1.0+1
+  json_serializable: ^3.4.1
+  build_runner: ^1.10.2
+  source_gen: 0.9.6
+  analyzer: ^0.39.12
+  inject_generator:
+    git:
+      url: https://github.com/google/inject.dart.git
+      path: package/inject_generator
+      ref: 7c3cbf6
+
+  dotted_border: ^1.0.5
+  flutter_rating_bar: ^3.2.0+1
+  circular_profile_avatar: ^1.0.7
+
+
+flutter:
+
+
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/images/
+    - assets/lang/
+    - assets/animations/
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware.
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/assets-and-images/#from-packages
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  fonts:
+    - family: Lato
+      fonts:
+        - asset: assets/fonts/lato_bold.ttf
+          weight: 900
+        - asset: assets/fonts/lato_regular.ttf
+          weight: 500
+        - asset: assets/fonts/lato_light.ttf
+          weight: 200
+
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages

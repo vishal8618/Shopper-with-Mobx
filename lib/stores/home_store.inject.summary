@@ -1,0 +1,8 @@
+{
+  "asset": "asset:greetings_world_shopper/lib/stores/home_store.dart",
+  "summary": {
+    "injector": [],
+    "module": [],
+    "injectable": []
+  }
+}

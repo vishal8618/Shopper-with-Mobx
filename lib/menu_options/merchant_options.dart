@@ -1,0 +1,1 @@
+enum MerchantOptions{ follow, call, report, find_location}

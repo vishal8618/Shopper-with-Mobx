@@ -1,0 +1,224 @@
+{
+  "asset": "asset:greetings_world_shopper/lib/di/modules/netwok_module.dart",
+  "summary": {
+    "injector": [],
+    "module": [
+      {
+        "name": "NetworkModule",
+        "providers": [
+          {
+            "name": "provideSharedPreferences",
+            "kind": "method",
+            "injectedType": {
+              "lookupKey": {
+                "root": "asset:shared_preferences/lib/shared_preferences.dart#SharedPreferences",
+                "qualifier": null
+              },
+              "isProvider": false
+            },
+            "singleton": true,
+            "asynchronous": true,
+            "dependencies": []
+          },
+          {
+            "name": "provideSharedPreferenceHelper",
+            "kind": "method",
+            "injectedType": {
+              "lookupKey": {
+                "root": "asset:greetings_world_shopper/lib/data/sharedpref/shared_preference_helper.dart#SharedPreferenceHelper",
+                "qualifier": null
+              },
+              "isProvider": false
+            },
+            "singleton": true,
+            "asynchronous": false,
+            "dependencies": []
+          },
+          {
+            "name": "provideDio",
+            "kind": "method",
+            "injectedType": {
+              "lookupKey": {
+                "root": "asset:dio/lib/src/dio.dart#Dio",
+                "qualifier": null
+              },
+              "isProvider": false
+            },
+            "singleton": true,
+            "asynchronous": false,
+            "dependencies": [
+              {
+                "lookupKey": {
+                  "root": "asset:greetings_world_shopper/lib/data/sharedpref/shared_preference_helper.dart#SharedPreferenceHelper",
+                  "qualifier": null
+                },
+                "isProvider": false
+              }
+            ]
+          },
+          {
+            "name": "provideDioClient",
+            "kind": "method",
+            "injectedType": {
+              "lookupKey": {
+                "root": "asset:greetings_world_shopper/lib/data/network/dio_client.dart#DioClient",
+                "qualifier": null
+              },
+              "isProvider": false
+            },
+            "singleton": true,
+            "asynchronous": false,
+            "dependencies": [
+              {
+                "lookupKey": {
+                  "root": "asset:dio/lib/src/dio.dart#Dio",
+                  "qualifier": null
+                },
+                "isProvider": false
+              }
+            ]
+          },
+          {
+            "name": "provideUserApi",
+            "kind": "method",
+            "injectedType": {
+              "lookupKey": {
+                "root": "asset:greetings_world_shopper/lib/data/network/apis/user/user_api.dart#UserApi",
+                "qualifier": null
+              },
+              "isProvider": false
+            },
+            "singleton": true,
+            "asynchronous": false,
+            "dependencies": [
+              {
+                "lookupKey": {
+                  "root": "asset:greetings_world_shopper/lib/data/network/dio_client.dart#DioClient",
+                  "qualifier": null
+                },
+                "isProvider": false
+              }
+            ]
+          },
+          {
+            "name": "provideMerchantsApi",
+            "kind": "method",
+            "injectedType": {
+              "lookupKey": {
+                "root": "asset:greetings_world_shopper/lib/data/network/apis/merchants/merchants_api.dart#MerchantsApi",
+                "qualifier": null
+              },
+              "isProvider": false
+            },
+            "singleton": true,
+            "asynchronous": false,
+            "dependencies": [
+              {
+                "lookupKey": {
+                  "root": "asset:greetings_world_shopper/lib/data/network/dio_client.dart#DioClient",
+                  "qualifier": null
+                },
+                "isProvider": false
+              }
+            ]
+          },
+          {
+            "name": "provideProductsApi",
+            "kind": "method",
+            "injectedType": {
+              "lookupKey": {
+                "root": "asset:greetings_world_shopper/lib/data/network/apis/products/products_api.dart#ProductsApi",
+                "qualifier": null
+              },
+              "isProvider": false
+            },
+            "singleton": true,
+            "asynchronous": false,
+            "dependencies": [
+              {
+                "lookupKey": {
+                  "root": "asset:greetings_world_shopper/lib/data/network/dio_client.dart#DioClient",
+                  "qualifier": null
+                },
+                "isProvider": false
+              }
+            ]
+          },
+          {
+            "name": "provideCartApi",
+            "kind": "method",
+            "injectedType": {
+              "lookupKey": {
+                "root": "asset:greetings_world_shopper/lib/data/network/apis/cart/cart_api.dart#CartApi",
+                "qualifier": null
+              },
+              "isProvider": false
+            },
+            "singleton": true,
+            "asynchronous": false,
+            "dependencies": [
+              {
+                "lookupKey": {
+                  "root": "asset:greetings_world_shopper/lib/data/network/dio_client.dart#DioClient",
+                  "qualifier": null
+                },
+                "isProvider": false
+              }
+            ]
+          },
+          {
+            "name": "provideRepository",
+            "kind": "method",
+            "injectedType": {
+              "lookupKey": {
+                "root": "asset:greetings_world_shopper/lib/data/repository.dart#Repository",
+                "qualifier": null
+              },
+              "isProvider": false
+            },
+            "singleton": true,
+            "asynchronous": false,
+            "dependencies": [
+              {
+                "lookupKey": {
+                  "root": "asset:greetings_world_shopper/lib/data/network/apis/merchants/merchants_api.dart#MerchantsApi",
+                  "qualifier": null
+                },
+                "isProvider": false
+              },
+              {
+                "lookupKey": {
+                  "root": "asset:greetings_world_shopper/lib/data/network/apis/products/products_api.dart#ProductsApi",
+                  "qualifier": null
+                },
+                "isProvider": false
+              },
+              {
+                "lookupKey": {
+                  "root": "asset:greetings_world_shopper/lib/data/network/apis/user/user_api.dart#UserApi",
+                  "qualifier": null
+                },
+                "isProvider": false
+              },
+              {
+                "lookupKey": {
+                  "root": "asset:greetings_world_shopper/lib/data/network/apis/cart/cart_api.dart#CartApi",
+                  "qualifier": null
+                },
+                "isProvider": false
+              },
+              {
+                "lookupKey": {
+                  "root": "asset:greetings_world_shopper/lib/data/sharedpref/shared_preference_helper.dart#SharedPreferenceHelper",
+                  "qualifier": null
+                },
+                "isProvider": false
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "injectable": []
+  }
+}

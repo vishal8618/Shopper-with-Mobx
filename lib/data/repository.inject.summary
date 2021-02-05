@@ -1,0 +1,62 @@
+{
+  "asset": "asset:greetings_world_shopper/lib/data/repository.dart",
+  "summary": {
+    "injector": [],
+    "module": [],
+    "injectable": [
+      {
+        "name": "Repository",
+        "constructor": {
+          "name": "",
+          "kind": "constructor",
+          "injectedType": {
+            "lookupKey": {
+              "root": "asset:greetings_world_shopper/lib/data/repository.dart#Repository",
+              "qualifier": null
+            },
+            "isProvider": false
+          },
+          "singleton": false,
+          "asynchronous": false,
+          "dependencies": [
+            {
+              "lookupKey": {
+                "root": "asset:greetings_world_shopper/lib/data/network/apis/merchants/merchants_api.dart#MerchantsApi",
+                "qualifier": null
+              },
+              "isProvider": false
+            },
+            {
+              "lookupKey": {
+                "root": "asset:greetings_world_shopper/lib/data/network/apis/products/products_api.dart#ProductsApi",
+                "qualifier": null
+              },
+              "isProvider": false
+            },
+            {
+              "lookupKey": {
+                "root": "asset:greetings_world_shopper/lib/data/network/apis/user/user_api.dart#UserApi",
+                "qualifier": null
+              },
+              "isProvider": false
+            },
+            {
+              "lookupKey": {
+                "root": "asset:greetings_world_shopper/lib/data/network/apis/cart/cart_api.dart#CartApi",
+                "qualifier": null
+              },
+              "isProvider": false
+            },
+            {
+              "lookupKey": {
+                "root": "asset:greetings_world_shopper/lib/data/sharedpref/shared_preference_helper.dart#SharedPreferenceHelper",
+                "qualifier": null
+              },
+              "isProvider": false
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
