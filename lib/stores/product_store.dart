@@ -1,4 +1,5 @@
 import 'package:greetings_world_shopper/data/repository.dart';
+import 'package:greetings_world_shopper/models/report/report_model.dart';
 import 'package:greetings_world_shopper/utils/dio/dio_error_util.dart';
 import 'package:mobx/mobx.dart';
 
@@ -25,6 +26,14 @@ abstract class _ProductStore with Store {
   ObservableFuture<String> fetchWishFuture =
       ObservableFuture<String>(emptyWishResponse);
 
+
+  static ObservableFuture<ReportModel> emptyReportResponse =
+  ObservableFuture.value(null);
+
+  @observable
+  ObservableFuture<ReportModel> fetchReportFuture =
+  ObservableFuture<ReportModel>(emptyReportResponse);
+
   @action
   Future addWish({String uid, String productId}) async {
     final future = _repository.addWish(uid: uid, productId: productId);
@@ -42,4 +51,25 @@ abstract class _ProductStore with Store {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
     });
   }
+
+////Report Section
+  @action
+  Future addProductReport({String uid, String productId, String reason}) async {
+    final future = _repository.addProductReport(uid: uid, productId: productId,reason: reason);
+    fetchReportFuture = ObservableFuture(future);
+    future.then((merchantsList) {}).catchError((error) {
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+    });
+  }
+
+
+  @action
+  Future addMerchantReport({String uid, String merchantId, String reason}) async {
+    final future = _repository.addMerchantReport(uid: uid, merchantId: merchantId,reason: reason);
+    fetchReportFuture = ObservableFuture(future);
+    future.then((merchantsList) {}).catchError((error) {
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+    });
+  }
+
 }

@@ -416,7 +416,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             else
               _cartStore.addCart(
                   uid: _userStore.uid, productId: model.id.toString());
-          } else if (selected == ProductOptions.report) {}
+          } else if (selected == ProductOptions.report) {
+            if (_userStore.isLoggedIn) {
+              setState(() {
+                CommonDialogs.showReportDialog(context, (text) {
+                  _productStore.addProductReport(
+                      uid: _userStore.uid,
+                      productId: model.id.toString(),
+                      reason: text);
+                });
+              });
+            } else {
+              CommonDialogs.showLoginDialog(context);
+            }
+          }
         },
         child: ImageView(
           path: Assets.more,
@@ -442,8 +455,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             child: AppText(
               text: 'Report',
             ),
-          ),
-        ],
+
+          )],
       ),
     );
   }

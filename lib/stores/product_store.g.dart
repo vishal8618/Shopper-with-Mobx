@@ -24,6 +24,21 @@ mixin _$ProductStore on _ProductStore, Store {
     });
   }
 
+  final _$fetchReportFutureAtom = Atom(name: '_ProductStore.fetchReportFuture');
+
+  @override
+  ObservableFuture<ReportModel> get fetchReportFuture {
+    _$fetchReportFutureAtom.reportRead();
+    return super.fetchReportFuture;
+  }
+
+  @override
+  set fetchReportFuture(ObservableFuture<ReportModel> value) {
+    _$fetchReportFutureAtom.reportWrite(value, super.fetchReportFuture, () {
+      super.fetchReportFuture = value;
+    });
+  }
+
   final _$addWishAsyncAction = AsyncAction('_ProductStore.addWish');
 
   @override
@@ -40,10 +55,31 @@ mixin _$ProductStore on _ProductStore, Store {
         .run(() => super.removeWish(uid: uid, productId: productId));
   }
 
+  final _$addProductReportAsyncAction =
+      AsyncAction('_ProductStore.addProductReport');
+
+  @override
+  Future<dynamic> addProductReport(
+      {String uid, String productId, String reason}) {
+    return _$addProductReportAsyncAction.run(() =>
+        super.addProductReport(uid: uid, productId: productId, reason: reason));
+  }
+
+  final _$addMerchantReportAsyncAction =
+      AsyncAction('_ProductStore.addMerchantReport');
+
+  @override
+  Future<dynamic> addMerchantReport(
+      {String uid, String merchantId, String reason}) {
+    return _$addMerchantReportAsyncAction.run(() => super
+        .addMerchantReport(uid: uid, merchantId: merchantId, reason: reason));
+  }
+
   @override
   String toString() {
     return '''
-fetchWishFuture: ${fetchWishFuture}
+fetchWishFuture: ${fetchWishFuture},
+fetchReportFuture: ${fetchReportFuture}
     ''';
   }
 }

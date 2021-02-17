@@ -1,5 +1,6 @@
 import 'package:greetings_world_shopper/data/repository.dart';
 import 'package:greetings_world_shopper/models/merchants/merchant_model.dart';
+import 'package:greetings_world_shopper/models/report/report_model.dart';
 import 'package:greetings_world_shopper/utils/dio/dio_error_util.dart';
 import 'package:mobx/mobx.dart';
 import 'error_store.dart';
@@ -90,6 +91,17 @@ abstract class _MerchantStore with Store {
         _repository.unFollowMerchant(merchantId: merchantId, uid: uid);
 
     future.then((merchantsList) {}).catchError((error) {
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+    });
+  }
+
+  ///////report///
+  @action
+  Future reportMerchant({String uid, String merchantId, String reason}) async {
+    final future =
+    _repository.addMerchantReport(merchantId: merchantId, uid: uid, reason: reason);
+    future.then((merchantsList) {}).catchError((error) {
+      print('===>  $error');
       errorStore.errorMessage = DioErrorUtil.handleError(error);
     });
   }

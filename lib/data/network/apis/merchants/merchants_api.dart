@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:greetings_world_shopper/data/network/constants/endpoints.dart';
 import 'package:greetings_world_shopper/models/merchants/merchant_model.dart';
+import 'package:greetings_world_shopper/models/report/report_model.dart';
 import '../../dio_client.dart';
 
 class MerchantsApi {
@@ -65,4 +66,46 @@ class MerchantsApi {
       throw e;
     }
   }
+  Future<ReportModel> addProductReport({
+    String uid,
+    String productId,
+    String reason
+  }) async {
+    try {
+      var data = Map<String, dynamic>();
+      data["buyer_id"] = uid;
+      data["product_id"] = productId;
+      data["reason"] = reason;
+
+      final res =
+      await _dioClient.post(Endpoints.addReport, data: data, options: null);
+      return reportModelFromJson(json.encode(res.data));
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  Future<ReportModel> addMerchantReport({
+    String uid,
+    String merchantId,
+    String reason
+  }) async {
+    try {
+      var data = Map<String, dynamic>();
+      data["buyer_id"] = uid;
+      data["merchant_id"] = merchantId;
+      data["reason"] = reason;
+
+      final res =
+      await _dioClient.post(Endpoints.addMerchantReport, data: data, options: null);
+      return reportModelFromJson(json.encode(res.data));
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+
+
 }

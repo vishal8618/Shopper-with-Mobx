@@ -10,6 +10,7 @@ import 'package:greetings_world_shopper/ui/home/home.dart';
 import 'package:greetings_world_shopper/ui/login/login.dart';
 import 'package:greetings_world_shopper/ui/merchant_detail/merchant_detail.dart';
 import 'package:greetings_world_shopper/ui/product_detail/product_detail.dart';
+import 'package:greetings_world_shopper/ui/shopper_detail/shopper_detail.dart';
 import 'package:greetings_world_shopper/ui/signup/signup.dart';
 import 'package:greetings_world_shopper/ui/splash/splash.dart';
 import 'package:greetings_world_shopper/ui/web_view/web_view.dart';
@@ -33,6 +34,7 @@ class Routes {
   static const String webView = '/webView';
   static const String creditCard = '/creditCard';
   static const String completeAddress = '/completeAddress';
+  static const String shopperProfileDetail = '/shopperProfileDetail';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -122,6 +124,14 @@ class Routes {
         case completeAddress:
         return PageTransition(
             child: AddressScreen(),
+            type: PageTransitionType.fade,
+            duration: Duration(milliseconds: 300),
+            reverseDuration: Duration(milliseconds: 300),
+            settings: settings);
+
+      case shopperProfileDetail:
+        return PageTransition(
+            child: ShopperProfileDetail(),
             type: PageTransitionType.fade,
             duration: Duration(milliseconds: 300),
             reverseDuration: Duration(milliseconds: 300),

@@ -26,7 +26,7 @@
   "subTotal": "Sub Total",
   "taxes": "Taxes",
   "shipping": "Shipping",
-  "convinceFee": "Convince Fee",
+  "convinceFee": "Convenience Fee",
   "yourTotal": "Your total is",
   "estimatedDelivery": "Estimated Delivery",
   "payNow": "Pay Now",
@@ -54,5 +54,11 @@
   "passwordError": "Password must be minimum of 6 characters",
   "emailError": "Invalid email!",
   "nameError": "Please enter name",
-  "phoneError": "Invalid phone"
+  "phoneError": "Invalid phone",
+  "reason": "Reason",
+  "reportNow":"Report Now",
+  "profile": "Profile",
+  "save": "Save"
+
+
 }

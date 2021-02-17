@@ -46,6 +46,55 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
+  final _$fetchProfileDetailsFutureAtom =
+      Atom(name: '_UserStore.fetchProfileDetailsFuture');
+
+  @override
+  ObservableFuture<UserModel> get fetchProfileDetailsFuture {
+    _$fetchProfileDetailsFutureAtom.reportRead();
+    return super.fetchProfileDetailsFuture;
+  }
+
+  @override
+  set fetchProfileDetailsFuture(ObservableFuture<UserModel> value) {
+    _$fetchProfileDetailsFutureAtom
+        .reportWrite(value, super.fetchProfileDetailsFuture, () {
+      super.fetchProfileDetailsFuture = value;
+    });
+  }
+
+  final _$fetchAddressDetailsFutureAtom =
+      Atom(name: '_UserStore.fetchAddressDetailsFuture');
+
+  @override
+  ObservableFuture<UserModel> get fetchAddressDetailsFuture {
+    _$fetchAddressDetailsFutureAtom.reportRead();
+    return super.fetchAddressDetailsFuture;
+  }
+
+  @override
+  set fetchAddressDetailsFuture(ObservableFuture<UserModel> value) {
+    _$fetchAddressDetailsFutureAtom
+        .reportWrite(value, super.fetchAddressDetailsFuture, () {
+      super.fetchAddressDetailsFuture = value;
+    });
+  }
+
+  final _$isEditingAtom = Atom(name: '_UserStore.isEditing');
+
+  @override
+  bool get isEditing {
+    _$isEditingAtom.reportRead();
+    return super.isEditing;
+  }
+
+  @override
+  set isEditing(bool value) {
+    _$isEditingAtom.reportWrite(value, super.isEditing, () {
+      super.isEditing = value;
+    });
+  }
+
   final _$successAtom = Atom(name: '_UserStore.success');
 
   @override
@@ -115,7 +164,52 @@ mixin _$UserStore on _UserStore, Store {
     return _$userDetailsAsyncAction.run(() => super.userDetails(uid: uid));
   }
 
+  final _$updateUserDetailsAsyncAction =
+      AsyncAction('_UserStore.updateUserDetails');
+
+  @override
+  Future<dynamic> updateUserDetails(String uid,
+      {String fullName, String phone}) {
+    return _$updateUserDetailsAsyncAction.run(
+        () => super.updateUserDetails(uid, fullName: fullName, phone: phone));
+  }
+
+  final _$updateUserAddressAsyncAction =
+      AsyncAction('_UserStore.updateUserAddress');
+
+  @override
+  Future<dynamic> updateUserAddress(String uid,
+      {String city,
+      String street1,
+      String street2,
+      String countryName,
+      String stateName,
+      String zip,
+      String lat,
+      String lng}) {
+    return _$updateUserAddressAsyncAction.run(() => super.updateUserAddress(uid,
+        city: city,
+        street1: street1,
+        street2: street2,
+        countryName: countryName,
+        stateName: stateName,
+        zip: zip,
+        lat: lat,
+        lng: lng));
+  }
+
   final _$_UserStoreActionController = ActionController(name: '_UserStore');
+
+  @override
+  dynamic updateIsEditing() {
+    final _$actionInfo = _$_UserStoreActionController.startAction(
+        name: '_UserStore.updateIsEditing');
+    try {
+      return super.updateIsEditing();
+    } finally {
+      _$_UserStoreActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   dynamic updateImage(Io.File image) {
@@ -133,6 +227,9 @@ mixin _$UserStore on _UserStore, Store {
     return '''
 fetchSignupFuture: ${fetchSignupFuture},
 fetchLoginFuture: ${fetchLoginFuture},
+fetchProfileDetailsFuture: ${fetchProfileDetailsFuture},
+fetchAddressDetailsFuture: ${fetchAddressDetailsFuture},
+isEditing: ${isEditing},
 success: ${success},
 image: ${image},
 user: ${user},

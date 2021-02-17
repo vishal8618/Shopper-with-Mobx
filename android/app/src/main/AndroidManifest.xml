@@ -25,7 +25,7 @@
 
 
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDsvWV0AWi4scTJU8czKC_b6-9MXUK4hRc"/>
+            android:value="AIzaSyBotqZp8T6mT_tTuZB25YOe2RcTPUTMsUo"/>
 
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"

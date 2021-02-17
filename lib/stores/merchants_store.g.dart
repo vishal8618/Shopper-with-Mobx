@@ -111,6 +111,16 @@ mixin _$MerchantStore on _MerchantStore, Store {
         .run(() => super.unFollowMerchant(uid: uid, merchantId: merchantId));
   }
 
+  final _$reportMerchantAsyncAction =
+      AsyncAction('_MerchantStore.reportMerchant');
+
+  @override
+  Future<dynamic> reportMerchant(
+      {String uid, String merchantId, String reason}) {
+    return _$reportMerchantAsyncAction.run(() =>
+        super.reportMerchant(uid: uid, merchantId: merchantId, reason: reason));
+  }
+
   final _$addSearchAsyncAction = AsyncAction('_MerchantStore.addSearch');
 
   @override

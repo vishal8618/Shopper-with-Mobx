@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
+
 import 'package:greetings_world_shopper/data/network/apis/merchants/merchants_api.dart';
 import 'package:greetings_world_shopper/data/network/apis/products/products_api.dart';
 import 'package:greetings_world_shopper/data/network/apis/user/user_api.dart';
@@ -8,6 +8,7 @@ import 'package:greetings_world_shopper/models/cart/cart_item_model.dart';
 import 'package:greetings_world_shopper/models/cart/update_cart_model.dart';
 import 'package:greetings_world_shopper/models/merchants/merchant_model.dart';
 import 'package:greetings_world_shopper/models/products/product_model.dart';
+import 'package:greetings_world_shopper/models/report/report_model.dart';
 import 'package:greetings_world_shopper/models/user/login_model.dart';
 import 'package:greetings_world_shopper/models/user/user_model.dart';
 import 'package:inject/inject.dart';
@@ -60,25 +61,18 @@ class Repository {
     }).catchError((error) => throw error);
   }
 
-
   // get user detail
-  Future<UserModel> userDetail(
-      {
-        String uid}) async {
-    return await _userApi
-        .userDetail(
-      uid: uid
-        )
-        .then((user) {
+  Future<UserModel> userDetail({String uid}) async {
+    return await _userApi.userDetail(uid: uid).then((user) {
       return user;
     }).catchError((error) => throw error);
   }
 
-
   // get list of merchants
-  Future<List<MerchantModel>> getMerchants({String search, String tab, int limit, int offset}) async {
+  Future<List<MerchantModel>> getMerchants(
+      {String search, String tab, int limit, int offset}) async {
     return await _merchantsApi
-        .getMerchants(search: search, tab: tab,limit: limit,offset: offset)
+        .getMerchants(search: search, tab: tab, limit: limit, offset: offset)
         .then((merchantsList) {
       return merchantsList;
     }).catchError((error) => throw error);
@@ -118,6 +112,27 @@ class Repository {
     }).catchError((error) => throw error);
   }
 
+//product report
+  Future<ReportModel> addProductReport(
+      {String uid, String productId, String reason}) async {
+    return await _merchantsApi
+        .addProductReport(uid: uid, productId: productId, reason: reason)
+        .then((response) {
+      return response;
+    }).catchError((error) => throw error);
+  }
+
+// merchant report
+
+  Future<ReportModel> addMerchantReport(
+      {String uid, String merchantId, String reason}) async {
+    return await _merchantsApi
+        .addMerchantReport(uid: uid, merchantId: merchantId, reason: reason)
+        .then((response) {
+      return response;
+    }).catchError((error) => throw error);
+  }
+
   // remove wish
   Future<String> removeWish({String uid, String productId}) async {
     return await _productsApi
@@ -151,6 +166,49 @@ class Repository {
     }).catchError((error) => throw error);
   }
 
+  /* // return cart items
+  Future<List<PlaceDetailModel>> getPlaceDetail({String placeId,String apiKey}) async {
+    return await _userApi.placeDetails(placeId: placeId,apiKey: apiKey).then((model) {
+      return model;
+    }).catchError((error) => throw error);
+  }*/
+
+  //update shopper detail
+  Future<UserModel> updateProfile(String uid,
+      {String fullName, String image, String phone}) async {
+    return await _userApi
+        .updateProfileDetails(uid,
+            image: image, fullName: fullName, phone: phone)
+        .then((user) {
+      return user;
+    }).catchError((error) => throw error);
+  }
+
+//update Address detail
+  Future<UserModel> updateAddress(String uid,
+      {String city,
+      String street1,
+      String street2,
+      String countryName,
+      String stateName,
+      String zip,
+      String lat,
+      String lng}) async {
+    return await _userApi
+        .updateAddress(uid,
+            city: city,
+            street1: street1,
+            street2: street2,
+            countryName: countryName,
+            stateName: stateName,
+            zip: zip,
+            lat: lat,
+            lng: lng)
+        .then((user) {
+      return user;
+    }).catchError((error) => throw error);
+  }
+
   //save login info in local
   Future<void> saveIsLoggedIn(bool value) =>
       _sharedPrefsHelper.saveIsLoggedIn(value);
@@ -165,16 +223,48 @@ class Repository {
 
   Future<String> get getName => _sharedPrefsHelper.getName;
 
-
   Future<void> saveImage(String value) => _sharedPrefsHelper.saveImage(value);
 
   Future<String> get getImage => _sharedPrefsHelper.getImage;
 
+  Future<void> saveEmail(String value) => _sharedPrefsHelper.saveEmail(value);
 
+  Future<String> get getEmail => _sharedPrefsHelper.getEmail;
 
-  Future<void> saveAddress(String value) => _sharedPrefsHelper.saveAddress(value);
+  Future<void> savePhoneNumber(String value) =>
+      _sharedPrefsHelper.savePhoneNumber(value);
+
+  Future<String> get getPhoneNumber => _sharedPrefsHelper.getPhoneNumber;
+//address 1
+  Future<void> saveAddress(String value) =>
+      _sharedPrefsHelper.saveAddress(value);
 
   Future<String> get getAddress => _sharedPrefsHelper.getAddress;
+//address 2
+
+  Future<void> saveAddress2(String value) =>
+      _sharedPrefsHelper.saveAddress(value);
+
+  Future<String> get getAddress2 => _sharedPrefsHelper.getAddress2;
+  //city
+
+  Future<void> saveCity(String value) =>
+      _sharedPrefsHelper.saveCity(value);
+
+  Future<String> get getCity => _sharedPrefsHelper.getCity;
+
+  //state
+  Future<void> saveState(String value) =>
+      _sharedPrefsHelper.saveState(value);
+
+  Future<String> get getState => _sharedPrefsHelper.getState;
+
+  //zip
+
+  Future<void> saveZip(String value) =>
+      _sharedPrefsHelper.saveZip(value);
+
+  Future<String> get getZip => _sharedPrefsHelper.getZip;
 
 
   // Language: -----------------------------------------------------------------

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -27,14 +25,12 @@ import 'package:greetings_world_shopper/widgets/common_message_dialog.dart';
 import 'package:greetings_world_shopper/widgets/detail_tab_button.dart';
 import 'package:greetings_world_shopper/widgets/image_view.dart';
 import 'package:greetings_world_shopper/widgets/like_button.dart';
-import 'package:greetings_world_shopper/widgets/login_dialog.dart';
 import 'package:greetings_world_shopper/widgets/nav_cart_button.dart';
 import 'package:greetings_world_shopper/widgets/no_data_error.dart';
 import 'package:greetings_world_shopper/widgets/polygon_clipper/polygon_clipper.dart';
 import 'package:greetings_world_shopper/widgets/progress_indicator_widget.dart';
 import 'package:greetings_world_shopper/widgets/shape_of_view/shape/arc.dart';
 import 'package:greetings_world_shopper/widgets/shape_of_view/shape_of_view.dart';
-import 'package:greetings_world_shopper/widgets/tab_button.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -149,7 +145,7 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
               //  right: 0,
               width: _scaler.getHeight(12),
               height: _scaler.getHeight(12),
-margin: _scaler.getMarginLTRB(0, 6,0, 0),
+              margin: _scaler.getMarginLTRB(0, 6, 0, 0),
 
               child: Hero(
                 tag: widget.merchantInfo.id.toString(),
@@ -477,7 +473,7 @@ margin: _scaler.getMarginLTRB(0, 6,0, 0),
                     children: [
                       Expanded(
                         child: AppText(
-                          text: widget.merchantInfo.address??"",
+                          text: widget.merchantInfo.address ?? "",
                           style: AppTextStyle.medium,
                           size: _scaler.getTextSize(10),
                         ),
@@ -788,7 +784,20 @@ margin: _scaler.getMarginLTRB(0, 6,0, 0),
             else
               _cartStore.addCart(
                   uid: _userStore.uid, productId: model.id.toString());
-          } else if (selected == ProductOptions.report) {}
+          } else if (selected == ProductOptions.report) {
+            if (_userStore.isLoggedIn) {
+              setState(() {
+                CommonDialogs.showReportDialog(context, (text) {
+                  _productStore.addMerchantReport(
+                      uid: _userStore.uid,
+                      merchantId: model.id.toString(),
+                      reason: text);
+                });
+              });
+            } else {
+              CommonDialogs.showLoginDialog(context);
+            }
+          }
         },
         child: ImageView(
           path: Assets.more,
@@ -814,6 +823,7 @@ margin: _scaler.getMarginLTRB(0, 6,0, 0),
             child: AppText(
               text: 'Report',
             ),
+
           ),
         ],
       ),

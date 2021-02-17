@@ -141,6 +141,7 @@ class _LoginScreen extends State<LoginScreen> {
                           child: AppTextField(
                             hintText: Strings.password,
                             controller: passwordController,
+                            maxLines: 1,
                             password: true,
                             prefix: Icon(
                               Icons.vpn_key,

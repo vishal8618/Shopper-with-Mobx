@@ -15,10 +15,8 @@ import 'package:greetings_world_shopper/utils/common_dialogs.dart';
 import 'package:greetings_world_shopper/utils/device/device_utils.dart';
 import 'package:greetings_world_shopper/utils/error_bar.dart';
 import 'package:greetings_world_shopper/widgets/app_text.dart';
-import 'package:greetings_world_shopper/widgets/call_sms_dialog.dart';
 import 'package:greetings_world_shopper/widgets/common_message_dialog.dart';
 import 'package:greetings_world_shopper/widgets/image_view.dart';
-import 'package:greetings_world_shopper/widgets/login_dialog.dart';
 import 'package:greetings_world_shopper/widgets/no_data_error.dart';
 import 'package:greetings_world_shopper/widgets/polygon_clipper/polygon_clipper.dart';
 import 'package:greetings_world_shopper/widgets/progress_indicator_widget.dart';
@@ -201,6 +199,23 @@ class _DashboardState extends State<DashboardScreen> {
           } else if (selected == MerchantOptions.call) {
             phoneClick(model);
           } else if (selected == MerchantOptions.report) {
+          
+            /////call product report function/////
+            if (_userStore.isLoggedIn) {
+              setState(() {
+                CommonDialogs.showReportDialog(context, (text) {
+                  _merchantStore.reportMerchant(
+                      uid: _userStore.uid,
+                      merchantId: model.id.toString(),
+                      reason: text);
+                });
+              });
+            }else{
+              CommonDialogs.showLoginDialog(context);
+
+            }
+
+
           } else if (selected == MerchantOptions.find_location) {}
         },
         child: ImageView(

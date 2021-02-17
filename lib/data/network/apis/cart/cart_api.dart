@@ -57,8 +57,7 @@ class CartApi {
       var map = HashMap<String, dynamic>();
       map["buyer_id"] = uid;
 
-      final res =
-          await _dioClient.get(Endpoints.cartList, queryParameters: map);
+      final res = await _dioClient.get(Endpoints.cartList, queryParameters: map);
       return cartItemModelFromJson(json.encode(res.data));
     } catch (e) {
       print(e.toString());

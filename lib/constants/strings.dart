@@ -31,6 +31,7 @@ class Strings {
 
   static const String securePay= "securePay";
   static const String cancel= "cancel";
+  static const String save= "Save";
 
   static const String pickup= "pickup";
   static const String delivery= "delivery";
@@ -47,7 +48,7 @@ class Strings {
   static const String subTotal = "subTotal";
   static const String taxes = "taxes";
   static const String shipping = "shipping";
-  static const String convinceFee = "convinceFee";
+  static const String convinceFee = "Convenience Fee";
   static const String yourTotal = "yourTotal";
   static const String estimatedDelivery = "estimatedDelivery";
   static const String payNow = "payNow";
@@ -57,12 +58,19 @@ class Strings {
   static const String loginYes = "loginYes";
   static const String loginNo = "loginNo";
 
+  static const String reasonTitle = "Reason";
+  static const String reportNow = "Report Now";
+  static const String reportCancel = "Cancel";
+
 
 //  errors
   static const String emailError= "emailError";
   static const String passwordError= "passwordError";
   static const String nameError= "nameError";
   static const String phoneError= "phoneError";
+  static const String reasonError= "reasonError";
+
+  static const String profile= "Profile";
 
 
 }

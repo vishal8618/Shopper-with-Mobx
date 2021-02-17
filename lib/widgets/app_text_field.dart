@@ -22,6 +22,7 @@ class AppTextField extends StatelessWidget {
 
   final bool password;
   final int maxLength;
+  final int maxLines;
   final Function(String) validate;
 
   AppTextField({
@@ -37,7 +38,8 @@ class AppTextField extends StatelessWidget {
     this.suffix,
     this.prefix,
     this.inputType,
-  });
+    this.maxLines,
+   });
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +60,7 @@ class AppTextField extends StatelessWidget {
                 ]
               : null,
       controller: controller,
-      enabled: editabled == null,
+      enabled: editabled == null?true: editabled,
       focusNode: node == null ? null : node,
       maxLength: maxLength ?? null,
       cursorColor: AppColors.primaryColor1,
@@ -70,6 +72,7 @@ class AppTextField extends StatelessWidget {
       textCapitalization: TextCapitalization.none,
       validator: validate ?? validate,
       style: textFieldStyle(_scaler.getTextSize(11)),
+      maxLines: maxLines ?? null,
     );
   }
 

@@ -66,12 +66,33 @@ class SharedPreferenceHelper {
     });
   }
 
+  Future<String> get getEmail {
+    return _sharedPreference.then((prefs) {
+      return prefs.getString(Preferences.email) ?? null;
+    });
+  }
+
+  Future<void> saveEmail(String value) async {
+    return _sharedPreference.then((preference) {
+      preference.setString(Preferences.email, value);
+    });
+  }
 
 
 
+  Future<String> get getPhoneNumber {
+    return _sharedPreference.then((prefs) {
+      return prefs.getString(Preferences.phone_number) ?? null;
+    });
+  }
 
+  Future<void> savePhoneNumber(String value) async {
+    return _sharedPreference.then((preference) {
+      preference.setString(Preferences.phone_number, value);
+    });
+  }
 
-  Future<String> get getImage {
+  get getImage {
     return _sharedPreference.then((prefs) {
       return prefs.getString(Preferences.image) ?? null;
     });
@@ -82,9 +103,6 @@ class SharedPreferenceHelper {
       preference.setString(Preferences.image, value);
     });
   }
-
-
-
 
 
   Future<String> get getAddress {
@@ -99,6 +117,58 @@ class SharedPreferenceHelper {
     });
   }
 
+  //address 2
+
+  Future<String> get getAddress2 {
+    return _sharedPreference.then((prefs) {
+      return prefs.getString(Preferences.address2) ?? null;
+    });
+  }
+
+  Future<void> saveAddress2(String value) async {
+    return _sharedPreference.then((preference) {
+      preference.setString(Preferences.address2, value);
+    });
+  }
+//city
+  Future<String> get getCity {
+    return _sharedPreference.then((prefs) {
+      return prefs.getString(Preferences.city) ?? null;
+    });
+  }
+
+  Future<void> saveCity(String value) async {
+    return _sharedPreference.then((preference) {
+      preference.setString(Preferences.city, value);
+    });
+  }
+  //state
+
+  Future<String> get getState {
+    return _sharedPreference.then((prefs) {
+      return prefs.getString(Preferences.state) ?? null;
+    });
+  }
+
+  Future<void> saveState(String value) async {
+    return _sharedPreference.then((preference) {
+      preference.setString(Preferences.state, value);
+    });
+  }
+
+  //zip
+
+  Future<String> get getZip {
+    return _sharedPreference.then((prefs) {
+      return prefs.getString(Preferences.zip) ?? null;
+    });
+  }
+
+  Future<void> saveZip(String value) async {
+    return _sharedPreference.then((preference) {
+      preference.setString(Preferences.zip, value);
+    });
+  }
 
   // Theme:------------------------------------------------------
   Future<bool> get isDarkMode {
@@ -132,7 +202,7 @@ class SharedPreferenceHelper {
 
     try {
       var index = searches.lastIndexWhere(
-          (element) => search.toLowerCase() == element.toLowerCase());
+              (element) => search.toLowerCase() == element.toLowerCase());
       if (index > 0) searches.removeWhere((element) => element == search);
       //all filtered now
     } catch (e) {}

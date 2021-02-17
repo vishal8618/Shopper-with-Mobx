@@ -62,8 +62,7 @@ class AppText extends StatelessWidget {
 
   getTextSize(ScreenScaler scaler) {
     switch (style) {
-      case AppTextStyle.title:
-        return scaler.getTextSize(14);
+      case AppTextStyle.title:          return scaler.getTextSize(14);
         break;
 
       case AppTextStyle.medium:

@@ -291,6 +291,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               child: AppTextField(
                                 hintText: Strings.password,
                                 controller: passwordController,
+                                maxLines: 1,
                                 prefix: Icon(
                                   Icons.vpn_key_sharp,
                                   color: passwordFocus

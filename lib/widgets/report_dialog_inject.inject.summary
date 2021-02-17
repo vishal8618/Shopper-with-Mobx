@@ -1,0 +1,8 @@
+{
+  "asset": "asset:greetings_world_shopper/lib/widgets/report_dialog_inject.dart",
+  "summary": {
+    "injector": [],
+    "module": [],
+    "injectable": []
+  }
+}
