@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:greetings_world_shopper/data/repository.dart';
 import 'package:greetings_world_shopper/models/cart/cart_item_model.dart';
 import 'package:greetings_world_shopper/models/cart/update_cart_model.dart';
+import 'package:greetings_world_shopper/models/orders/create_order_model.dart';
 import 'package:greetings_world_shopper/stores/success_store.dart';
 import 'package:greetings_world_shopper/utils/dio/dio_error_util.dart';
 import 'package:mobx/mobx.dart';
@@ -26,6 +27,7 @@ abstract class _CartStore with Store {
   // constructor:---------------------------------------------------------------
   _CartStore(Repository repository) : this._repository = repository;
 
+
 // store variables:-----------------------------------------------------------
   static ObservableFuture<UpdateCartModel> emptyUpdateCartResponse =
       ObservableFuture.value(null);
@@ -41,10 +43,26 @@ abstract class _CartStore with Store {
   ObservableFuture<List<CartItemModel>> fetchCartFuture =
       ObservableFuture<List<CartItemModel>>(emptyCartResponse);
 
+  static ObservableFuture<OrdersModel> emptyCreateOrderResponse =
+      ObservableFuture.value(null);
+
+  @observable
+  ObservableFuture<OrdersModel> fetchCreateOrderFuture =
+      ObservableFuture<OrdersModel>(emptyCreateOrderResponse);
+
   @computed
   bool get loading =>
       fetchUpdateCartFuture.status == FutureStatus.pending ||
-      fetchCartFuture.status == FutureStatus.pending;
+      fetchCartFuture.status == FutureStatus.pending
+      ;
+
+
+
+
+  @computed
+  bool get createOrderLoading =>
+      fetchCreateOrderFuture.status == FutureStatus.pending;
+
 
   @observable
   bool success = false;
@@ -56,16 +74,31 @@ abstract class _CartStore with Store {
   int cartTotal = 0;
 
   @observable
+  double taxCharges = 0.0;
+
+  @observable
+  double shippingAmount = 0.0;
+
+  @observable
   int cartItems = 0;
 
   @observable
   List<CartItemModel> cartList;
 
+  @observable
+  double cartSubTotal = 0.0;
+
+  @observable
+  String deliveryEstimated = " ";
+
+  @observable
+  double convenienceFee = 0.0;
+
   @action
   Future addCart({String uid, String productId}) async {
     final future = _repository.addCart(productId: productId, id: uid);
     fetchUpdateCartFuture = ObservableFuture(future);
-     print(fetchUpdateCartFuture.status.toString());
+    print(fetchUpdateCartFuture.status.toString());
     future.then((model) {
       this.success = true;
       successStore.successMessage = model.message;
@@ -77,12 +110,13 @@ abstract class _CartStore with Store {
                 element.cartItem.product.id.toString() == productId)
             .cartItem
             .itemQuantity;
-
+/*
         cartList
             .lastWhere((element) =>
                 element.cartItem.product.id.toString() == productId)
             .cartItem
-            .totalAmount = (cartList
+            .product
+            .price = (cartList
                 .lastWhere((element) =>
                     element.cartItem.product.id.toString() == productId)
                 .cartItem
@@ -93,8 +127,35 @@ abstract class _CartStore with Store {
                 .cartItem
                 .product
                 .price);
-      }
+        cartList
+            .lastWhere((element) =>
+                element.cartItem.product.id.toString() == productId)
+            .cartItem
+            .product
+            .price
+            .toInt();*/
 
+        cartList
+            .lastWhere((element) =>
+                element.cartItem.product.id.toString() == productId)
+            .cartItem
+            .taxCharges
+            .toString();
+
+        cartList
+            .lastWhere((element) =>
+                element.cartItem.product.id.toString() == productId)
+            .cartItem
+            .shippingAmount
+            .toString();
+
+        cartList
+            .lastWhere((element) =>
+                element.cartItem.product.id.toString() == productId)
+            .cartItem
+            .deliveryEstimatedDays
+            .toString();
+      }
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
       this.success = false;
@@ -131,11 +192,12 @@ abstract class _CartStore with Store {
                   element.cartItem.product.id.toString() == productId)
               .cartItem
               .itemQuantity;
-          cartList
+         /* cartList
               .lastWhere((element) =>
                   element.cartItem.product.id.toString() == productId)
               .cartItem
-              .totalAmount = (cartList
+              .product
+              .price = (cartList
                   .lastWhere((element) =>
                       element.cartItem.product.id.toString() == productId)
                   .cartItem
@@ -145,10 +207,9 @@ abstract class _CartStore with Store {
                       element.cartItem.product.id.toString() == productId)
                   .cartItem
                   .product
-                  .price);
+                  .price);*/
         }
       }
-
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
       this.success = false;
@@ -168,8 +229,52 @@ abstract class _CartStore with Store {
 
       if (hasCart) {
         cartList.forEach((element) {
-          cartTotal += element.cartItem.totalAmount;
+          cartTotal +=
+              element.cartItem.product.price * element.cartItem.itemQuantity;
+          print("$cartTotal");
         });
+      }
+      if (hasCart) {
+        cartList.forEach((element) {
+          var taxAmount = (element.cartItem.subTotal / 100) * 9.25;
+          taxCharges = taxAmount;
+          print("$taxAmount");
+        });
+
+        /*double sum = cartList
+            .map((expense) => expense.cartItem.taxCharges)
+            .fold(0, (prev, amount) => prev + amount);*/
+
+      }
+
+      if (hasCart) {
+        double sum = cartList
+            .map((expense) => expense.cartItem.shippingAmount)
+            .fold(0, (prev, amount) => prev + amount);
+
+        shippingAmount = sum;
+      }
+
+      if (hasCart) {
+        cartList.forEach((element) {
+          deliveryEstimated = element.cartItem.deliveryEstimatedDays;
+        });
+      }
+
+      if (hasCart) {
+        cartList.forEach((element) {
+          var convenienceAmount = (element.cartItem.subTotal / 100) * 2;
+          convenienceFee = convenienceAmount;
+        });
+      }
+
+      if (hasCart) {
+        var cartList = [cartTotal, taxCharges, shippingAmount, convenienceFee];
+        cartSubTotal =
+            cartList.fold(0, (previous, current) => previous + current);
+        print(cartSubTotal.round()); // 6
+
+        print("$cartSubTotal");
       }
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
@@ -186,21 +291,45 @@ abstract class _CartStore with Store {
   }
 
   @action
-  processPayment() async {
-    // StripePayment.setOptions(
-    //   StripeOptions(
-    //     publishableKey: "pk_test_PqRugISQX9tprKeM08RG4WeQ00jq1t3ELU",
-    //     androidPayMode: 'test',
-    //   ),
-    // );
-    // await StripePayment.createTokenWithCard(CreditCard());
-
-    //  await StripePayment.paymentRequestWithCardForm(
-    //   CardFormPaymentRequest(),
-    // ).catchError(setError);
+  Future processPayment({String uid, String totalAmount, String subTotal, String shippingAmount, String taxCharges, String serviceCharges, String stripeToken}) async {
+    final future = _repository.createOrder(
+        uid: uid,
+        totalAmount: totalAmount,
+        subTotal: subTotal,
+        shippingAmount: shippingAmount,
+        taxCharges: taxCharges,
+        serviceCharges: serviceCharges,
+        stripeToken: stripeToken);
+    print("here");
+    fetchCreateOrderFuture = ObservableFuture(future);
+    print(fetchCreateOrderFuture.status.toString());
+    future.then((model) {
+      this.success = true;
+      successStore.successMessage = model.message;
+    }).catchError((error) {
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+      this.success = false;
+    });
   }
 
   void setError(dynamic error) {
 //Handle your errors
+  }
+
+  // disposers:-----------------------------------------------------------------
+  List<ReactionDisposer> _disposers;
+
+  void _setupDisposers() {
+    _disposers = [
+      reaction((_) => success, (_) => success = false, delay: 200),
+    ];
+  }
+
+  // general methods:-----------------------------------------------------------
+
+  void dispose() {
+    for (final d in _disposers) {
+      d();
+    }
   }
 }

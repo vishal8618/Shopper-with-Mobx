@@ -10,6 +10,7 @@ import 'package:greetings_world_shopper/ui/home/home.dart';
 import 'package:greetings_world_shopper/ui/login/login.dart';
 import 'package:greetings_world_shopper/ui/merchant_detail/merchant_detail.dart';
 import 'package:greetings_world_shopper/ui/product_detail/product_detail.dart';
+import 'package:greetings_world_shopper/ui/profile/shopper_profile.dart';
 import 'package:greetings_world_shopper/ui/shopper_detail/shopper_detail.dart';
 import 'package:greetings_world_shopper/ui/signup/signup.dart';
 import 'package:greetings_world_shopper/ui/splash/splash.dart';
@@ -22,6 +23,9 @@ class Routes {
   Routes._();
 
   //static variables
+  static  String currentRoute = '';
+
+
   static const String splash = '/splash';
   static const String home = '/home';
   static const String login = '/login';
@@ -35,8 +39,12 @@ class Routes {
   static const String creditCard = '/creditCard';
   static const String completeAddress = '/completeAddress';
   static const String shopperProfileDetail = '/shopperProfileDetail';
+  static const String shopperProfile= '/shopperProfile';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
+
+    currentRoute=settings.name;
+
     switch (settings.name) {
       case splash:
         return MaterialPageRoute(
@@ -115,7 +123,7 @@ class Routes {
             settings: settings);
       case creditCard:
         return PageTransition(
-            child: CreditCard(),
+            child: CreditCardScreen(),
             type: PageTransitionType.fade,
             duration: Duration(milliseconds: 300),
             reverseDuration: Duration(milliseconds: 300),
@@ -123,7 +131,7 @@ class Routes {
 
         case completeAddress:
         return PageTransition(
-            child: AddressScreen(),
+            child: AddressScreen( sendResult: settings.arguments,),
             type: PageTransitionType.fade,
             duration: Duration(milliseconds: 300),
             reverseDuration: Duration(milliseconds: 300),
@@ -132,6 +140,14 @@ class Routes {
       case shopperProfileDetail:
         return PageTransition(
             child: ShopperProfileDetail(),
+            type: PageTransitionType.fade,
+            duration: Duration(milliseconds: 300),
+            reverseDuration: Duration(milliseconds: 300),
+            settings: settings);
+
+      case shopperProfile:
+        return PageTransition(
+            child: ShopperProfile(),
             type: PageTransitionType.fade,
             duration: Duration(milliseconds: 300),
             reverseDuration: Duration(milliseconds: 300),

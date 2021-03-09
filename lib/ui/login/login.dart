@@ -13,6 +13,7 @@ import 'package:greetings_world_shopper/utils/locale/app_localization.dart';
 import 'package:greetings_world_shopper/widgets/app_text.dart';
 import 'package:greetings_world_shopper/widgets/app_text_field.dart';
 import 'package:greetings_world_shopper/widgets/image_view.dart';
+import 'package:greetings_world_shopper/widgets/login_text_feild.dart';
 import 'package:greetings_world_shopper/widgets/progress_indicator_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:validators/validators.dart';
@@ -82,7 +83,7 @@ class _LoginScreen extends State<LoginScreen> {
           onTap: () {
             DeviceUtils.hideKeyboard(context);
           },
-          child: Container(color: Colors.white, child: _buildBody())),
+          child: Container(color: Colors.purple, child: _buildBody())),
     );
   }
 
@@ -94,7 +95,9 @@ class _LoginScreen extends State<LoginScreen> {
             children: [
               ImageView(
                 path: Assets.logo,
-                color: AppColors.primaryColor,
+                height: _scaler.getHeight(25),
+                width: _scaler.getWidth(30),
+                color: AppColors.starYellow,
               ),
               Form(
                 key: formKey,
@@ -110,15 +113,15 @@ class _LoginScreen extends State<LoginScreen> {
                               this.emailFocus = has;
                             });
                           },
-                          child: AppTextField(
+                          child: LoginTextField(
                             hintText: Strings.email,
                             controller: emailController,
                             inputType: TextInputType.emailAddress,
                             prefix: Icon(
                               Icons.email,
                               color: emailFocus
-                                  ? AppColors.primaryColor1
-                                  : AppColors.textColorDark,
+                                  ? AppColors.bg
+                                  : AppColors.bg,
                               size: _scaler.getTextSize(14),
                             ),
                             validate: (text) {
@@ -138,7 +141,7 @@ class _LoginScreen extends State<LoginScreen> {
                               this.passwordFocus = has;
                             });
                           },
-                          child: AppTextField(
+                          child: LoginTextField(
                             hintText: Strings.password,
                             controller: passwordController,
                             maxLines: 1,
@@ -146,8 +149,8 @@ class _LoginScreen extends State<LoginScreen> {
                             prefix: Icon(
                               Icons.vpn_key,
                               color: passwordFocus
-                                  ? AppColors.primaryColor1
-                                  : AppColors.textColorDark,
+                                  ? AppColors.bg
+                                  : AppColors.bg,
                               size: _scaler.getTextSize(14),
                             ),
                             validate: (value) {
@@ -169,7 +172,7 @@ class _LoginScreen extends State<LoginScreen> {
                 margin: _scaler.getMargin(1, 3),
                 child: MaterialButton(
                   height: _scaler.getHeight(3.5),
-                  color: AppColors.buttonBg,
+                  color: AppColors.bg,
                   onPressed: () {
                     if (formKey.currentState.validate()) {
                       DeviceUtils.hideKeyboard(context);
@@ -182,7 +185,7 @@ class _LoginScreen extends State<LoginScreen> {
                   },
                   child: AppText(
                     text: Strings.proceed,
-                    color: Colors.white,
+                    color: Colors.purple,
                   ),
                 ),
               ),
@@ -196,7 +199,7 @@ class _LoginScreen extends State<LoginScreen> {
                   AppText(
                     text: Strings.dontHaveAccount,
                     style: AppTextStyle.regular,
-                    color: AppColors.textColorDark,
+                    color: AppColors.bg,
                     size: _scaler.getTextSize(10),
                   ),
                   GestureDetector(
@@ -213,7 +216,7 @@ class _LoginScreen extends State<LoginScreen> {
                       child: AppText(
                         text: Strings.registerNow,
                         style: AppTextStyle.title,
-                        color: AppColors.textColorDark,
+                        color: AppColors.bg,
                         size: _scaler.getTextSize(10),
                       ),
                     ),

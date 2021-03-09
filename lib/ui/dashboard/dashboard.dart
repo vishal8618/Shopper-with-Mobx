@@ -9,6 +9,7 @@ import 'package:greetings_world_shopper/constants/strings.dart';
 import 'package:greetings_world_shopper/menu_options/merchant_options.dart';
 import 'package:greetings_world_shopper/models/merchants/merchant_model.dart';
 import 'package:greetings_world_shopper/routes.dart';
+import 'package:greetings_world_shopper/stores/cart_store.dart';
 import 'package:greetings_world_shopper/stores/merchants_store.dart';
 import 'package:greetings_world_shopper/stores/user_store.dart';
 import 'package:greetings_world_shopper/utils/common_dialogs.dart';
@@ -16,10 +17,10 @@ import 'package:greetings_world_shopper/utils/device/device_utils.dart';
 import 'package:greetings_world_shopper/utils/error_bar.dart';
 import 'package:greetings_world_shopper/widgets/app_text.dart';
 import 'package:greetings_world_shopper/widgets/common_message_dialog.dart';
+import 'package:greetings_world_shopper/widgets/dashboard_loader.dart';
 import 'package:greetings_world_shopper/widgets/image_view.dart';
 import 'package:greetings_world_shopper/widgets/no_data_error.dart';
 import 'package:greetings_world_shopper/widgets/polygon_clipper/polygon_clipper.dart';
-import 'package:greetings_world_shopper/widgets/progress_indicator_widget.dart';
 import 'package:greetings_world_shopper/widgets/search_field.dart';
 import 'package:greetings_world_shopper/widgets/tab_button.dart';
 import 'package:provider/provider.dart';
@@ -32,12 +33,14 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardState extends State<DashboardScreen> {
   TextEditingController searchController;
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
   MerchantStore _merchantStore;
   UserStore _userStore;
   ScreenScaler _scaler;
-
+  CartStore _cartStore;
   ScrollController _scrollController = ScrollController();
+  bool firstTabselected = true;
 
   @override
   void initState() {
@@ -60,16 +63,22 @@ class _DashboardState extends State<DashboardScreen> {
     super.didChangeDependencies();
 
     //  initialising stores
+    _cartStore = Provider.of<CartStore>(context);
+
     _merchantStore = Provider.of<MerchantStore>(context);
     _userStore = Provider.of<UserStore>(context);
+    if (!_merchantStore.loading && Routes.currentRoute == Routes.home)
+      _cartStore.getCart(uid: _userStore.uid);
 
     if (!_merchantStore.loading)
       _merchantStore.getMerchants(tab: "Online", paginated: false);
+
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_scaler == null) _scaler = ScreenScaler()..init(context);
+    if (_scaler == null) _scaler = ScreenScaler()
+      ..init(context);
 
     return Scaffold(backgroundColor: AppColors.bg, body: _buildBody());
   }
@@ -100,10 +109,13 @@ class _DashboardState extends State<DashboardScreen> {
       action: TextInputAction.done,
       onType: _merchantStore.getSearches,
       onSubmit: (text) {
-        _merchantStore.addSearch(text);
+        print('===========>onSubmit');
+       _merchantStore.addSearch(text);
         _merchantStore.updateSearch(text);
+
       },
       onSelected: (text) {
+        print('===========>onSelected');
         _merchantStore.updateSearch(text);
         DeviceUtils.hideKeyboard(context);
         setState(() {
@@ -125,8 +137,11 @@ class _DashboardState extends State<DashboardScreen> {
               child: TabButton(
                 text: "Online",
                 onPressed: () {
-                  _merchantStore.updateTab(0);
-                  DeviceUtils.hideKeyboard(context);
+                  if (!firstTabselected) {
+                    firstTabselected = true;
+                    _merchantStore.updateTab(0);
+                    DeviceUtils.hideKeyboard(context);
+                  }
                 },
                 selected: _merchantStore.tab == 0,
               ),
@@ -136,8 +151,11 @@ class _DashboardState extends State<DashboardScreen> {
               child: TabButton(
                 text: "Brick and Mortars",
                 onPressed: () {
-                  _merchantStore.updateTab(1);
-                  DeviceUtils.hideKeyboard(context);
+                  if (firstTabselected) {
+                    firstTabselected = false;
+                    _merchantStore.updateTab(1);
+                    DeviceUtils.hideKeyboard(context);
+                  }
                 },
                 selected: _merchantStore.tab == 1,
               ),
@@ -152,7 +170,7 @@ class _DashboardState extends State<DashboardScreen> {
     return Observer(
       builder: (context) {
         return _merchantStore.loading
-            ? CustomProgressIndicatorWidget()
+            ? CustomProgressDashboardLoaderWidget()
             : _buildListView();
       },
     );
@@ -160,18 +178,18 @@ class _DashboardState extends State<DashboardScreen> {
 
   Widget _buildListView() {
     return _merchantStore.merchantsList != null &&
-            _merchantStore.merchantsList.length > 0
+        _merchantStore.merchantsList.length > 0
         ? ListView.builder(
-            physics: BouncingScrollPhysics(),
-            controller: _scrollController,
-            itemBuilder: (context, position) {
-              return _buildListItem(_merchantStore.merchantsList[position]);
-            },
-            itemCount: _merchantStore.merchantsList.length,
-          )
+      physics: BouncingScrollPhysics(),
+      controller: _scrollController,
+      itemBuilder: (context, position) {
+        return _buildListItem(_merchantStore.merchantsList[position]);
+      },
+      itemCount: _merchantStore.merchantsList.length,
+    )
         : Center(
-            child: NoDataError(),
-          );
+      child: NoDataError(),
+    );
   }
 
   Widget getMerchantOptions(MerchantModel model) {
@@ -190,17 +208,15 @@ class _DashboardState extends State<DashboardScreen> {
 
               model.followers.contains(int.parse(_userStore.uid))
                   ? _merchantStore.followMerchant(
-                      merchantId: model.id.toString(), uid: _userStore.uid)
+                  merchantId: model.id.toString(), uid: _userStore.uid)
                   : _merchantStore.unFollowMerchant(
-                      merchantId: model.id.toString(), uid: _userStore.uid);
+                  merchantId: model.id.toString(), uid: _userStore.uid);
             } else {
               CommonDialogs.showLoginDialog(context);
             }
           } else if (selected == MerchantOptions.call) {
             phoneClick(model);
           } else if (selected == MerchantOptions.report) {
-          
-            /////call product report function/////
             if (_userStore.isLoggedIn) {
               setState(() {
                 CommonDialogs.showReportDialog(context, (text) {
@@ -210,13 +226,14 @@ class _DashboardState extends State<DashboardScreen> {
                       reason: text);
                 });
               });
-            }else{
+            } else {
               CommonDialogs.showLoginDialog(context);
-
             }
+          } else if (selected == MerchantOptions.find_location) {
+            //launchMap("Chattanooga, TN, USA");
+            _launchMapsUrl(35.045631, -85.309677);
 
-
-          } else if (selected == MerchantOptions.find_location) {}
+          }
         },
         child: ImageView(
             path: Assets.more,
@@ -225,12 +242,12 @@ class _DashboardState extends State<DashboardScreen> {
               4,
             )),
         itemBuilder: (BuildContext context) =>
-            <PopupMenuEntry<MerchantOptions>>[
+        <PopupMenuEntry<MerchantOptions>>[
           PopupMenuItem<MerchantOptions>(
             value: MerchantOptions.follow,
             child: AppText(
               text: _userStore.isLoggedIn &&
-                      model.followers.contains(int.parse(_userStore.uid))
+                  model.followers.contains(int.parse(_userStore.uid))
                   ? 'UnFollow'
                   : 'Follow',
             ),
@@ -249,11 +266,11 @@ class _DashboardState extends State<DashboardScreen> {
           ),
           model.mtype.toLowerCase() != "online"
               ? PopupMenuItem<MerchantOptions>(
-                  value: MerchantOptions.report,
-                  child: AppText(
-                    text: 'Find Location',
-                  ),
-                )
+            value: MerchantOptions.find_location,
+            child: AppText(
+              text: 'Get Location',
+            ),
+          )
               : null
         ],
       ),
@@ -270,8 +287,8 @@ class _DashboardState extends State<DashboardScreen> {
               image: merchant.merchantPhoto != null
                   ? NetworkImage(merchant.merchantPhoto)
                   : AssetImage(
-                      Assets.logo,
-                    ),
+                Assets.logo,
+              ),
               fit: BoxFit.cover)),
       child: Material(
         color: Colors.transparent,
@@ -291,7 +308,7 @@ class _DashboardState extends State<DashboardScreen> {
                 bottom: 0,
                 child: Container(
                   decoration:
-                      BoxDecoration(gradient: AppColors.transParentGradient),
+                  BoxDecoration(gradient: AppColors.transParentGradient),
                   height: _scaler.getHeight(20),
                   width: _scaler.getWidth(100),
                 ),
@@ -331,7 +348,7 @@ class _DashboardState extends State<DashboardScreen> {
                           ),
                         )
 
-                        /*   child: RotatedBox(
+                      /*   child: RotatedBox(
                         child: ShapeOfView(
                           bgColor: Colors.white,
                           shape: PolygonShape(
@@ -359,8 +376,8 @@ class _DashboardState extends State<DashboardScreen> {
                         ),
                         quarterTurns: 1,
                       ),*/
-                        // transitionOnUserGestures: true,
-                        ),
+                      // transitionOnUserGestures: true,
+                    ),
 
                     /*      ImageView(
                       path: merchant.logo ?? Assets.logo,
@@ -416,13 +433,14 @@ class _DashboardState extends State<DashboardScreen> {
                                 allowHalfRating: true,
                                 itemCount: 5,
                                 itemPadding:
-                                    EdgeInsets.symmetric(horizontal: 2.0),
-                                itemBuilder: (context, _) => ImageView(
-                                  height: _scaler.getWidth(1),
-                                  width: _scaler.getWidth(1),
-                                  path: Assets.star,
-                                  color: AppColors.starYellow,
-                                ),
+                                EdgeInsets.symmetric(horizontal: 2.0),
+                                itemBuilder: (context, _) =>
+                                    ImageView(
+                                      height: _scaler.getWidth(1),
+                                      width: _scaler.getWidth(1),
+                                      path: Assets.star,
+                                      color: AppColors.starYellow,
+                                    ),
                               ),
                               SizedBox(
                                 width: _scaler.getWidth(1),
@@ -469,10 +487,31 @@ class _DashboardState extends State<DashboardScreen> {
     } else {
       showDialog(
           context: context,
-          builder: (BuildContext context) => CommonMessageDialog(
+          builder: (BuildContext context) =>
+              CommonMessageDialog(
                 message:
-                    "Merchant has not activated yet. Please try again later!",
+                "Merchant has not activated yet. Please try again later!",
               ));
     }
+  }
+
+  /* void launchMap(String address) async {
+    String query = Uri.encodeComponent(address);
+    String googleUrl = "https://www.google.com/maps/search/?api=1&query=$query";
+
+    if (await canLaunch(googleUrl)) {
+      await launch(googleUrl);
+    }
+  }*/
+
+
+  void _launchMapsUrl(double lat, double lon) async {
+    final url = 'https://www.google.com/maps/search/?api=1&query=$lat,$lon';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+
   }
 }

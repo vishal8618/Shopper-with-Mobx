@@ -36,32 +36,32 @@ class UserModel {
   Address address;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-    id: json["id"],
-    userId: json["user_id"],
-    firstName: json["first_name"],
-    lastName: json["last_name"],
-    email: json["email"],
-    buyerPhoto: json["buyer_photo"],
-    phoneNumber: json["phone_number"],
-    createdAt: DateTime.parse(json["created_at"]),
-    updatedAt: DateTime.parse(json["updated_at"]),
-    url: json["url"],
-    address: Address.fromJson(json["address"]),
-  );
+        id: json["id"],
+        userId: json["user_id"],
+        firstName: json["first_name"],
+        lastName: json["last_name"],
+        email: json["email"],
+        buyerPhoto: json["buyer_photo"] == null ? null :json["buyer_photo"],
+        phoneNumber: json["phone_number"],
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),
+        url: json["url"] == null ? null : json["url"],
+        address: json["address"] == null ? null : Address.fromJson(json["address"]),
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "user_id": userId,
-    "first_name": firstName,
-    "last_name": lastName,
-    "email": email,
-    "buyer_photo": buyerPhoto,
-    "phone_number": phoneNumber,
-    "created_at": createdAt.toIso8601String(),
-    "updated_at": updatedAt.toIso8601String(),
-    "url": url,
-    "address": address.toJson(),
-  };
+        "id": id,
+        "user_id": userId,
+        "first_name": firstName,
+        "last_name": lastName,
+        "email": email,
+        "buyer_photo": buyerPhoto,
+        "phone_number": phoneNumber,
+        "created_at": createdAt.toIso8601String(),
+        "updated_at": updatedAt.toIso8601String(),
+        "url": url,
+        "address": address.toJson(),
+      };
 }
 
 class Address {
@@ -86,24 +86,24 @@ class Address {
   dynamic lng;
 
   factory Address.fromJson(Map<String, dynamic> json) => Address(
-    city: json["city"],
-    street1: json["street1"],
-    street2: json["street2"],
-    countryName: json["country_name"],
-    stateName: json["state_name"],
-    zip: json["zip"],
-    lat: json["lat"],
-    lng: json["lng"],
-  );
+        city: json["city"],
+        street1: json["street1"],
+        street2: json["street2"],
+        countryName: json["country_name"],
+        stateName: json["state_name"],
+        zip: json["zip"],
+        lat: json["lat"],
+        lng: json["lng"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "city": city,
-    "street1": street1,
-    "street2": street2,
-    "country_name": countryName,
-    "state_name": stateName,
-    "zip": zip,
-    "lat": lat,
-    "lng": lng,
-  };
+        "city": city,
+        "street1": street1,
+        "street2": street2,
+        "country_name": countryName,
+        "state_name": stateName,
+        "zip": zip,
+        "lat": lat,
+        "lng": lng,
+      };
 }

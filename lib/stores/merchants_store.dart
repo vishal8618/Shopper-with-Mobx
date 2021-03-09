@@ -1,6 +1,7 @@
 import 'package:greetings_world_shopper/data/repository.dart';
 import 'package:greetings_world_shopper/models/merchants/merchant_model.dart';
-import 'package:greetings_world_shopper/models/report/report_model.dart';
+import 'package:greetings_world_shopper/models/merchnat_follow_model/merchant_follow_order.dart';
+import 'package:greetings_world_shopper/stores/success_store.dart';
 import 'package:greetings_world_shopper/utils/dio/dio_error_util.dart';
 import 'package:mobx/mobx.dart';
 import 'error_store.dart';
@@ -16,12 +17,16 @@ abstract class _MerchantStore with Store {
 
   // store for handling errors
   final ErrorStore errorStore = ErrorStore();
-
+  // store for handling errors
+  final SuccessStore successStore = SuccessStore();
   // constructor:---------------------------------------------------------------
   _MerchantStore(Repository repository) : this._repository = repository;
 
   @observable
   String searchText = "";
+
+  @observable
+  bool success = false;
 
   @observable
   int tab = 0;
@@ -36,6 +41,23 @@ abstract class _MerchantStore with Store {
   @observable
   ObservableFuture<List<MerchantModel>> fetchMerchantsFuture =
       ObservableFuture<List<MerchantModel>>(emptyMerchantsResponse);
+
+
+  // store follow variables:-----------------------------------------------------------
+  static ObservableFuture<FollowModel> emptyMerchantsFollowResponse =
+  ObservableFuture.value(null);
+
+  @observable
+  ObservableFuture<FollowModel> fetchMerchantsFollowFuture =
+  ObservableFuture<FollowModel>(emptyMerchantsFollowResponse);
+
+// store unfollow variables:-----------------------------------------------------------
+  static ObservableFuture<FollowModel> emptyMerchantsUnFollowResponse =
+  ObservableFuture.value(null);
+
+  @observable
+  ObservableFuture<FollowModel> fetchMerchantsUnFollowFuture =
+  ObservableFuture<FollowModel>(emptyMerchantsUnFollowResponse);
 
   @observable
   List<MerchantModel> merchantsList;
@@ -79,20 +101,36 @@ abstract class _MerchantStore with Store {
   @action
   followMerchant({String uid, String merchantId}) async {
     final future = _repository.followMerchant(merchantId: merchantId, uid: uid);
-
-    future.then((merchantsList) {}).catchError((error) {
+    fetchMerchantsFollowFuture = ObservableFuture(future);
+    print(fetchMerchantsFollowFuture.status.toString());
+    future.then((model) {
+      this.success = true;
+      successStore.successMessage = model.message;
+    }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
+      this.success = false;
     });
+  /*  future.then((merchantsList) {}).catchError((error) {
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+    });*/
   }
 
   @action
   unFollowMerchant({String uid, String merchantId}) async {
-    final future =
-        _repository.unFollowMerchant(merchantId: merchantId, uid: uid);
-
-    future.then((merchantsList) {}).catchError((error) {
+    final future = _repository.unFollowMerchant(merchantId: merchantId, uid: uid);
+    fetchMerchantsUnFollowFuture = ObservableFuture(future);
+    print(fetchMerchantsUnFollowFuture.status.toString());
+    future.then((model) {
+      this.success = true;
+      successStore.successMessage = model.message;
+    }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
+      this.success = false;
     });
+
+   /* future.then((merchantsList) {}).catchError((error) {
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+    });*/
   }
 
   ///////report///
@@ -133,5 +171,21 @@ abstract class _MerchantStore with Store {
         search: text,
         tab: tab == 0 ? "Online" : "Brick and Mortar",
         paginated: false);
+  }
+  // disposers:-----------------------------------------------------------------
+  List<ReactionDisposer> _disposers;
+
+  void _setupDisposers() {
+    _disposers = [
+      reaction((_) => success, (_) => success = false, delay: 200),
+    ];
+  }
+
+  // general methods:-----------------------------------------------------------
+
+  void dispose() {
+    for (final d in _disposers) {
+      d();
+    }
   }
 }

@@ -93,10 +93,7 @@ class UserApi {
       if (image != null && image != "") map["buyer_photo"] = image;
 
       map["phone_number"] = phone;
-      final res = await _dioClient.put(
-          "${Endpoints.updateProfileDetail}$uid.json",
-          data: map,
-          options: null);
+      final res = await _dioClient.put("${Endpoints.updateProfileDetail}$uid.json", data: map, options: null);
       return userModelFromJson(json.encode(res.data));
     } catch (e) {
       print(e.toString());

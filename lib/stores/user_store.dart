@@ -43,12 +43,12 @@ abstract class _UserStore with Store {
       this.userImage = value ?? "";
     });
     repository.getEmail.then((value) {
-      this.email = value ?? "";
+      this.userEmail = value ?? "";
     });
     repository.getPhoneNumber.then((value) {
       this.phoneNumber = value ?? "";
     });
-    repository.getAddress.then((value) {
+    repository.getAddress1.then((value) {
       this.address1 = value ?? "";
     });
     repository.getAddress2.then((value) {
@@ -59,16 +59,19 @@ abstract class _UserStore with Store {
     });
 
     repository.getCity.then((value) {
-      this.city = value ?? "";
+      this.userCity = value ?? "";
     });
 
     repository.getZip.then((value) {
-      this.zip = value ?? "";
+      this.userZip = value ?? "";
+    });
+    repository.getCallback.then((value) {
+      this.userZip = value ?? "";
     });
 
-    // repository.getAddress.then((value) {
-    //   if (value != null) this.address = Address.fromJson(jsonDecode(value));
-    // });
+    /*repository.getFullAddress.then((value) {
+       if (value != null) this. = Address.fromJson(jsonDecode(value));
+     });*/
   }
 
   // store variables:-----------------------------------------------------------
@@ -118,13 +121,15 @@ abstract class _UserStore with Store {
   String uid = "";
   String name = "";
   String userImage = "";
-  String email = "";
+  String userEmail = "";
   String phoneNumber = "";
+  String address = "";
   String address1 = "";
   String address2 = "";
-  String city = "";
+  String userCity = "";
   String state = "";
-  String zip = "";
+  String userZip = "";
+  String country = "";
 
   // Address address;
 
@@ -137,7 +142,9 @@ abstract class _UserStore with Store {
   @computed
   bool get loading =>
       fetchSignupFuture.status == FutureStatus.pending ||
-      fetchLoginFuture.status == FutureStatus.pending;
+      fetchLoginFuture.status == FutureStatus.pending ||
+      fetchProfileDetailsFuture.status == FutureStatus.pending ||
+      fetchAddressDetailsFuture.status == FutureStatus.pending;
 
   // actions:-------------------------------------------------------------------
   @action
@@ -155,7 +162,8 @@ abstract class _UserStore with Store {
         phone: phone,
         image: image == null
             ? ""
-            : base64Encode(Io.File(image.path).readAsBytesSync()));
+            : "data:image/jpeg;base64," +
+            base64Encode(Io.File(image.path).readAsBytesSync()));
     fetchSignupFuture = ObservableFuture(future);
     future.then((user) {
       _repository.saveIsLoggedIn(true);
@@ -163,8 +171,8 @@ abstract class _UserStore with Store {
       _repository.saveImage(user.buyerPhoto);
       _repository
           .saveName("${user.firstName.toString()} ${user.lastName.toString()}");
-      _repository.saveEmail(user.email);
-      _repository.savePhoneNumber(user.phoneNumber);
+      _repository.saveEmail(user.email.toString());
+      _repository.savePhoneNumber(user.phoneNumber.toString());
 
       this.user = user;
       this.success = true;
@@ -172,7 +180,7 @@ abstract class _UserStore with Store {
       uid = user.id.toString();
       userImage = user.buyerPhoto;
       name = "${user.firstName.toString()} ${user.lastName.toString()}";
-      email = user.email.toString();
+      userEmail = user.email.toString();
       phoneNumber = user.phoneNumber.toString();
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
@@ -190,19 +198,26 @@ abstract class _UserStore with Store {
     future.then((user) {
       _repository.saveIsLoggedIn(true);
       _repository.saveUserId(user.buyer.id);
-      _repository.saveImage(user.buyer.buyerPhoto);
+      if (user.buyer.buyerPhoto != null) {
+        _repository.saveImage(user.buyer.buyerPhoto);
+      }
       _repository.saveName(
           "${user.buyer.firstName.toString()} ${user.buyer.lastName.toString()}");
-      _repository.saveEmail(user.buyer.email);
+      _repository.saveEmail(user.buyer.email.toString());
       _repository.savePhoneNumber(user.buyer.phoneNumber);
-      _repository.saveAddress(jsonEncode(user.buyerAddress.toJson()));
-
-      _repository.saveAddress(user.buyerAddress.street1);
-      _repository.saveAddress2(user.buyerAddress.street2);
-      _repository.saveCity(user.buyerAddress.city);
-      _repository.saveState(user.buyerAddress.stateName);
-      _repository.saveZip(user.buyerAddress.zip);
-      // _repository.saveAddress(jsonEncode(user.buyer.address.toJson()));
+      if (user.buyerAddress != null) {
+        _repository.saveAddress(jsonEncode(user.buyerAddress.toJson()));
+      }
+      if (user.buyerAddress != null) {
+        _repository.saveAddress1(user.buyerAddress.street1.toString());
+        print('=====>${user.buyerAddress.street1}');
+        _repository.saveAddress2(user.buyerAddress.street2.toString());
+        _repository.saveCity(user.buyerAddress.city.toString());
+        _repository.saveState(user.buyerAddress.stateName.toString());
+        _repository.saveZip(user.buyerAddress.zip.toString());
+        _repository.saveCountry(user.buyerAddress.countryName.toString());
+        // _repository.saveAddress(jsonEncode(user.buyer.address.toJson()));
+      }
 
       this.success = true;
       isLoggedIn = true;
@@ -210,13 +225,15 @@ abstract class _UserStore with Store {
       uid = user.buyer.id.toString();
       name =
           "${user.buyer.firstName.toString()} ${user.buyer.lastName.toString()}";
-      email = user.buyer.email.toString();
+      userEmail = user.user.email.toString();
       phoneNumber = user.buyer.phoneNumber.toString();
+
       address1 = user.buyerAddress.street1.toString();
       address2 = user.buyerAddress.street2.toString();
-      city = user.buyerAddress.city.toString();
+      userCity = user.buyerAddress.city.toString();
       state = user.buyerAddress.stateName.toString();
-      zip = user.buyerAddress.zip.toString();
+      userZip = user.buyerAddress.zip.toString();
+      country = user.buyerAddress.countryName.toString();
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
       this.success = false;
@@ -230,18 +247,23 @@ abstract class _UserStore with Store {
     future.then((user) {
       _repository.saveIsLoggedIn(true);
       _repository.saveUserId(user.id);
-      _repository.saveImage(user.buyerPhoto);
+      if (user.buyerPhoto != null) {
+        _repository.saveImage(user.buyerPhoto);
+      }
       _repository
           .saveName("${user.firstName.toString()} ${user.lastName.toString()}");
       _repository.saveEmail(user.email.toString());
       _repository.savePhoneNumber(user.phoneNumber);
       _repository.saveAddress(jsonEncode(user.address.toJson()));
 
-      _repository.saveAddress(user.address.street1);
-      _repository.saveAddress2(user.address.street2);
-      _repository.saveCity(user.address.city);
-      _repository.saveState(user.address.stateName);
-      _repository.saveZip(user.address.zip);
+      if (user.address != null) {
+        _repository.saveAddress1(user.address.street1.toString());
+        _repository.saveAddress2(user.address.street2.toString());
+        _repository.saveCity(user.address.city.toString());
+        _repository.saveState(user.address.stateName.toString());
+        _repository.saveZip(user.address.zip.toString());
+        _repository.saveCountry(user.address.countryName.toString());
+      }
 
       this.user = user;
       this.success = true;
@@ -249,36 +271,40 @@ abstract class _UserStore with Store {
       uid = user.id.toString();
       userImage = user.buyerPhoto;
       name = "${user.firstName.toString()} ${user.lastName.toString()}";
-      email = user.email.toString();
-      phoneNumber = user.phoneNumber;
-      address1 = user.address.street1;
-      address2 = user.address.street2;
-      city = user.address.city;
-      state = user.address.stateName;
-      zip = user.address.zip;
+      userEmail = user.email.toString();
+      phoneNumber = user.phoneNumber.toString();
+      address1 = user.address.street1.toString();
+      address2 = user.address.street2.toString();
+      userCity = user.address.city.toString();
+      state = user.address.stateName.toString();
+      userZip = user.address.zip;
+      country = user.address.countryName;
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
       this.success = false;
     });
   }
 
-  @action
   Future updateUserDetails(String uid, {String fullName, String phone}) async {
     final future = _repository.updateProfile(uid,
         fullName: fullName,
         phone: phone,
         image: image == null
-            ? "" : base64Encode(Io.File(image.path).readAsBytesSync()));
+            ? ""
+            : "data:image/jpeg;base64," +
+                base64Encode(Io.File(image.path).readAsBytesSync()));
     fetchProfileDetailsFuture = ObservableFuture(future);
     future.then((user) {
       _repository.saveIsLoggedIn(true);
       _repository.saveUserId(user.id);
-      _repository.saveImage(user.buyerPhoto);
+
+      if (user.buyerPhoto != null) {
+        _repository.saveImage(user.buyerPhoto);
+      }
       _repository
           .saveName("${user.firstName.toString()} ${user.lastName.toString()}");
       _repository.saveEmail(user.email.toString());
       _repository.savePhoneNumber(user.phoneNumber);
-      _repository.saveAddress(jsonEncode(user.address.toJson()));
 
       this.user = user;
       this.success = true;
@@ -287,6 +313,7 @@ abstract class _UserStore with Store {
       userImage = user.buyerPhoto;
       name = "${user.firstName.toString()} ${user.lastName.toString()}";
       phoneNumber = user.phoneNumber.toString();
+      userEmail = user.email.toString();
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
       this.success = false;
@@ -305,6 +332,7 @@ abstract class _UserStore with Store {
       String zip,
       String lat,
       String lng}) async {
+    print("updateUserAddress");
     final future = _repository.updateAddress(uid,
         city: city,
         street1: street1,
@@ -319,22 +347,27 @@ abstract class _UserStore with Store {
     future.then((user) {
       _repository.saveIsLoggedIn(true);
       _repository.saveUserId(user.id);
-      _repository.saveAddress(jsonEncode(user.address.toJson()));
-      _repository.saveAddress(user.address.street1);
-      _repository.saveAddress2(user.address.street2);
-      _repository.saveCity(user.address.city);
-      _repository.saveState(user.address.stateName);
-      _repository.saveZip(user.address.zip);
+      if (user.address != null) {
+        _repository.saveAddress(jsonEncode(user.address.toJson()));
+      }
+      if (user.address != null) {
+        _repository.saveAddress1(user.address.street1);
+        _repository.saveAddress2(user.address.street2);
+        _repository.saveCity(user.address.city);
+        _repository.saveState(user.address.stateName);
+        _repository.saveZip(user.address.zip);
+        _repository.saveCountry(user.address.countryName);
+      }
 
       this.user = user;
       this.success = true;
       isLoggedIn = true;
       uid = user.id.toString();
-      address1 = user.address.street1;
-      address2 = user.address.street2;
-      city = user.address.city;
+      address1 = user.address.street1.toString();
+      address2 = user.address.street2.toString();
+      userCity = user.address.city;
       state = user.address.stateName;
-      zip = user.address.zip;
+      userZip = user.address.zip;
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
       this.success = false;

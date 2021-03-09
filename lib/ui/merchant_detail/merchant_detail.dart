@@ -19,6 +19,7 @@ import 'package:greetings_world_shopper/ui/product_detail/product_detail.dart';
 import 'package:greetings_world_shopper/utils/common_decorations.dart';
 import 'package:greetings_world_shopper/utils/common_dialogs.dart';
 import 'package:greetings_world_shopper/utils/error_bar.dart';
+import 'package:greetings_world_shopper/utils/success_bar.dart';
 import 'package:greetings_world_shopper/widgets/app_text.dart';
 import 'package:greetings_world_shopper/widgets/call_sms_dialog.dart';
 import 'package:greetings_world_shopper/widgets/common_message_dialog.dart';
@@ -85,6 +86,7 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
           child: Stack(
             children: [
               _handleErrorMessage(),
+              _handleSuccessMessage(),
               Column(
                 children: [_buildHeader(), Expanded(child: _buildBody())],
               ),
@@ -123,15 +125,15 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
                         image: DecorationImage(
                             image: widget.merchantInfo.merchantPhoto != null
                                 ? NetworkImage(
-                                    widget.merchantInfo.merchantPhoto)
+                                widget.merchantInfo.merchantPhoto)
                                 : AssetImage(
-                                    Assets.logo,
-                                  ),
+                              Assets.logo,
+                            ),
                             fit: BoxFit.cover)),
                   ),
                   Container(
                     decoration:
-                        BoxDecoration(gradient: AppColors.primaryGradient),
+                    BoxDecoration(gradient: AppColors.primaryGradient),
                   ),
                 ],
               ),
@@ -192,6 +194,8 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            _handleErrorFollowMessage(),
+            _handleSuccessFollowMessage(),
             GestureDetector(
               onTap: () {
                 if (_userStore.isLoggedIn) {
@@ -207,13 +211,13 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
                   });
 
                   widget.merchantInfo.followers
-                          .contains(int.parse(_userStore.uid))
+                      .contains(int.parse(_userStore.uid))
                       ? _merchantStore.followMerchant(
-                          merchantId: widget.merchantInfo.id.toString(),
-                          uid: _userStore.uid)
+                      merchantId: widget.merchantInfo.id.toString(),
+                      uid: _userStore.uid)
                       : _merchantStore.unFollowMerchant(
-                          merchantId: widget.merchantInfo.id.toString(),
-                          uid: _userStore.uid);
+                      merchantId: widget.merchantInfo.id.toString(),
+                      uid: _userStore.uid);
                 } else {
                   CommonDialogs.showLoginDialog(context);
                 }
@@ -224,9 +228,9 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
                 width: !_userStore.isLoggedIn
                     ? _scaler.getWidth(22)
                     : !widget.merchantInfo.followers
-                            .contains(int.parse(_userStore.uid))
-                        ? _scaler.getWidth(22)
-                        : _scaler.getWidth(25),
+                    .contains(int.parse(_userStore.uid))
+                    ? _scaler.getWidth(22)
+                    : _scaler.getWidth(25),
                 padding: _scaler.getPadding(0.4, 0.0),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
@@ -235,16 +239,16 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
                     color: !_userStore.isLoggedIn
                         ? Colors.transparent
                         : !widget.merchantInfo.followers
-                                .contains(int.parse(_userStore.uid))
-                            ? Colors.transparent
-                            : AppColors.primaryColor),
+                        .contains(int.parse(_userStore.uid))
+                        ? Colors.transparent
+                        : AppColors.primaryColor),
                 child: AppText(
                   text: !_userStore.isLoggedIn
                       ? Strings.follow
                       : !widget.merchantInfo.followers
-                              .contains(int.parse(_userStore.uid))
-                          ? Strings.follow
-                          : Strings.following,
+                      .contains(int.parse(_userStore.uid))
+                      ? Strings.follow
+                      : Strings.following,
                   color: Colors.white,
                   style: AppTextStyle.medium,
                   maxLine: 1,
@@ -298,34 +302,34 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
             SizedBox(
               height: _scaler.getHeight(
                   widget.merchantInfo.phoneNumber != null &&
-                          widget.merchantInfo.phoneNumber != ""
+                      widget.merchantInfo.phoneNumber != ""
                       ? 0.5
                       : 0),
             ),
             widget.merchantInfo.phoneNumber != null &&
-                    widget.merchantInfo.phoneNumber != ""
+                widget.merchantInfo.phoneNumber != ""
                 ? Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.call,
-                        size: _scaler.getTextSize(11),
-                        color: AppColors.starYellow,
-                      ),
-                      SizedBox(
-                        width: _scaler.getWidth(0.5),
-                      ),
-                      GestureDetector(
-                        onTap: phoneClick,
-                        child: AppText(
-                          text: widget.merchantInfo.phoneNumber,
-                          style: AppTextStyle.medium,
-                          color: AppColors.starYellow,
-                          size: _scaler.getTextSize(10),
-                        ),
-                      ),
-                    ],
-                  )
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.call,
+                  size: _scaler.getTextSize(11),
+                  color: AppColors.starYellow,
+                ),
+                SizedBox(
+                  width: _scaler.getWidth(0.5),
+                ),
+                GestureDetector(
+                  onTap: phoneClick,
+                  child: AppText(
+                    text: widget.merchantInfo.phoneNumber,
+                    style: AppTextStyle.medium,
+                    color: AppColors.starYellow,
+                    size: _scaler.getTextSize(10),
+                  ),
+                ),
+              ],
+            )
                 : Container(),
             SizedBox(
               height: _scaler.getHeight(1),
@@ -468,27 +472,34 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
               colorFull: true),
           widget.merchantInfo.mtype.toLowerCase() != "online"
               ? _buildDetailRow(
-                  title: "Location",
-                  desc: Row(
-                    children: [
-                      Expanded(
-                        child: AppText(
-                          text: widget.merchantInfo.address ?? "",
-                          style: AppTextStyle.medium,
-                          size: _scaler.getTextSize(10),
-                        ),
-                      ),
-                      ImageView(
-                        path: Assets.navigate,
-                        width: _scaler.getTextSize(14),
-                        color: AppColors.primaryColor1,
-                      )
-                    ],
+              title: "Location",
+              desc: Row(
+                children: [
+                  Expanded(
+                    child: AppText(
+                      text: widget.merchantInfo.address ?? "",
+                      style: AppTextStyle.medium,
+                      size: _scaler.getTextSize(10),
+                    ),
                   ),
-                  colorFull: false)
+                  InkWell(
+                    onTap:(){
+                      launchMap(_userStore.address1.toString());
+                      print('merchnatDetail${_userStore.address1.toString()}');
+                    },
+                    child:  ImageView(
+                      path: Assets.navigate,
+                      width: _scaler.getTextSize(14),
+                      color: AppColors.primaryColor1,) ,
+                  )
+
+
+                ],
+              ),
+              colorFull: false)
               : Container(
-                  width: 0,
-                ),
+            width: 0,
+          ),
           _buildDetailRow(
               title: "Website",
               desc: GestureDetector(
@@ -512,7 +523,7 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
   Widget _buildDetailRow({String title, Widget desc, bool colorFull}) {
     return Container(
       color:
-          colorFull ? AppColors.textColorLight.withOpacity(0.1) : Colors.white,
+      colorFull ? AppColors.textColorLight.withOpacity(0.1) : Colors.white,
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: [
@@ -548,10 +559,10 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
       builder: (context) {
         return _merchantDetailStore.loading
             ? Container(
-                margin: _scaler.getMargin(4, 0),
-                child: CustomProgressIndicatorWidget(
-                  full: false,
-                ))
+            margin: _scaler.getMargin(4, 0),
+            child: CustomProgressIndicatorWidget(
+              full: false,
+            ))
             : _buildProductsList();
       },
     );
@@ -559,17 +570,17 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
 
   Widget _buildProductsList() {
     return _merchantDetailStore.productsList != null &&
-            _merchantDetailStore.productsList.length > 0
+        _merchantDetailStore.productsList.length > 0
         ? ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            padding: _scaler.getPadding(1, 0),
-            shrinkWrap: true,
-            itemBuilder: (context, position) {
-              return _buildListItem(
-                  _merchantDetailStore.productsList[position]);
-            },
-            itemCount: _merchantDetailStore.productsList.length,
-          )
+      physics: NeverScrollableScrollPhysics(),
+      padding: _scaler.getPadding(1, 0),
+      shrinkWrap: true,
+      itemBuilder: (context, position) {
+        return _buildListItem(
+            _merchantDetailStore.productsList[position]);
+      },
+      itemCount: _merchantDetailStore.productsList.length,
+    )
         : Container(margin: _scaler.getMargin(3, 0), child: NoDataError());
   }
 
@@ -577,13 +588,18 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, Routes.productDetail,
-                arguments: ProductDetailArgs(
-                    productModel: product, merchantModel: widget.merchantInfo))
+            arguments: ProductDetailArgs(
+                productModel: product, merchantModel: widget.merchantInfo))
             .then((value) {
           var data = value as ProductModel;
           _merchantDetailStore.productsList
               .lastWhere((element) => element.id == data.id)
-              .liked = data.liked;
+              .likes = data.likes;
+
+          _merchantDetailStore.productsList
+              .lastWhere((element) => element.id == data.id)
+              .favorites = data.favorites;
+
 
           setState(() {});
         });
@@ -652,37 +668,43 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
                       ),
                       Row(
                         children: [
+                          _handleErrorLikeMessage(),
+                          _handleSuccessLikeMessage(),
                           !_userStore.isLoggedIn
                               ? GestureDetector(
-                                  onTap: () {
-                                    CommonDialogs.showLoginDialog(context);
-                                  },
-                                  child: Icon(
-                                    Icons.favorite_border,
-                                    color: AppColors.textColorDark,
-                                    size: _scaler.getTextSize(14),
-                                  ),
-                                )
+                            onTap: () {
+                              CommonDialogs.showLoginDialog(context);
+                            },
+                            child: Icon(
+                              Icons.favorite_border,
+                              color: AppColors.textColorDark,
+                              size: _scaler.getTextSize(14),
+                            ),
+                          )
                               : LikeWidget(
-                                  liked:
-                                      (product.liked != null) && product.liked,
-                                  likeCallback: (isLiked) {
-                                    Future.delayed(Duration(
-                                      milliseconds: 1,
-                                    )).then((value) {
-                                      setState(() {
-                                        product.liked = isLiked;
-                                      });
-                                      isLiked
-                                          ? _productStore.addWish(
-                                              productId: product.id.toString(),
-                                              uid: _userStore.uid)
-                                          : _productStore.removeWish(
-                                              productId: product.id.toString(),
-                                              uid: _userStore.uid);
-                                    });
-                                  },
-                                ),
+                            liked:
+                            (product.likes != null) && product.likes.isLiked,
+                            likeCallback: (isLiked) {
+                              Future.delayed(Duration(
+                                milliseconds: 1,
+                              )).then((value) {
+                                setState(() {
+                                  if(product.likes==null){
+                                    product.likes=Likes(id: 0,buyerId: int.parse( _userStore.uid), isLiked: false,productId: int.parse(product.id.toString()));
+                                  }
+
+                                  product.likes.isLiked = isLiked;
+                                });
+                                isLiked
+                                    ? _productStore.addWish(
+                                    productId: product.id.toString(),
+                                    uid: _userStore.uid)
+                                    : _productStore.removeWish(
+                                    productId: product.id.toString(),
+                                    uid: _userStore.uid);
+                              });
+                            },
+                          ),
                           SizedBox(
                             width: _scaler.getWidth(1),
                           ),
@@ -738,25 +760,25 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
       showDialog(
           context: context,
           builder: (BuildContext context) => CallSMSDialog(
-                callClick: () {
-                  launch("tel:${widget.merchantInfo.phoneNumber}");
-                  Navigator.of(context).pop();
-                },
-                smsClick: () {
-                  launch("sms:${widget.merchantInfo.phoneNumber}");
-                  Navigator.of(context).pop();
-                },
-                cancelClick: () {
-                  Navigator.of(context).pop();
-                },
-              ));
+            callClick: () {
+              launch("tel:${widget.merchantInfo.phoneNumber}");
+              Navigator.of(context).pop();
+            },
+            smsClick: () {
+              launch("sms:${widget.merchantInfo.phoneNumber}");
+              Navigator.of(context).pop();
+            },
+            cancelClick: () {
+              Navigator.of(context).pop();
+            },
+          ));
     } else {
       showDialog(
           context: context,
           builder: (BuildContext context) => CommonMessageDialog(
-                message:
-                    "Merchant has not activated yet. Please try again later!",
-              ));
+            message:
+            "Merchant has not activated yet. Please try again later!",
+          ));
     }
   }
 
@@ -764,21 +786,29 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
     return Center(
       child: PopupMenuButton<ProductOptions>(
         onSelected: (selected) {
-          if (selected == ProductOptions.like) {
+          if (selected == ProductOptions.favourite) {
+
             if (!_userStore.isLoggedIn)
               CommonDialogs.showLoginDialog(context);
             else {
               setState(() {
-                model.liked = !model.liked;
+                if(model.favorites==null){
+                  model.favorites=Favorites(id: 0,buyerId: int.parse( _userStore.uid), isFavorite: false,productId: int.parse(model.id.toString()));
+                }
+
+               model.favorites.isFavorite = !model.favorites.isFavorite;
               });
 
-              model.liked
-                  ? _productStore.addWish(
-                      uid: _userStore.uid, productId: model.id.toString())
-                  : _productStore.removeWish(
-                      uid: _userStore.uid, productId: model.id.toString());
+              print( model.favorites.isFavorite);
+
+             model.favorites.isFavorite
+                  ? _productStore.addFavourite(
+                  uid: _userStore.uid, productId: model.id.toString())
+                  : _productStore.removeFavourite(
+                  uid: _userStore.uid, productId: model.id.toString());
             }
-          } else if (selected == ProductOptions.cart) {
+          }
+          else if (selected == ProductOptions.cart) {
             if (!_userStore.isLoggedIn)
               CommonDialogs.showLoginDialog(context);
             else
@@ -805,9 +835,9 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
         ),
         itemBuilder: (BuildContext context) => <PopupMenuEntry<ProductOptions>>[
           PopupMenuItem<ProductOptions>(
-            value: ProductOptions.like,
+            value: ProductOptions.favourite,
             child: AppText(
-              text: _userStore.isLoggedIn && model.liked
+              text: _userStore.isLoggedIn && model.favorites!= null && model.favorites.isFavorite
                   ? 'Remove from favourites'
                   : 'Add to favourites',
             ),
@@ -828,5 +858,75 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
         ],
       ),
     );
+  }
+
+
+
+  Widget _handleSuccessMessage() {
+    return Observer(
+      builder: (context) {
+        return _cartStore.successStore.successMessage.isNotEmpty
+            ? SuccessBar.showMessage(
+            _cartStore.successStore.successMessage, context)
+            : SizedBox.shrink();
+      },
+    );
+  }
+
+
+  Widget _handleSuccessFollowMessage() {
+    return Observer(
+      builder: (context) {
+        return _merchantStore.successStore.successMessage.isNotEmpty
+            ? SuccessBar.showMessage(
+            _merchantStore.successStore.successMessage, context)
+            : SizedBox.shrink();
+      },
+    );
+  }
+
+  Widget _handleErrorFollowMessage() {
+    return Observer(
+      builder: (context) {
+        if (_merchantStore.errorStore.errorMessage.isNotEmpty) {
+          return ErrorBar.showMessage(
+              _merchantStore.errorStore.errorMessage, context);
+        }
+        return SizedBox.shrink();
+      },
+    );
+  }
+
+
+  Widget _handleSuccessLikeMessage() {
+    return Observer(
+      builder: (context) {
+        return _productStore.successStore.successMessage.isNotEmpty
+            ? SuccessBar.showMessage(
+            _productStore.successStore.successMessage, context)
+            : SizedBox.shrink();
+      },
+    );
+  }
+
+  Widget _handleErrorLikeMessage() {
+    return Observer(
+      builder: (context) {
+        if (_productStore.errorStore.errorMessage.isNotEmpty) {
+          return ErrorBar.showMessage(
+              _productStore.errorStore.errorMessage, context);
+        }
+        return SizedBox.shrink();
+      },
+    );
+  }
+
+  void launchMap(String address) async {
+    String query = Uri.encodeComponent(address);
+    String googleUrl = "https://www.google.com/maps/search/?api=1&query=$query";
+
+    if (await canLaunch(googleUrl)) {
+      await launch(googleUrl);
+    }
   }
 }

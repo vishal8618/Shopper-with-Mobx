@@ -8,10 +8,13 @@ import 'package:greetings_world_shopper/constants/strings.dart';
 import 'package:greetings_world_shopper/models/cart/cart_item_model.dart';
 import 'package:greetings_world_shopper/stores/cart_store.dart';
 import 'package:greetings_world_shopper/stores/user_store.dart';
+import 'package:greetings_world_shopper/ui/checkout/checkout.dart';
 import 'package:greetings_world_shopper/utils/device/device_utils.dart';
 import 'package:greetings_world_shopper/utils/error_bar.dart';
+import 'package:greetings_world_shopper/widgets/address_dialog.dart';
 import 'package:greetings_world_shopper/widgets/app_text.dart';
 import 'package:greetings_world_shopper/widgets/app_text_field.dart';
+import 'package:greetings_world_shopper/widgets/common_message_dialog.dart';
 import 'package:greetings_world_shopper/widgets/image_view.dart';
 import 'package:greetings_world_shopper/widgets/no_data_error.dart';
 import 'package:greetings_world_shopper/widgets/progress_indicator_widget.dart';
@@ -42,7 +45,7 @@ class _CartScreenState extends State<CartScreen> {
     _userStore = Provider.of<UserStore>(context);
     _cartStore = Provider.of<CartStore>(context);
 
-    if (!_cartStore.loading && initial) _cartStore.getCart(uid: _userStore.uid);
+    if (!_cartStore.loading && initial &&  Routes.currentRoute== Routes.cart) _cartStore.getCart(uid: _userStore.uid);
     initial = false;
   }
 
@@ -68,7 +71,7 @@ class _CartScreenState extends State<CartScreen> {
                 _buildItems(),
                 _buildButtons(),
                 _handleErrorMessage(),
-                _cartStore.loading
+               _cartStore.loading
                     ? CustomProgressIndicatorWidget()
                     : Container(),
               ],
@@ -149,7 +152,7 @@ class _CartScreenState extends State<CartScreen> {
                             height: _scaler.getHeight(0.3),
                           ),
                           AppText(
-                            text: "\$${item.cartItem.totalAmount}",
+                            text: "Price: \$${item.cartItem.product.price * item.cartItem.itemQuantity}"  ,
                             color: AppColors.textColorDark,
                             style: AppTextStyle.medium,
                             size: _scaler.getTextSize(12.4),
@@ -196,8 +199,11 @@ class _CartScreenState extends State<CartScreen> {
                           _cartStore.updateDeliveryType(
                               id: item.cartItem.id.toString(), type: data);
                         },
-                        value: item.cartItem.deliveryType,
+                            hint: Text('Select Type'),
+
+                            value: item.cartItem.deliveryType,
                       )),
+
                     ),
                     Container(
                       padding: _scaler.getPadding(0.1, 1),
@@ -270,11 +276,29 @@ class _CartScreenState extends State<CartScreen> {
                     height: _scaler.getHeight(3.5),
                     padding: _scaler.getPadding(1, 0),
                     color: AppColors.buttonBg,
-                    onPressed: () => Navigator.of(context)
-                        .pushNamed(Routes.checkout)
-                        .then((value) {
-                      setState(() {});
-                    }),
+                    onPressed: () {
+                      print('Address=====>${_userStore.address1.length}  - ${(_userStore.address1 == null)}');
+
+                      if(_userStore.address1.isEmpty||_userStore.address1.trim().compareTo("null") == 0 || _userStore.address1 == null){
+                        showCodeInfoDialog();
+
+                      }else{
+                        Navigator.of(context)
+                            .pushNamed(Routes.checkout)
+                            .then((value) {
+                          if(mounted) setState(() {});
+                        });
+                      }
+                     /* if (_userStore.address1.trim().compareTo("null") == 0 || _userStore.address1 == null) {
+                        showCodeInfoDialog();
+                      } else {
+                        Navigator.of(context)
+                            .pushNamed(Routes.checkout)
+                            .then((value) {
+                          if(mounted) setState(() {});
+                        });
+                      }*/
+                    },
                     child: AppText(
                       text: Strings.securePay,
                       color: Colors.white,
@@ -354,5 +378,15 @@ class _CartScreenState extends State<CartScreen> {
 
   Future<bool> pop() async {
     Navigator.of(context).pop();
+
   }
+
+  showCodeInfoDialog() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => AddressDialog());
+  }
+
+
 }

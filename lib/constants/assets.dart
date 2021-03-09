@@ -2,7 +2,7 @@ class Assets {
   Assets._();
 
 
-  static const String logo = "assets/images/logo.png";
+  static const String logo = "assets/images/mall-logo.png";
   static const String lottieNoDataError = "assets/animations/no_data.json";
 
   static const String home = "assets/images/home.png";

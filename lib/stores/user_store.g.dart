@@ -164,16 +164,6 @@ mixin _$UserStore on _UserStore, Store {
     return _$userDetailsAsyncAction.run(() => super.userDetails(uid: uid));
   }
 
-  final _$updateUserDetailsAsyncAction =
-      AsyncAction('_UserStore.updateUserDetails');
-
-  @override
-  Future<dynamic> updateUserDetails(String uid,
-      {String fullName, String phone}) {
-    return _$updateUserDetailsAsyncAction.run(
-        () => super.updateUserDetails(uid, fullName: fullName, phone: phone));
-  }
-
   final _$updateUserAddressAsyncAction =
       AsyncAction('_UserStore.updateUserAddress');
 

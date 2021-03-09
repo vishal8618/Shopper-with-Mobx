@@ -43,6 +43,8 @@ class _SplashScreenState extends State<SplashScreen> {
         child: ImageView(
           path: Assets.logo,
           color: AppColors.starYellow,
+          height: _scaler.getHeight(50),
+          width: _scaler.getWidth(50),
         ),
       ),
     );

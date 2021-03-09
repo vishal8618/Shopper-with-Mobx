@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:greetings_world_shopper/data/network/constants/endpoints.dart';
 import 'package:greetings_world_shopper/models/merchants/merchant_model.dart';
+import 'package:greetings_world_shopper/models/merchnat_follow_model/merchant_follow_order.dart';
 import 'package:greetings_world_shopper/models/report/report_model.dart';
 import '../../dio_client.dart';
 
@@ -38,14 +39,14 @@ class MerchantsApi {
   }
 
   // follow merchant
-  Future<String> followMerchant({String uid, String merchantId}) async {
+  Future<FollowModel> followMerchant({String uid, String merchantId}) async {
     try {
       var data = Map<String, dynamic>();
       data["buyer_id"] = uid;
       data["merchant_id"] = merchantId;
 
       final res = await _dioClient.post(Endpoints.followMerchant, data: data);
-      return res.data.toString();
+      return followModelFromJson(json.encode(res.data));
     } catch (e) {
       print(e.toString());
       throw e;
@@ -53,14 +54,14 @@ class MerchantsApi {
   }
 
   // follow merchant
-  Future<String> unFollowMerchant({String uid, String merchantId}) async {
+  Future<FollowModel> unFollowMerchant({String uid, String merchantId}) async {
     try {
       var data = Map<String, dynamic>();
       data["buyer_id"] = uid;
       data["merchant_id"] = merchantId;
 
       final res = await _dioClient.post(Endpoints.unFollowMerchant, data: data);
-      return res.data.toString();
+      return followModelFromJson(json.encode(res.data));
     } catch (e) {
       print(e.toString());
       throw e;

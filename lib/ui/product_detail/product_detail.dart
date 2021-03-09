@@ -189,37 +189,40 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   children: [
                     !_userStore.isLoggedIn
                         ? GestureDetector(
-                            onTap: () {
-                              CommonDialogs.showLoginDialog(context);
-                            },
-                            child: Icon(
-                              Icons.favorite_border,
-                              color: AppColors.textColorDark,
-                              size: _scaler.getTextSize(14),
-                            ),
-                          )
+                      onTap: () {
+                        CommonDialogs.showLoginDialog(context);
+                      },
+                      child: Icon(
+                        Icons.favorite_border,
+                        color: AppColors.textColorDark,
+                        size: _scaler.getTextSize(14),
+                      ),
+                    )
                         : LikeWidget(
-                            liked: (widget.args.productModel.liked != null) &&
-                                widget.args.productModel.liked,
-                            likeCallback: (isLiked) {
-                              Future.delayed(Duration(
-                                milliseconds: 1,
-                              )).then((value) {
-                                setState(() {
-                                  widget.args.productModel.liked = isLiked;
-                                });
-                                isLiked
-                                    ? _productStore.addWish(
-                                        productId: widget.args.productModel.id
-                                            .toString(),
-                                        uid: _userStore.uid)
-                                    : _productStore.removeWish(
-                                        productId: widget.args.productModel.id
-                                            .toString(),
-                                        uid: _userStore.uid);
-                              });
-                            },
-                          ),
+                      liked: (widget.args.productModel.likes != null) &&
+                          widget.args.productModel.likes.isLiked,
+                      likeCallback: (isLiked) {
+                        Future.delayed(Duration(
+                          milliseconds: 1,
+                        )).then((value) {
+                          setState(() {
+                            if(widget.args.productModel.likes==null){
+                              widget.args.productModel.likes=Likes(id: 0,buyerId: int.parse( _userStore.uid), isLiked: false,productId: int.parse(widget.args.productModel.id.toString()));
+                            }
+                            widget.args.productModel.likes.isLiked = isLiked;
+                          });
+                          isLiked
+                              ? _productStore.addWish(
+                              productId: widget.args.productModel.id
+                                  .toString(),
+                              uid: _userStore.uid)
+                              : _productStore.removeWish(
+                              productId: widget.args.productModel.id
+                                  .toString(),
+                              uid: _userStore.uid);
+                        });
+                      },
+                    ),
                     SizedBox(
                       width: _scaler.getWidth(1),
                     ),
@@ -340,9 +343,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             padding: _scaler.getPadding(1, 0),
             shape: RoundedRectangleBorder(
                 side: BorderSide(
-              width: 1,
-              color: AppColors.buttonBg,
-            )),
+                  width: 1,
+                  color: AppColors.buttonBg,
+                )),
             onPressed: () {
               showReturnPolicyDialog();
             },
@@ -373,7 +376,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       builder: (context) {
         return _cartStore.successStore.successMessage.isNotEmpty
             ? SuccessBar.showMessage(
-                _cartStore.successStore.successMessage, context)
+            _cartStore.successStore.successMessage, context)
             : SizedBox.shrink();
       },
     );
@@ -384,33 +387,39 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) => CommonMessageDialog(
-              message: widget.args.merchantModel.returnPolicy == null ||
-                      widget.args.merchantModel.returnPolicy.name == null
-                  ? "No returns for this product"
-                  : widget.args.merchantModel.returnPolicy.name,
-              title: Strings.returnPolicy,
-            ));
+          message: widget.args.merchantModel.returnPolicy == null ||
+              widget.args.merchantModel.returnPolicy.name == null
+              ? "No returns for this product"
+              : widget.args.merchantModel.returnPolicy.name,
+          title: Strings.returnPolicy,
+        ));
   }
 
   Widget getProductOptions(ProductModel model) {
     return Center(
       child: PopupMenuButton<ProductOptions>(
         onSelected: (selected) {
-          if (selected == ProductOptions.like) {
+          if (selected == ProductOptions.favourite) {
             if (!_userStore.isLoggedIn)
               CommonDialogs.showLoginDialog(context);
             else {
               setState(() {
-                model.liked = !model.liked;
+                if(model.favorites==null){
+                  model.favorites=Favorites(id: 0,buyerId: int.parse( _userStore.uid), isFavorite: false,productId: int.parse(model.id.toString()));
+                }
+
+                model.favorites.isFavorite = !model.favorites.isFavorite;
               });
 
-              model.liked
-                  ? _productStore.addWish(
-                      uid: _userStore.uid, productId: model.id.toString())
-                  : _productStore.removeWish(
-                      uid: _userStore.uid, productId: model.id.toString());
+              model.favorites.isFavorite
+                  ? _productStore.addFavourite(
+                  uid: _userStore.uid, productId: model.id.toString())
+                  : _productStore.removeFavourite(
+                  uid: _userStore.uid, productId: model.id.toString());
             }
-          } else if (selected == ProductOptions.cart) {
+          }
+
+          else if (selected == ProductOptions.cart) {
             if (!_userStore.isLoggedIn)
               CommonDialogs.showLoginDialog(context);
             else
@@ -437,9 +446,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         ),
         itemBuilder: (BuildContext context) => <PopupMenuEntry<ProductOptions>>[
           PopupMenuItem<ProductOptions>(
-            value: ProductOptions.like,
+            value: ProductOptions.favourite,
             child: AppText(
-              text: _userStore.isLoggedIn && model.liked
+              text: _userStore.isLoggedIn && model.favorites.isFavorite
                   ? 'Remove from favourites'
                   : 'Add to favourites',
             ),

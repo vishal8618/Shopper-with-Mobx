@@ -36,7 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
     _homeStore = Provider.of<HomeStore>(context);
     _cartStore = Provider.of<CartStore>(context);
     _userStore = Provider.of<UserStore>(context);
-    if (_userStore.isLoggedIn) _cartStore.getCart(uid: _userStore.uid);
+    if (_userStore.isLoggedIn && Routes.currentRoute== Routes.home) _cartStore.getCart(uid: _userStore.uid);
+
   }
 
   @override

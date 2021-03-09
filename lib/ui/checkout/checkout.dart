@@ -28,14 +28,27 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   ScreenScaler _scaler;
   CartStore _cartStore;
   UserStore _userStore;
+  bool initial;
+  @override
+  void initState() {
+    super.initState();
+    print("===>initState");
+    // _imagePicker = ImagePicker();
+    initial = true;
+   WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_cartStore.loading) _cartStore.getCart(uid: _userStore.uid);
+    });
+
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
     _userStore = Provider.of<UserStore>(context);
     _cartStore = Provider.of<CartStore>(context);
-    if (!_cartStore.loading) _cartStore.getCart(uid: _userStore.uid);
+    initial = false;
+    print(
+        "addressCheckout====>${_userStore.address1 + "," + _userStore.state + "," + _userStore.userCity + "," + _userStore.userZip}");
   }
 
   @override
@@ -68,6 +81,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           color: Colors.white,
                           child: Column(
                             children: [
+
                               _buildOwnInfo(),
                               _buildShopperInfo(),
                               _buildDetails()
@@ -125,24 +139,29 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             children: [
               Expanded(
                 child: AppText(
-                  text: "1100 Market S, Ste 120, Chattonga, TN 91756",
+                  text: _userStore.address1 +
+                      "," +
+                      _userStore.state +
+                      "," +
+                      _userStore.userCity +
+                      "," +
+                      _userStore.userZip,
                   style: AppTextStyle.medium,
                   size: _scaler.getTextSize(11.5),
                 ),
               ),
               IconButton(
                   icon: Icon(Icons.edit),
-                  onPressed: () async {
-
-                    Navigator.of(context).pushNamed(Routes.completeAddress);
-
-
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(Routes.completeAddress,arguments: 'checkout');
                   })
             ],
           ),
         ),
       ],
+
     );
+
   }
 
   Widget _buildShopperInfo() {
@@ -188,6 +207,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   Widget _buildDetails() {
+    print("===>_buildDetails");
     return Column(
       children: [
         SizedBox(
@@ -227,24 +247,31 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               .map((e) => getAmountCell(
                   e.cartItem.product.name,
                   e.cartItem.itemQuantity.toString(),
-                  "\$${e.cartItem.totalAmount.toString()}"))
+                  "\$${e.cartItem.product.price.toString()}"))
               .toList(),
         ),
         SizedBox(
           height: _scaler.getHeight(2),
         ),
-        getAmountCell(Strings.subTotal, "", "\$0", bold: true),
-        getAmountCell(Strings.taxes, "", "\$0"),
-        getAmountCell(Strings.shipping, "", "\$0"),
-        getAmountCell(Strings.convinceFee, "", "\$0"),
+        getAmountCell(
+            Strings.subTotal, "", "\$${_cartStore.cartTotal.toString()}",
+            bold: true),
+        getAmountCell(Strings.taxes, "",
+            "\$${_cartStore.taxCharges.toDouble().toStringAsFixed(2).trim()}"),
+        getAmountCell(Strings.shipping, "",
+            "\$${_cartStore.shippingAmount.toStringAsFixed(2).trim()}"),
+        getAmountCell(Strings.convinceFee, "",
+            "\$${_cartStore.convenienceFee.toDouble()}"),
         SizedBox(
           height: _scaler.getHeight(2),
         ),
-        getAmountCell(Strings.yourTotal, "", "\$0", bold: true),
+        getAmountCell(Strings.yourTotal, "",
+            "\$${_cartStore.cartSubTotal.toStringAsFixed(2).trim()}",
+            bold: true),
         getAmountCell(
           Strings.estimatedDelivery,
           "",
-          "27 November 2020",
+          _cartStore.deliveryEstimated.toString(),
         ),
       ],
     );
@@ -252,6 +279,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   Widget getAmountCell(String item, String quantity, String price,
       {bool bold}) {
+    print("===>getAmountCell");
+
     return Column(
       children: [
         Row(
@@ -320,7 +349,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               padding: _scaler.getPadding(1, 0),
               color: AppColors.buttonBg,
               onPressed: () {
-                processPayment();
+                 processPayment();
+              //  Navigator.of(context).pushNamed(Routes.creditCard);
               },
               child: AppText(
                 text: Strings.payNow,
@@ -359,6 +389,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   Widget _handleErrorMessage() {
+    print("===>_handleErrorMessage");
     return Observer(
       builder: (context) {
         return _cartStore.errorStore.errorMessage.isNotEmpty
@@ -369,6 +400,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   showCodeInfoDialog() {
+    print("===>showCodeInfoDialog");
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -379,6 +411,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   processPayment() async {
+    print("===>processPayment");
+
+    // _cartStore.success=false;
+
+
     var result = await Navigator.of(context).pushNamed(Routes.creditCard);
 
     if (result != null && result is CreditCardModel) {
@@ -395,4 +432,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Future<bool> pop() async {
     Navigator.of(context).pop();
   }
+
+
 }

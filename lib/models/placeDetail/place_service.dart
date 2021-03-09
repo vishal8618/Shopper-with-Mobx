@@ -10,6 +10,7 @@ class Place {
   String zipCode;
   String administrativeArea;
   String subAdministrativeArea;
+  String country;
 
   Place({
     this.streetNumber,
@@ -20,7 +21,7 @@ class Place {
 
   @override
   String toString() {
-    return 'Place(streetNumber: $streetNumber, street: $street, city: $city, zipCode: $zipCode, administrativeArea: $administrativeArea, subAdministrativeArea: $subAdministrativeArea)';
+    return 'Place(streetNumber: $streetNumber, street: $street, city: $city, zipCode: $zipCode, administrativeArea: $administrativeArea, subAdministrativeArea: $subAdministrativeArea, $country, country:)';
   }
 }
 
@@ -58,6 +59,9 @@ class PlaceApiProvider {
           }
           if (type.contains('administrative_area_level_1')) {
             place.administrativeArea = c['long_name'];
+          }
+          if(type.contains('country')){
+            place.country = c['short_name'];
           }
         }
         );

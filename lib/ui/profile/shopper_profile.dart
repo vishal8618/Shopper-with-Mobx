@@ -41,20 +41,18 @@ class _ShopperProfileState extends State<ShopperProfile> {
           ],
         ),
       ),
-     /* backgroundColor: Colors.white,
+      /* backgroundColor: Colors.white,
       body: _buildBody(),*/
-
     );
   }
+
   Widget _buildHeader() {
     return Container(
       height: _scaler.getHeight(22),
       child: Stack(
         children: [
           GestureDetector(
-            onTap: () {
-
-            },
+            onTap: () {},
             child: ShapeOfView(
               elevation: 4,
               bgColor: AppColors.primaryColor,
@@ -65,7 +63,15 @@ class _ShopperProfileState extends State<ShopperProfile> {
               ),
               height: _scaler.getHeight(14),
               child: Stack(
-              /* children: [
+                children: [
+                  Container(
+                    decoration:
+                        BoxDecoration(gradient: AppColors.primaryGradient),
+                  ),
+                ],
+              ),
+              /*    child: Stack(
+              */ /* children: [
                   Container(
                     decoration: BoxDecoration(
                         gradient: AppColors.transParentGradient,
@@ -75,8 +81,8 @@ class _ShopperProfileState extends State<ShopperProfile> {
                     decoration:
                     BoxDecoration(gradient: AppColors.primaryGradient),
                   ),
-                ],*/
-              ),
+                ],*/ /*
+              ),*/
             ),
           ),
           Center(
@@ -85,17 +91,22 @@ class _ShopperProfileState extends State<ShopperProfile> {
               height: _scaler.getHeight(12),
               margin: _scaler.getMarginLTRB(0, 6, 0, 0),
               child: ClipPolygon(
-                    sides: 6,
-                    borderRadius: 5.0,
-                    child: ImageView(
-                      path: Assets.user,
-                      height: _scaler.getHeight(12),
-                      width: _scaler.getHeight(10),
-                    ),
-                  ),
-
+                sides: 6,
+                borderRadius: 5.0,
+                child: Container(
+                    height: 12,
+                    width: 10,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30.0),
+                        gradient: AppColors.transParentGradient,
+                        image: DecorationImage(
+                            image: _userStore.image != null
+                                ? FileImage(_userStore.image)
+                                : NetworkImage(_userStore.userImage),
+                            fit: BoxFit.contain))),
               ),
             ),
+          ),
         ],
       ),
     );
@@ -121,6 +132,7 @@ class _ShopperProfileState extends State<ShopperProfile> {
       ),
     );
   }
+
   Widget _getImage() {
     return Container(
       width: _scaler.getWidth(32),
@@ -202,7 +214,7 @@ class _ShopperProfileState extends State<ShopperProfile> {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).pushNamed(Routes.creditCard);
+                // Navigator.of(context).pushNamed(Routes.creditCard);
               },
               child: Container(
                 margin:
@@ -229,7 +241,7 @@ class _ShopperProfileState extends State<ShopperProfile> {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).pushNamed(Routes.completeAddress);
+                Navigator.of(context).pushNamed(Routes.completeAddress , arguments: 'shopperProfile');
               },
               child: Container(
                 margin:

@@ -1,1 +1,1 @@
-enum ProductOptions { like, cart, report }
+enum ProductOptions { like, cart, report,favourite}

@@ -78,8 +78,6 @@ class SharedPreferenceHelper {
     });
   }
 
-
-
   Future<String> get getPhoneNumber {
     return _sharedPreference.then((prefs) {
       return prefs.getString(Preferences.phone_number) ?? null;
@@ -103,8 +101,7 @@ class SharedPreferenceHelper {
       preference.setString(Preferences.image, value);
     });
   }
-
-
+//address
   Future<String> get getAddress {
     return _sharedPreference.then((prefs) {
       return prefs.getString(Preferences.address) ?? null;
@@ -114,6 +111,19 @@ class SharedPreferenceHelper {
   Future<void> saveAddress(String value) async {
     return _sharedPreference.then((preference) {
       preference.setString(Preferences.address, value);
+    });
+  }
+
+//address1
+  Future<String> get getAddress1 {
+    return _sharedPreference.then((prefs) {
+      return prefs.getString(Preferences.address1) ?? null;
+    });
+  }
+
+  Future<void> saveAddress1(String value) async {
+    return _sharedPreference.then((preference) {
+      preference.setString(Preferences.address1, value);
     });
   }
 
@@ -170,6 +180,31 @@ class SharedPreferenceHelper {
     });
   }
 
+  //country name
+
+  Future<String> get getCountry {
+    return _sharedPreference.then((prefs) {
+      return prefs.getString(Preferences.country) ?? null;
+    });
+  }
+
+  Future<void> saveCountry(String value) async {
+    return _sharedPreference.then((preference) {
+      preference.setString(Preferences.country, value);
+    });
+  }
+
+  Future<String> get getCallback {
+    return _sharedPreference.then((prefs) {
+      return prefs.getString(Preferences.callBack) ?? null;
+    });
+  }
+
+  Future<void> saveCallback(String value) async {
+    return _sharedPreference.then((preference) {
+      preference.setString(Preferences.callBack, value);
+    });
+  }
   // Theme:------------------------------------------------------
   Future<bool> get isDarkMode {
     return _sharedPreference.then((prefs) {

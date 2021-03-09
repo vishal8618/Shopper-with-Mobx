@@ -62,11 +62,14 @@ class Strings {
   static const String reportNow = "Report Now";
   static const String reportCancel = "Cancel";
 
+  static const String addAddress = "Please Add Address";
+  static const String address = "Add Address";
 
 //  errors
   static const String emailError= "emailError";
   static const String passwordError= "passwordError";
   static const String nameError= "nameError";
+  static const String cityError= "Please fill city";
   static const String phoneError= "phoneError";
   static const String reasonError= "reasonError";
 

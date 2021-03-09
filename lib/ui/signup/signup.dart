@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:greetings_world_shopper/constants/assets.dart';
@@ -54,7 +55,7 @@ class _SignupScreenState extends State<SignupScreen> {
   // ImagePicker _imagePicker;
 
   bool initial;
-
+  Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
   @override
   void initState() {
     super.initState();
@@ -163,8 +164,6 @@ class _SignupScreenState extends State<SignupScreen> {
                                           ),
                                         ),
                                         onTap: () {
-
-
                                           showDialog(
                                               context: context,
                                               builder: (BuildContext context) =>
@@ -205,6 +204,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 hintText: Strings.fullName,
                                 controller: nameController,
                                 inputType: TextInputType.name,
+
                                 prefix: Icon(
                                   Icons.account_circle,
                                   color: nameFocus
@@ -232,6 +232,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               child: AppTextField(
                                 hintText: Strings.email,
                                 controller: emailController,
+
                                 inputType: TextInputType.emailAddress,
                                 prefix: Icon(
                                   Icons.email,
@@ -240,11 +241,22 @@ class _SignupScreenState extends State<SignupScreen> {
                                       : AppColors.textColorDark,
                                   size: scaler.getTextSize(14),
                                 ),
+
                                 validate: (text) {
-                                  return isEmail(text)
+                                  RegExp regex = new RegExp(pattern);
+                                  if (text.trim().isEmpty) {
+                                    return AppLocalizations.of(context)
+                                        .translate(Strings.emailError);
+                                  } else if (!(text.contains(regex))){
+                                    return "Invalid Email";
+
+                                  } else {
+                                    return null;
+                                  }
+                                  /* return isEmail(text)
                                       ? null
                                       : AppLocalizations.of(context)
-                                          .translate(Strings.emailError);
+                                          .translate(Strings.emailError);*/
                                 },
                               ),
                             ),
@@ -387,4 +399,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
     return Container();
   }
+
+
 }

@@ -1,17 +1,17 @@
 // To parse this JSON data, do
 //
-//     final updateCart = updateCartFromJson(jsonString);
+//     final updateCartModel = updateCartModelFromJson(jsonString);
 
 import 'dart:convert';
 
-UpdateCartModel updateCartFromJson(String str) => UpdateCartModel.fromJson(json.decode(str));
+UpdateCartModel updateCartModelFromJson(String str) => UpdateCartModel.fromJson(json.decode(str));
 
-String updateCartToJson(UpdateCartModel data) => json.encode(data.toJson());
+String updateCartModelToJson(UpdateCartModel data) => json.encode(data.toJson());
 
 class UpdateCartModel {
   UpdateCartModel({
     this.message,
-    this.itemCount
+    this.itemCount,
   });
 
   String message;

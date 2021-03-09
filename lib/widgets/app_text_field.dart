@@ -39,7 +39,7 @@ class AppTextField extends StatelessWidget {
     this.prefix,
     this.inputType,
     this.maxLines,
-   });
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -58,12 +58,16 @@ class AppTextField extends StatelessWidget {
               ? [
                   new FilteringTextInputFormatter.allow(RegExp('[0-9]')),
                 ]
-              : null,
+              : inputType == TextInputType.emailAddress
+                  ? [
+                      new FilteringTextInputFormatter.allow(RegExp('[a-z0-9@.]')),
+                    ]
+                  : null,
       controller: controller,
-      enabled: editabled == null?true: editabled,
+      enabled: editabled == null ? true : editabled,
       focusNode: node == null ? null : node,
       maxLength: maxLength ?? null,
-      cursorColor: AppColors.primaryColor1,
+      cursorColor: Colors.red,
       obscureText: password != null && password,
       textInputAction: action == null ? TextInputAction.done : action,
       decoration: inputDecorationWithCurve(hint, _scaler,
@@ -101,7 +105,9 @@ class AppTextField extends StatelessWidget {
       focusedErrorBorder: UnderlineInputBorder(
         borderSide: BorderSide(color: Colors.red, width: 0.5),
       ),
+
     );
+
   }
 
   static TextStyle textFieldStyle(double size) {

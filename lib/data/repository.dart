@@ -6,7 +6,10 @@ import 'package:greetings_world_shopper/data/network/apis/user/user_api.dart';
 import 'package:greetings_world_shopper/data/sharedpref/shared_preference_helper.dart';
 import 'package:greetings_world_shopper/models/cart/cart_item_model.dart';
 import 'package:greetings_world_shopper/models/cart/update_cart_model.dart';
+import 'package:greetings_world_shopper/models/like/like_model.dart';
 import 'package:greetings_world_shopper/models/merchants/merchant_model.dart';
+import 'package:greetings_world_shopper/models/merchnat_follow_model/merchant_follow_order.dart';
+import 'package:greetings_world_shopper/models/orders/create_order_model.dart';
 import 'package:greetings_world_shopper/models/products/product_model.dart';
 import 'package:greetings_world_shopper/models/report/report_model.dart';
 import 'package:greetings_world_shopper/models/user/login_model.dart';
@@ -69,8 +72,7 @@ class Repository {
   }
 
   // get list of merchants
-  Future<List<MerchantModel>> getMerchants(
-      {String search, String tab, int limit, int offset}) async {
+  Future<List<MerchantModel>> getMerchants({String search, String tab, int limit, int offset}) async {
     return await _merchantsApi
         .getMerchants(search: search, tab: tab, limit: limit, offset: offset)
         .then((merchantsList) {
@@ -79,20 +81,20 @@ class Repository {
   }
 
   // follow merchant
-  Future<String> followMerchant({String uid, String merchantId}) async {
+  Future<FollowModel> followMerchant({String uid, String merchantId}) async {
     return await _merchantsApi
         .followMerchant(uid: uid, merchantId: merchantId)
-        .then((data) {
-      return data;
+        .then((model) {
+      return model;
     }).catchError((error) => throw error);
   }
 
   // follow merchant
-  Future<String> unFollowMerchant({String uid, String merchantId}) async {
+  Future<FollowModel> unFollowMerchant({String uid, String merchantId}) async {
     return await _merchantsApi
         .unFollowMerchant(uid: uid, merchantId: merchantId)
-        .then((data) {
-      return data;
+        .then((model) {
+      return model;
     }).catchError((error) => throw error);
   }
 
@@ -104,14 +106,21 @@ class Repository {
   }
 
   // add wish
-  Future<String> addWish({String uid, String productId}) async {
+  Future<LikeModel> addWish({String uid, String productId}) async {
     return await _productsApi
         .addWish(uid: uid, productId: productId)
-        .then((response) {
-      return response;
+        .then((model) {
+      return model;
     }).catchError((error) => throw error);
   }
-
+  // add favourite
+  Future<LikeModel> addFavourite({String uid, String productId}) async {
+    return await _productsApi
+        .addFavourite(uid: uid, productId: productId)
+        .then((model) {
+      return model;
+    }).catchError((error) => throw error);
+  }
 //product report
   Future<ReportModel> addProductReport(
       {String uid, String productId, String reason}) async {
@@ -134,13 +143,23 @@ class Repository {
   }
 
   // remove wish
-  Future<String> removeWish({String uid, String productId}) async {
+  Future<LikeModel> removeWish({String uid, String productId}) async {
     return await _productsApi
         .removeWish(uid: uid, productId: productId)
-        .then((response) {
-      return response;
+        .then((model) {
+      return model;
     }).catchError((error) => throw error);
   }
+
+  // remove favourite
+  Future<LikeModel> removeFavourite({String uid, String productId}) async {
+    return await _productsApi
+        .removeFavourite(uid: uid, productId: productId)
+        .then((model) {
+      return model;
+    }).catchError((error) => throw error);
+  }
+
 
   // add item to cart
   Future<UpdateCartModel> addCart({String id, String productId}) async {
@@ -166,12 +185,14 @@ class Repository {
     }).catchError((error) => throw error);
   }
 
-  /* // return cart items
-  Future<List<PlaceDetailModel>> getPlaceDetail({String placeId,String apiKey}) async {
-    return await _userApi.placeDetails(placeId: placeId,apiKey: apiKey).then((model) {
+// place order
+  Future<OrdersModel> createOrder({String uid, String totalAmount, String subTotal, String shippingAmount, String taxCharges, String serviceCharges, String stripeToken}) async {
+    return await _cartApi
+        .createOrder(uid: uid, totalAmount: totalAmount, subTotal: subTotal, shippingAmount: shippingAmount, taxCharges: taxCharges, serviceCharges: serviceCharges, stripeToken: stripeToken)
+        .then((model) {
       return model;
     }).catchError((error) => throw error);
-  }*/
+  }
 
   //update shopper detail
   Future<UserModel> updateProfile(String uid,
@@ -235,37 +256,55 @@ class Repository {
       _sharedPrefsHelper.savePhoneNumber(value);
 
   Future<String> get getPhoneNumber => _sharedPrefsHelper.getPhoneNumber;
-//address 1
+//address
+
   Future<void> saveAddress(String value) =>
       _sharedPrefsHelper.saveAddress(value);
 
   Future<String> get getAddress => _sharedPrefsHelper.getAddress;
+
+//address 1
+  Future<void> saveAddress1(String value) =>
+      _sharedPrefsHelper.saveAddress1(value);
+
+  Future<String> get getAddress1 => _sharedPrefsHelper.getAddress1;
+
 //address 2
 
   Future<void> saveAddress2(String value) =>
-      _sharedPrefsHelper.saveAddress(value);
+      _sharedPrefsHelper.saveAddress2(value);
 
   Future<String> get getAddress2 => _sharedPrefsHelper.getAddress2;
+
   //city
 
-  Future<void> saveCity(String value) =>
-      _sharedPrefsHelper.saveCity(value);
+  Future<void> saveCity(String value) => _sharedPrefsHelper.saveCity(value);
 
   Future<String> get getCity => _sharedPrefsHelper.getCity;
 
   //state
-  Future<void> saveState(String value) =>
-      _sharedPrefsHelper.saveState(value);
+  Future<void> saveState(String value) => _sharedPrefsHelper.saveState(value);
 
   Future<String> get getState => _sharedPrefsHelper.getState;
 
   //zip
 
-  Future<void> saveZip(String value) =>
-      _sharedPrefsHelper.saveZip(value);
+  Future<void> saveZip(String value) => _sharedPrefsHelper.saveZip(value);
 
   Future<String> get getZip => _sharedPrefsHelper.getZip;
 
+  //country
+  Future<void> saveCountry(String value) =>
+      _sharedPrefsHelper.saveCountry(value);
+
+  Future<String> get getCountry => _sharedPrefsHelper.getCountry;
+
+  //callback
+  //country
+  Future<void> saveCallback(String value) =>
+      _sharedPrefsHelper.saveCallback(value);
+
+  Future<String> get getCallback => _sharedPrefsHelper.getCallback;
 
   // Language: -----------------------------------------------------------------
   Future<void> changeLanguage(String value) =>

@@ -31,6 +31,21 @@ mixin _$MerchantStore on _MerchantStore, Store {
     });
   }
 
+  final _$successAtom = Atom(name: '_MerchantStore.success');
+
+  @override
+  bool get success {
+    _$successAtom.reportRead();
+    return super.success;
+  }
+
+  @override
+  set success(bool value) {
+    _$successAtom.reportWrite(value, super.success, () {
+      super.success = value;
+    });
+  }
+
   final _$tabAtom = Atom(name: '_MerchantStore.tab');
 
   @override
@@ -60,6 +75,40 @@ mixin _$MerchantStore on _MerchantStore, Store {
     _$fetchMerchantsFutureAtom.reportWrite(value, super.fetchMerchantsFuture,
         () {
       super.fetchMerchantsFuture = value;
+    });
+  }
+
+  final _$fetchMerchantsFollowFutureAtom =
+      Atom(name: '_MerchantStore.fetchMerchantsFollowFuture');
+
+  @override
+  ObservableFuture<FollowModel> get fetchMerchantsFollowFuture {
+    _$fetchMerchantsFollowFutureAtom.reportRead();
+    return super.fetchMerchantsFollowFuture;
+  }
+
+  @override
+  set fetchMerchantsFollowFuture(ObservableFuture<FollowModel> value) {
+    _$fetchMerchantsFollowFutureAtom
+        .reportWrite(value, super.fetchMerchantsFollowFuture, () {
+      super.fetchMerchantsFollowFuture = value;
+    });
+  }
+
+  final _$fetchMerchantsUnFollowFutureAtom =
+      Atom(name: '_MerchantStore.fetchMerchantsUnFollowFuture');
+
+  @override
+  ObservableFuture<FollowModel> get fetchMerchantsUnFollowFuture {
+    _$fetchMerchantsUnFollowFutureAtom.reportRead();
+    return super.fetchMerchantsUnFollowFuture;
+  }
+
+  @override
+  set fetchMerchantsUnFollowFuture(ObservableFuture<FollowModel> value) {
+    _$fetchMerchantsUnFollowFutureAtom
+        .reportWrite(value, super.fetchMerchantsUnFollowFuture, () {
+      super.fetchMerchantsUnFollowFuture = value;
     });
   }
 
@@ -157,8 +206,11 @@ mixin _$MerchantStore on _MerchantStore, Store {
   String toString() {
     return '''
 searchText: ${searchText},
+success: ${success},
 tab: ${tab},
 fetchMerchantsFuture: ${fetchMerchantsFuture},
+fetchMerchantsFollowFuture: ${fetchMerchantsFollowFuture},
+fetchMerchantsUnFollowFuture: ${fetchMerchantsUnFollowFuture},
 merchantsList: ${merchantsList},
 loading: ${loading}
     ''';
