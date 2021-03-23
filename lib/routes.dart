@@ -11,10 +11,13 @@ import 'package:greetings_world_shopper/ui/login/login.dart';
 import 'package:greetings_world_shopper/ui/merchant_detail/merchant_detail.dart';
 import 'package:greetings_world_shopper/ui/product_detail/product_detail.dart';
 import 'package:greetings_world_shopper/ui/profile/shopper_profile.dart';
+import 'package:greetings_world_shopper/ui/receipt_details/receipt_details.dart';
+import 'package:greetings_world_shopper/ui/receipts/receipts.dart';
 import 'package:greetings_world_shopper/ui/shopper_detail/shopper_detail.dart';
 import 'package:greetings_world_shopper/ui/signup/signup.dart';
 import 'package:greetings_world_shopper/ui/splash/splash.dart';
 import 'package:greetings_world_shopper/ui/web_view/web_view.dart';
+import 'package:greetings_world_shopper/ui/welcome_screen/welcome.dart';
 import 'package:greetings_world_shopper/utils/device/device_utils.dart';
 import 'package:greetings_world_shopper/widgets/image_preview.dart';
 import 'package:page_transition/page_transition.dart';
@@ -40,6 +43,9 @@ class Routes {
   static const String completeAddress = '/completeAddress';
   static const String shopperProfileDetail = '/shopperProfileDetail';
   static const String shopperProfile= '/shopperProfile';
+  static const String receipt= '/receipt';
+  static const String receiptDetail= '/receiptDetail';
+  static const String welcome= '/welcomeScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
 
@@ -57,12 +63,12 @@ class Routes {
       case home:
         return MaterialPageRoute(
             builder: (_) => HomeScreen(), settings: settings);
+
       case signUp:
         return PageTransition(
             child: SignupScreen(
               sendResult: settings.arguments,
             ),
-            type: PageTransitionType.rightToLeft,
             duration: Duration(milliseconds: 300),
             reverseDuration: Duration(milliseconds: 300),
             settings: settings);
@@ -148,6 +154,31 @@ class Routes {
       case shopperProfile:
         return PageTransition(
             child: ShopperProfile(),
+            type: PageTransitionType.fade,
+            duration: Duration(milliseconds: 300),
+            reverseDuration: Duration(milliseconds: 300),
+            settings: settings);
+
+      case receipt:
+        return PageTransition(
+            child: ReceiptsScreen(),
+            type: PageTransitionType.fade,
+            duration: Duration(milliseconds: 300),
+            reverseDuration: Duration(milliseconds: 300),
+            settings: settings);
+
+      case receiptDetail:
+        return PageTransition(
+            child: ReceiptDetailScreen(
+              receiptInfo: settings.arguments,
+            ),
+            type: PageTransitionType.fade,
+            duration: Duration(milliseconds: 300),
+            reverseDuration: Duration(milliseconds: 300),
+            settings: settings);
+      case welcome:
+        return PageTransition(
+            child: WelcomeScreen(),
             type: PageTransitionType.fade,
             duration: Duration(milliseconds: 300),
             reverseDuration: Duration(milliseconds: 300),

@@ -47,7 +47,7 @@ class _CreditCardState extends State<CreditCardScreen> {
   bool initial;
   CartStore _cartStore;
   UserStore _userStore;
-
+  bool cardCheck = true;
   @override
   initState() {
     super.initState();
@@ -76,13 +76,15 @@ class _CreditCardState extends State<CreditCardScreen> {
           IconButton(
               icon: Icon(Icons.check),
               onPressed: () {
-                DeviceUtils.hideKeyboard(context);
-                if (formKey.currentState.validate()) {
-                //  Navigator.of(context).pop(creditCardModel);
-                  token();
-                }
-
-
+                setState(() {
+                  cardCheck = true ;
+                  DeviceUtils.hideKeyboard(context);
+                  if (formKey.currentState.validate()) {
+                    //  Navigator.of(context).pop(creditCardModel);
+                    DeviceUtils.hideKeyboard(context);
+                    token();
+                  }
+                });
 
               })
         ],
@@ -138,6 +140,7 @@ class _CreditCardState extends State<CreditCardScreen> {
                          hintText: 'XXX',
                        ),
                        cardHolderName: cardHolderController.text.trim(),
+
                        cardHolderDecoration: const InputDecoration(
                          border: OutlineInputBorder(),
                          labelText: 'Card Holder',
@@ -232,6 +235,7 @@ class _CreditCardState extends State<CreditCardScreen> {
             ? SuccessBar.showMessage(
                 _cartStore.successStore.successMessage, context)
             : SizedBox.shrink();
+
       },
     );
   }

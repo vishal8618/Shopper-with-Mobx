@@ -77,6 +77,19 @@ class SharedPreferenceHelper {
       preference.setString(Preferences.email, value);
     });
   }
+  // Login:---------------------------------------------------------------------
+  Future<bool> get getConfirmUser async {
+    return _sharedPreference.then((preference) {
+      return preference.getBool(Preferences.confirmed_user) ?? false;
+    });
+  }
+
+  Future<void> saveConfirmUser(bool value) async {
+    return _sharedPreference.then((preference) {
+      preference.setBool(Preferences.confirmed_user, value);
+    });
+  }
+
 
   Future<String> get getPhoneNumber {
     return _sharedPreference.then((prefs) {
@@ -193,16 +206,16 @@ class SharedPreferenceHelper {
       preference.setString(Preferences.country, value);
     });
   }
-
-  Future<String> get getCallback {
+//deep_link_url
+  Future<String> get getDeepLinkUrl {
     return _sharedPreference.then((prefs) {
-      return prefs.getString(Preferences.callBack) ?? null;
+      return prefs.getString(Preferences.deep_link_url) ?? null;
     });
   }
 
-  Future<void> saveCallback(String value) async {
+  Future<void> saveDeepLinkUrl(String value) async {
     return _sharedPreference.then((preference) {
-      preference.setString(Preferences.callBack, value);
+      preference.setString(Preferences.deep_link_url, value);
     });
   }
   // Theme:------------------------------------------------------

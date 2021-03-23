@@ -49,6 +49,13 @@
             },
             {
               "lookupKey": {
+                "root": "asset:greetings_world_shopper/lib/data/network/apis/receipt/receipt_api.dart#ReceiptApi",
+                "qualifier": null
+              },
+              "isProvider": false
+            },
+            {
+              "lookupKey": {
                 "root": "asset:greetings_world_shopper/lib/data/sharedpref/shared_preference_helper.dart#SharedPreferenceHelper",
                 "qualifier": null
               },

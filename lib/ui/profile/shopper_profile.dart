@@ -102,11 +102,16 @@ class _ShopperProfileState extends State<ShopperProfile> {
                         image: DecorationImage(
                             image: _userStore.image != null
                                 ? FileImage(_userStore.image)
-                                : NetworkImage(_userStore.userImage),
-                            fit: BoxFit.contain))),
+                                : NetworkImage(
+                                _userStore.userImage),
+                            fit: BoxFit.contain))
+
+
+                ),
+                  ),
+
               ),
             ),
-          ),
         ],
       ),
     );

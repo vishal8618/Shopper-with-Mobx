@@ -15,18 +15,16 @@ class AddressDialog extends StatefulWidget {
 
   @override
   _AddressDialogState createState() => _AddressDialogState();
-
 }
 
-
-class _AddressDialogState extends State<AddressDialog>{
+class _AddressDialogState extends State<AddressDialog> {
   ScreenScaler _scaler;
   var reportController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    _scaler= ScreenScaler()..init(context);
+    _scaler = ScreenScaler()..init(context);
 
     return Dialog(
       backgroundColor: Colors.white,
@@ -68,8 +66,9 @@ class _AddressDialogState extends State<AddressDialog>{
             padding: _scaler.getPadding(1, 0),
             color: AppColors.primaryColor,
             onPressed: () {
-              Navigator.of(context).pushNamed(Routes.completeAddress);
-
+              Navigator.of(context).pop();
+              Navigator.of(context).pushNamed(Routes.completeAddress,
+                  arguments: 'addressDialog');
             },
             child: AppText(
               text: Strings.address,
@@ -88,9 +87,9 @@ class _AddressDialogState extends State<AddressDialog>{
             color: Colors.white,
             shape: RoundedRectangleBorder(
                 side: BorderSide(
-                  width: 1,
-                  color: AppColors.buttonBg,
-                )),
+              width: 1,
+              color: AppColors.buttonBg,
+            )),
             onPressed: () => Navigator.of(context).pop(),
             child: AppText(
               text: Strings.cancel,
@@ -103,5 +102,4 @@ class _AddressDialogState extends State<AddressDialog>{
       ],
     );
   }
-
 }

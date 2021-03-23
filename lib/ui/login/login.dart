@@ -5,13 +5,15 @@ import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:greetings_world_shopper/constants/assets.dart';
 import 'package:greetings_world_shopper/constants/colors.dart';
 import 'package:greetings_world_shopper/constants/strings.dart';
+import 'package:greetings_world_shopper/data/repository.dart';
 import 'package:greetings_world_shopper/stores/cart_store.dart';
 import 'package:greetings_world_shopper/stores/user_store.dart';
+import 'package:greetings_world_shopper/ui/home/bloc.dart';
 import 'package:greetings_world_shopper/utils/device/device_utils.dart';
 import 'package:greetings_world_shopper/utils/error_bar.dart';
 import 'package:greetings_world_shopper/utils/locale/app_localization.dart';
+import 'package:greetings_world_shopper/utils/success_bar.dart';
 import 'package:greetings_world_shopper/widgets/app_text.dart';
-import 'package:greetings_world_shopper/widgets/app_text_field.dart';
 import 'package:greetings_world_shopper/widgets/image_view.dart';
 import 'package:greetings_world_shopper/widgets/login_text_feild.dart';
 import 'package:greetings_world_shopper/widgets/progress_indicator_widget.dart';
@@ -33,58 +35,88 @@ class _LoginScreen extends State<LoginScreen> {
 
   bool emailFocus = false;
   bool passwordFocus = false;
-
+  bool showVerifiedText = false;
+  Repository _repository;
   UserStore _userStore;
   CartStore _cartStore;
+  DeepLinkBloc _bloc;
+  bool hitVerifyApi = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _userStore = Provider.of<UserStore>(context);
     _cartStore = Provider.of<CartStore>(context);
+    _bloc = Provider.of<DeepLinkBloc>(context);
   }
 
   @override
   Widget build(BuildContext context) {
     if (_scaler == null) _scaler = ScreenScaler()..init(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        title: AppText(
-          text: Strings.login,
-          color: Colors.white,
-          style: AppTextStyle.medium,
-        ),
-        centerTitle: true,
-        actions: [
-          !Navigator.of(context).canPop()
-              ? Center(
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pushReplacementNamed(Routes.home);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: AppText(
-                        text: Strings.skip,
-                        style: AppTextStyle.title,
-                        color: Colors.white,
-                        underline: true,
-                        size: _scaler.getTextSize(10),
-                      ),
-                    ),
-                  ),
-                )
-              : Container()
-        ],
-      ),
-      body: GestureDetector(
-          onTap: () {
-            DeviceUtils.hideKeyboard(context);
-          },
-          child: Container(color: Colors.purple, child: _buildBody())),
-    );
+    return StreamBuilder<String>(
+        stream: _bloc.state,
+        builder: (context,  snapshot) {
+          print('SS Data========> ${snapshot.data}');
+          if (snapshot.hasData) {
+            showVerifiedText = true;
+            final splitInviteLink = snapshot.data.split('?');
+            final inviteToken = splitInviteLink[splitInviteLink.length - 1];
+            print('tokennnn====>$inviteToken');
+
+            if (!_userStore.loading)
+             if(!hitVerifyApi){
+               hitVerifyApi = true;
+               _userStore.userConfirmation(token: inviteToken);
+               if (Navigator.of(context).canPop()) Navigator.pop(context);
+             }
+          } else {
+            showVerifiedText = false;
+          }
+          return Scaffold(
+            appBar: AppBar(
+              automaticallyImplyLeading: true,
+              title: AppText(
+                text: Strings.login,
+                color: Colors.white,
+                style: AppTextStyle.medium,
+              ),
+              centerTitle: true,
+              actions: [
+                !Navigator.of(context).canPop()
+                    ? Center(
+                        child: GestureDetector(
+                          onTap: () {
+                         /*   Navigator.of(context)
+                                .pushReplacementNamed(Routes.home);*/
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: AppText(
+                              text: "",
+                              style: AppTextStyle.title,
+                              color: Colors.white,
+                              underline: true,
+                              size: _scaler.getTextSize(10),
+                            ),
+                          ),
+                        ),
+                      )
+                    : Container()
+              ],
+            ),
+            body: GestureDetector(
+                onTap: () {
+                  DeviceUtils.hideKeyboard(context);
+                },
+                child: Container(color: Colors.purple, child: _buildBody())),
+          );
+        });
   }
 
   Widget _buildBody() {
@@ -99,6 +131,7 @@ class _LoginScreen extends State<LoginScreen> {
                 width: _scaler.getWidth(30),
                 color: AppColors.starYellow,
               ),
+              showVerifiedText ? _buildText(context) : Container(),
               Form(
                 key: formKey,
                 child: Container(
@@ -109,9 +142,11 @@ class _LoginScreen extends State<LoginScreen> {
                       children: [
                         Focus(
                           onFocusChange: (has) {
-                            setState(() {
-                              this.emailFocus = has;
-                            });
+                            if (mounted) {
+                              setState(() {
+                                this.emailFocus = has;
+                              });
+                            }
                           },
                           child: LoginTextField(
                             hintText: Strings.email,
@@ -119,9 +154,7 @@ class _LoginScreen extends State<LoginScreen> {
                             inputType: TextInputType.emailAddress,
                             prefix: Icon(
                               Icons.email,
-                              color: emailFocus
-                                  ? AppColors.bg
-                                  : AppColors.bg,
+                              color: emailFocus ? AppColors.bg : AppColors.bg,
                               size: _scaler.getTextSize(14),
                             ),
                             validate: (text) {
@@ -137,9 +170,11 @@ class _LoginScreen extends State<LoginScreen> {
                         ),
                         Focus(
                           onFocusChange: (has) {
-                            setState(() {
-                              this.passwordFocus = has;
-                            });
+                            if (mounted) {
+                              setState(() {
+                                this.passwordFocus = has;
+                              });
+                            }
                           },
                           child: LoginTextField(
                             hintText: Strings.password,
@@ -148,9 +183,8 @@ class _LoginScreen extends State<LoginScreen> {
                             password: true,
                             prefix: Icon(
                               Icons.vpn_key,
-                              color: passwordFocus
-                                  ? AppColors.bg
-                                  : AppColors.bg,
+                              color:
+                                  passwordFocus ? AppColors.bg : AppColors.bg,
                               size: _scaler.getTextSize(14),
                             ),
                             validate: (value) {
@@ -208,7 +242,9 @@ class _LoginScreen extends State<LoginScreen> {
                           .pushNamed(Routes.signUp,
                               arguments: Navigator.of(context).canPop())
                           .then((value) => () {
-                                setState(() {});
+                                if (mounted) {
+                                  setState(() {});
+                                }
                               });
                     },
                     child: Padding(
@@ -250,17 +286,31 @@ class _LoginScreen extends State<LoginScreen> {
   Widget navigate(BuildContext context) {
     Future.delayed(Duration(milliseconds: 0), () {
       _cartStore.getCart(uid: _userStore.uid);
-
       if (Navigator.of(context).canPop())
         Navigator.of(context).pop();
       else
-        Navigator.of(context).pushNamedAndRemoveUntil(
-            Routes.home, (Route<dynamic> route) => false);
+        Navigator.of(context).pushReplacementNamed(Routes.home);
     });
 
     return Container();
   }
 
-
-
+  Widget _buildText(context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        AppText(
+          text: Strings.thankyou_Messsage,
+          style: AppTextStyle.medium,
+          size: _scaler.getTextSize(10.5),
+          color: Colors.white,
+        )
+      ],
+    );
+  }
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }

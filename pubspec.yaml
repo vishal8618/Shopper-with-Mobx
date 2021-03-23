@@ -20,7 +20,7 @@ dependencies:
   cupertino_icons: ^1.0.0
 
   # The following adds the shared pref as a dependency in your application
-  shared_preferences: ^0.5.10
+  shared_preferences: ^0.5.12
 
   # A composable, Future-based library for making HTTP requests.
   http: ^0.12.2
@@ -60,14 +60,13 @@ dependencies:
 
   credit_card_type_detector: ^1.1.0
 
-
-
+  credit_card_number_validator: ^1.0.4
   image_picker: ^0.6.7+22
 
   stripe_payment: ^1.0.10
   flutter_credit_card: ^0.1.4
 
-
+  marquee: ^1.7.0
   # To use animations as Json, provided by Lottie files
   lottie: ^0.7.0+1
 

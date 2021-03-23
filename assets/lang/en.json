@@ -59,7 +59,9 @@
   "reportNow":"Report Now",
   "profile": "Profile",
   "save": "Save",
-  "address": "Please update the address"
-
+  "address": "Please update the address",
+  "transactionInfo": "Transaction Info",
+  "returnProduct" : "Return Product",
+  "exportReceipt": "Export Receipt"
 
 }

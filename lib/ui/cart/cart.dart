@@ -9,6 +9,7 @@ import 'package:greetings_world_shopper/models/cart/cart_item_model.dart';
 import 'package:greetings_world_shopper/stores/cart_store.dart';
 import 'package:greetings_world_shopper/stores/user_store.dart';
 import 'package:greetings_world_shopper/ui/checkout/checkout.dart';
+import 'package:greetings_world_shopper/utils/common_dialogs.dart';
 import 'package:greetings_world_shopper/utils/device/device_utils.dart';
 import 'package:greetings_world_shopper/utils/error_bar.dart';
 import 'package:greetings_world_shopper/widgets/address_dialog.dart';
@@ -45,13 +46,16 @@ class _CartScreenState extends State<CartScreen> {
     _userStore = Provider.of<UserStore>(context);
     _cartStore = Provider.of<CartStore>(context);
 
-    if (!_cartStore.loading && initial &&  Routes.currentRoute== Routes.cart) _cartStore.getCart(uid: _userStore.uid);
+    if (!_cartStore.loading && initial &&
+        Routes.currentRoute == Routes.cart) _cartStore.getCart(
+        uid: _userStore.uid);
     initial = false;
   }
 
   @override
   Widget build(BuildContext context) {
-    _scaler = ScreenScaler()..init(context);
+    _scaler = ScreenScaler()
+      ..init(context);
 
     return WillPopScope(
         child: Scaffold(
@@ -71,7 +75,7 @@ class _CartScreenState extends State<CartScreen> {
                 _buildItems(),
                 _buildButtons(),
                 _handleErrorMessage(),
-               _cartStore.loading
+                _cartStore.loading
                     ? CustomProgressIndicatorWidget()
                     : Container(),
               ],
@@ -84,27 +88,27 @@ class _CartScreenState extends State<CartScreen> {
   Widget _buildItems() {
     return _cartStore.cartList != null && _cartStore.cartList.length > 0
         ? ListView(
-            padding: _scaler.getPadding(1, 2),
-            physics: BouncingScrollPhysics(),
-            children: _cartStore.cartList.map((e) => getItem(e)).toList() +
-                [
-                  SizedBox(
-                    height: _scaler.getHeight(16),
-                  )
-                ],
-          )
+      padding: _scaler.getPadding(1, 2),
+      physics: BouncingScrollPhysics(),
+      children: _cartStore.cartList.map((e) => getItem(e)).toList() +
+          [
+            SizedBox(
+              height: _scaler.getHeight(16),
+            )
+          ],
+    )
         : !_cartStore.loading
-            ? Positioned(
-                top: 0,
-                bottom: 0,
-                left: _scaler.getWidth(20),
-                right: _scaler.getWidth(20),
-                child: NoDataError(
-                  message: "Cart is empty!",
-                ))
-            : Container(
-                width: _scaler.getWidth(0),
-              );
+        ? Positioned(
+        top: 0,
+        bottom: 0,
+        left: _scaler.getWidth(20),
+        right: _scaler.getWidth(20),
+        child: NoDataError(
+          message: "Cart is empty!",
+        ))
+        : Container(
+      width: _scaler.getWidth(0),
+    );
   }
 
   Widget getItem(CartItemModel item) {
@@ -152,7 +156,8 @@ class _CartScreenState extends State<CartScreen> {
                             height: _scaler.getHeight(0.3),
                           ),
                           AppText(
-                            text: "Price: \$${item.cartItem.product.price * item.cartItem.itemQuantity}"  ,
+                            text: "Price: \$${item.cartItem.product.price *
+                                item.cartItem.itemQuantity}",
                             color: AppColors.textColorDark,
                             style: AppTextStyle.medium,
                             size: _scaler.getTextSize(12.4),
@@ -188,21 +193,22 @@ class _CartScreenState extends State<CartScreen> {
                               width: 1, color: Colors.grey.withOpacity(0.2))),
                       child: DropdownButtonHideUnderline(
                           child: DropdownButton(
-                        dropdownColor: Colors.white,
-                        style: AppTextField.textMedium(
-                            AppColors.textColorDark, _scaler.getTextSize(10)),
-                        items: getDeliveryType(item),
-                        isExpanded: false,
-                        isDense: true,
-                        onChanged: (data) {
-                          DeviceUtils.hideKeyboard(context);
-                          _cartStore.updateDeliveryType(
-                              id: item.cartItem.id.toString(), type: data);
-                        },
+                            dropdownColor: Colors.white,
+                            style: AppTextField.textMedium(
+                                AppColors.textColorDark, _scaler.getTextSize(
+                                10)),
+                            items: getDeliveryType(item),
+                            isExpanded: false,
+                            isDense: true,
+                            onChanged: (data) {
+                              DeviceUtils.hideKeyboard(context);
+                              _cartStore.updateDeliveryType(
+                                  id: item.cartItem.id.toString(), type: data);
+                            },
                             hint: Text('Select Type'),
 
                             value: item.cartItem.deliveryType,
-                      )),
+                          )),
 
                     ),
                     Container(
@@ -217,7 +223,7 @@ class _CartScreenState extends State<CartScreen> {
                               _cartStore.removeCart(
                                   uid: _userStore.uid,
                                   productId:
-                                      item.cartItem.product.id.toString());
+                                  item.cartItem.product.id.toString());
                             },
                             child: Icon(
                               Icons.remove,
@@ -228,14 +234,14 @@ class _CartScreenState extends State<CartScreen> {
                           Container(
                             padding: _scaler.getPadding(0, 1),
                             child:
-                                AppText(text: "${item.cartItem.itemQuantity}"),
+                            AppText(text: "${item.cartItem.itemQuantity}"),
                           ),
                           GestureDetector(
                             onTap: () {
                               _cartStore.addCart(
                                   uid: _userStore.uid,
                                   productId:
-                                      item.cartItem.product.id.toString());
+                                  item.cartItem.product.id.toString());
                             },
                             child: Icon(
                               Icons.add,
@@ -258,38 +264,41 @@ class _CartScreenState extends State<CartScreen> {
 
   Widget _buildButtons() {
     return _cartStore.cartList != null &&
-            _cartStore.cartList.length > 0 &&
-            !_cartStore.loading
+        _cartStore.cartList.length > 0 &&
+        !_cartStore.loading
         ? Positioned(
-            bottom: _scaler.getHeight(2),
-            left: 0,
-            right: 0,
-            child: Column(
-              children: [
-                SizedBox(
-                  height: _scaler.getHeight(1),
-                ),
-                Container(
-                  width: _scaler.getWidth(100),
-                  margin: _scaler.getMargin(1, 3),
-                  child: MaterialButton(
-                    height: _scaler.getHeight(3.5),
-                    padding: _scaler.getPadding(1, 0),
-                    color: AppColors.buttonBg,
-                    onPressed: () {
-                      print('Address=====>${_userStore.address1.length}  - ${(_userStore.address1 == null)}');
+      bottom: _scaler.getHeight(2),
+      left: 0,
+      right: 0,
+      child: Column(
+        children: [
+          SizedBox(
+            height: _scaler.getHeight(1),
+          ),
+          Container(
+            width: _scaler.getWidth(100),
+            margin: _scaler.getMargin(1, 3),
+            child: MaterialButton(
+              height: _scaler.getHeight(3.5),
+              padding: _scaler.getPadding(1, 0),
+              color: AppColors.buttonBg,
+              onPressed: () {
+                print(
+                    'Address=====>${_userStore.address1.length}  - ${(_userStore
+                        .address1 == null)}');
 
-                      if(_userStore.address1.isEmpty||_userStore.address1.trim().compareTo("null") == 0 || _userStore.address1 == null){
-                        showCodeInfoDialog();
-
-                      }else{
-                        Navigator.of(context)
-                            .pushNamed(Routes.checkout)
-                            .then((value) {
-                          if(mounted) setState(() {});
-                        });
-                      }
-                     /* if (_userStore.address1.trim().compareTo("null") == 0 || _userStore.address1 == null) {
+                if (_userStore.address1.isEmpty ||
+                    _userStore.address1.trim().compareTo("null") == 0 ||
+                    _userStore.address1 == null) {
+                  CommonDialogs.showAddressDialog(context);
+                }  else {
+                  Navigator.of(context)
+                      .pushNamed(Routes.checkout)
+                      .then((value) {
+                    if (mounted) setState(() {});
+                  });
+                }
+                /* if (_userStore.address1.trim().compareTo("null") == 0 || _userStore.address1 == null) {
                         showCodeInfoDialog();
                       } else {
                         Navigator.of(context)
@@ -298,41 +307,41 @@ class _CartScreenState extends State<CartScreen> {
                           if(mounted) setState(() {});
                         });
                       }*/
-                    },
-                    child: AppText(
-                      text: Strings.securePay,
-                      color: Colors.white,
-                      style: AppTextStyle.medium,
-                      size: _scaler.getTextSize(11),
-                    ),
-                  ),
-                ),
-                Container(
-                  width: _scaler.getWidth(100),
-                  margin: _scaler.getMargin(0, 3),
-                  child: MaterialButton(
-                    height: _scaler.getHeight(3.5),
-                    padding: _scaler.getPadding(1, 0),
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                      width: 1,
-                      color: AppColors.buttonBg,
-                    )),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: AppText(
-                      text: Strings.cancel,
-                      color: AppColors.buttonBg,
-                      style: AppTextStyle.medium,
-                      size: _scaler.getTextSize(11),
-                    ),
-                  ),
-                )
-              ],
+              },
+              child: AppText(
+                text: Strings.securePay,
+                color: Colors.white,
+                style: AppTextStyle.medium,
+                size: _scaler.getTextSize(11),
+              ),
+            ),
+          ),
+          Container(
+            width: _scaler.getWidth(100),
+            margin: _scaler.getMargin(0, 3),
+            child: MaterialButton(
+              height: _scaler.getHeight(3.5),
+              padding: _scaler.getPadding(1, 0),
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                    width: 1,
+                    color: AppColors.buttonBg,
+                  )),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: AppText(
+                text: Strings.cancel,
+                color: AppColors.buttonBg,
+                style: AppTextStyle.medium,
+                size: _scaler.getTextSize(11),
+              ),
             ),
           )
+        ],
+      ),
+    )
         : Container();
   }
 
@@ -378,15 +387,9 @@ class _CartScreenState extends State<CartScreen> {
 
   Future<bool> pop() async {
     Navigator.of(context).pop();
-
   }
 
-  showCodeInfoDialog() {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) => AddressDialog());
-  }
+
 
 
 }

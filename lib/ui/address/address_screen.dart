@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:greetings_world_shopper/constants/colors.dart';
@@ -24,8 +25,6 @@ class AddressScreen extends StatefulWidget {
   final String sendResult;
 
   AddressScreen({this.sendResult});
-
-
 
   @override
   _AddressScreenState createState() => _AddressScreenState();
@@ -50,6 +49,9 @@ class _AddressScreenState extends State<AddressScreen> {
   bool zipCodeCheck = false;
   String countryName;
   String selectedValue;
+  final controller = ScrollController();
+
+  String address = '';
 
   @override
   void initState() {
@@ -61,12 +63,6 @@ class _AddressScreenState extends State<AddressScreen> {
         address1Controller.text = "";
       } else {
         address1Controller.text = _userStore.address1;
-      }
-      if (_userStore.state.trim().compareTo("null") == 0 ||
-          _userStore.state == null) {
-        stateController.text = "";
-      } else {
-        stateController.text = _userStore.state;
       }
       if (_userStore.userCity.trim().compareTo("null") == 0 ||
           _userStore.userCity == null) {
@@ -105,24 +101,24 @@ class _AddressScreenState extends State<AddressScreen> {
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            actions: <Widget>[
+            actions: [
               Observer(builder: (snapshot) {
                 return _userStore.isEditing
                     ? Container(
-                  width: 0,
-                )
+                        width: 50,
+                      )
                     : IconButton(
-                  icon: Icon(
-                    Icons.edit_outlined,
-                    color: AppColors.starYellow,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _userStore.updateIsEditing();
-                      _status = false;
-                    });
-                  },
-                );
+                        icon: Icon(
+                          Icons.edit_outlined,
+                          color: AppColors.starYellow,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _userStore.updateIsEditing();
+                            _status = false;
+                          });
+                        },
+                      );
               })
             ],
           ),
@@ -131,7 +127,6 @@ class _AddressScreenState extends State<AddressScreen> {
       }),
       onWillPop: pop,
     );
-
   }
 
   Widget _buildBody() {
@@ -164,7 +159,7 @@ class _AddressScreenState extends State<AddressScreen> {
                               maxLines: null,
                             ),
                           ),
-                          SizedBox(
+                          /*    SizedBox(
                             height: _scaler.getHeight(2),
                           ),
                           AppTextField(
@@ -177,7 +172,7 @@ class _AddressScreenState extends State<AddressScreen> {
                               }
                               return null;
                             },
-                          ),
+                          ),*/
                           SizedBox(
                             height: _scaler.getHeight(2),
                           ),
@@ -185,7 +180,9 @@ class _AddressScreenState extends State<AddressScreen> {
                             hintText: 'City',
                             controller: cityController,
                             validate: (value) {
-                              if (value.isEmpty || value == null || value == '') {
+                              if (value.isEmpty ||
+                                  value == null ||
+                                  value == '') {
                                 return 'Please fill city';
                               }
                               return null;
@@ -197,7 +194,6 @@ class _AddressScreenState extends State<AddressScreen> {
                           !zipCodeCheck
                               ? Container(
                                   padding: _scaler.getPadding(0.5, 1),
-
                                   child: DropdownButtonHideUnderline(
                                       child: DropdownButtonFormField(
                                     dropdownColor: Colors.white,
@@ -234,7 +230,7 @@ class _AddressScreenState extends State<AddressScreen> {
                           !_status ? _getActionButtons() : new Container(),
                         ],
                       ),
-                    ))
+                    )),
               ],
             ),
             _handleErrorMessage(),
@@ -252,12 +248,17 @@ class _AddressScreenState extends State<AddressScreen> {
         mode: Mode.overlay,
         // Mode.fullscreen
         language: "en",
+        /* types: [
+          '(cities)'
+        ],*/
         components: [
           new Component(Component.country, "us"),
         ]);
+
     getPlaceDetails(p);
   }
 
+/*
   void getPlaceDetails(Prediction prediction) async {
     GoogleMapsPlaces _places = new GoogleMapsPlaces(
         apiKey: Constants.googleApiKey); //Same API_KEY as above
@@ -290,18 +291,25 @@ class _AddressScreenState extends State<AddressScreen> {
       print(e);
     }
   }
+*/
 
-  /*void getPlaceDetails(Prediction prediction) async {
+  void getPlaceDetails(Prediction prediction) async {
     final placeDetails =
         await PlaceApiProvider().getPlaceDetailFromId(prediction.placeId);
-    setState(() {
-      address1Controller.text = prediction.description;
-      stateController.text = placeDetails.administrativeArea;
-      cityController.text = placeDetails.city;
-      zipController.text = placeDetails.zipCode;
-      countryName = placeDetails.country;
-    });
-  }*/
+    if(mounted){
+      setState(() {
+     //   address = placeDetails.streetNumber + " " + placeDetails.street;
+        print('<=== ${placeDetails.streetNumber} - ${placeDetails.street}');
+        address1Controller.text = placeDetails.streetNumber + "" + placeDetails.street;
+        stateController.text = placeDetails.administrativeArea;
+        cityController.text = placeDetails.city;
+        print('City==========>${placeDetails.city}');
+        zipController.text = placeDetails.zipCode;
+        countryName = placeDetails.country;
+      });
+    }
+
+  }
 
   Widget _getActionButtons() {
     return Padding(
@@ -329,11 +337,14 @@ class _AddressScreenState extends State<AddressScreen> {
                       DeviceUtils.hideKeyboard(context);
                       _status = true;
                       _userStore.updateUserAddress(_userStore.uid,
-                          street1: address1Controller.text.trim(),
+                          street1: address.trim(),
                           street2: address2Controller.text.trim(),
                           city: cityController.text.trim(),
                           stateName: stateController.text.trim(),
-                          countryName: countryName == null || countryName.isEmpty ? "USA" : countryName,
+                          countryName:
+                              countryName == null || countryName.isEmpty
+                                  ? "USA"
+                                  : countryName,
                           zip: zipController.text == null ||
                                   zipController.text.trim().isEmpty
                               ? selectedValue
@@ -395,14 +406,17 @@ class _AddressScreenState extends State<AddressScreen> {
   Widget navigate(BuildContext context) {
     Future.delayed(Duration(milliseconds: 0), () {
       if (widget.sendResult.compareTo('checkout') == 0) {
-        Navigator.of(context)
-            .pushNamed(Routes.checkout)
-            .then((value) {
-          if(mounted) setState(() {});
+        Navigator.of(context).popAndPushNamed(Routes.checkout).then((value) {
+          if (mounted) setState(() {});
         });
-      } else
+      } else if (widget.sendResult.compareTo('addressDialog') == 0) {
+        Navigator.of(context).popAndPushNamed(Routes.checkout).then((value) {
+          if (mounted) setState(() {});
+        });
+      } else {
         Navigator.of(context).pushNamedAndRemoveUntil(
             Routes.home, (Route<dynamic> route) => false);
+      }
     });
 
     return Container();
@@ -611,7 +625,6 @@ class _AddressScreenState extends State<AddressScreen> {
 
     return items;
   }
-
 
   Future<bool> pop() async {
     Navigator.of(context).pop();

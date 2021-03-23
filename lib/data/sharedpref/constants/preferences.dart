@@ -2,6 +2,7 @@ class Preferences {
   Preferences._();
 
   static const String uid = "uid";
+  static const String confirmed_user = "confirmedUser";
   static const String name = "name";
   static const String image = "image";
   static const String address = "address";
@@ -18,5 +19,6 @@ class Preferences {
   static const String search_history = "search_history";
   static const String email = "email";
   static const String phone_number = "phone_number";
-  static const String callBack = "callback";
+  static const String deep_link_url = "deep_link_url";
+
 }

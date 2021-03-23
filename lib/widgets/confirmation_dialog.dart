@@ -6,12 +6,11 @@ import 'package:greetings_world_shopper/constants/strings.dart';
 import 'package:greetings_world_shopper/widgets/app_text.dart';
 
 // ignore: must_be_immutable
-class LoginDialog extends StatelessWidget {
+class ConfirmationDialog extends StatelessWidget {
   final VoidCallback yesClick;
-    ScreenScaler _scaler;
+  ScreenScaler _scaler;
 
-  LoginDialog(
-      {@required this.yesClick });
+  ConfirmationDialog({@required this.yesClick });
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +26,7 @@ class LoginDialog extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             AppText(
-              text: Strings.loginTitle,
+              text: Strings.confirmationTitle,
               style: AppTextStyle.title,
               size: _scaler.getTextSize(12),
             ),
@@ -35,7 +34,7 @@ class LoginDialog extends StatelessWidget {
               height: _scaler.getHeight(1),
             ),
             AppText(
-              text: Strings.loginDesc,
+              text: Strings.verifyRegistration,
               style: AppTextStyle.medium,
               size: _scaler.getTextSize(10),
             ),
@@ -61,34 +60,14 @@ class LoginDialog extends StatelessWidget {
             color: AppColors.buttonBg,
             onPressed: yesClick,
             child: AppText(
-              text: Strings.loginYes,
+              text: "Ok",
               color: Colors.white,
               style: AppTextStyle.medium,
               size: _scaler.getTextSize(11),
             ),
           ),
         ),
-        Container(
-          width: _scaler.getWidth(100),
-          margin: _scaler.getMargin(0, 3),
-          child: MaterialButton(
-            height: _scaler.getHeight(3.5),
-            padding: _scaler.getPadding(1, 0),
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-                side: BorderSide(
-              width: 1,
-              color: AppColors.buttonBg,
-            )),
-            onPressed:()=>  Navigator.of(context).pop(),
-            child: AppText(
-              text: Strings.loginNo,
-              color: AppColors.buttonBg,
-              style: AppTextStyle.medium,
-              size: _scaler.getTextSize(11),
-            ),
-          ),
-        )
+
       ],
     );
   }

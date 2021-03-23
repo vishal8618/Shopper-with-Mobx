@@ -94,6 +94,16 @@ abstract class _CartStore with Store {
   @observable
   double convenienceFee = 0.0;
 
+  @observable
+  bool isEditing = false;
+
+  @action
+  updateIsEditing() {
+    isEditing = !isEditing;
+  }
+
+
+
   @action
   Future addCart({String uid, String productId}) async {
     final future = _repository.addCart(productId: productId, id: uid);

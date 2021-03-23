@@ -1,50 +1,72 @@
-import 'package:flutter/cupertino.dart';
+
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:greetings_world_shopper/constants/colors.dart';
 import 'package:greetings_world_shopper/constants/strings.dart';
 import 'package:greetings_world_shopper/widgets/app_text.dart';
 
-// ignore: must_be_immutable
-class LoginDialog extends StatelessWidget {
-  final VoidCallback yesClick;
-    ScreenScaler _scaler;
+import '../../routes.dart';
 
-  LoginDialog(
-      {@required this.yesClick });
+class WelcomeScreen extends StatefulWidget {
+
+  @override
+  State<StatefulWidget> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  ScreenScaler _scaler;
+  @override
+  void initState() {
+    super.initState();
+   // startTimer();
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    _scaler = new ScreenScaler()..init(context);
-
-    return Dialog(
-      backgroundColor: Colors.white,
+    if (_scaler == null) _scaler = ScreenScaler()..init(context);
+    return Material(
+    child: Center(
       child: Container(
-        padding: _scaler.getPadding(2, 1),
-
+        decoration: BoxDecoration(gradient: AppColors.splashGradient),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             AppText(
-              text: Strings.loginTitle,
+              text: Strings.confirmationTitle,
               style: AppTextStyle.title,
-              size: _scaler.getTextSize(12),
+              size: _scaler.getTextSize(14),
+              color: Colors.white,
             ),
             SizedBox(
               height: _scaler.getHeight(1),
             ),
             AppText(
-              text: Strings.loginDesc,
+              text: Strings.verifyRegistration,
               style: AppTextStyle.medium,
-              size: _scaler.getTextSize(10),
+              size: _scaler.getTextSize(10.5),
+              color: Colors.white,
             ),
             _buildButtons(context)
           ],
         ),
       ),
+    ),
     );
+
   }
+
+ /* startTimer() {
+    var _duration = Duration(milliseconds: 3000);
+    return Timer(_duration, navigate);
+  }
+
+  navigate() async {
+    Navigator.of(context).pushReplacementNamed(Routes.login);
+  }*/
 
   Widget _buildButtons(context) {
     return Column(
@@ -59,37 +81,22 @@ class LoginDialog extends StatelessWidget {
             height: _scaler.getHeight(3.5),
             padding: _scaler.getPadding(1, 0),
             color: AppColors.buttonBg,
-            onPressed: yesClick,
+            onPressed: (){
+              Navigator.of(context).pushReplacementNamed(Routes.login);
+            },
             child: AppText(
-              text: Strings.loginYes,
+              text: "Ok",
               color: Colors.white,
               style: AppTextStyle.medium,
               size: _scaler.getTextSize(11),
             ),
           ),
         ),
-        Container(
-          width: _scaler.getWidth(100),
-          margin: _scaler.getMargin(0, 3),
-          child: MaterialButton(
-            height: _scaler.getHeight(3.5),
-            padding: _scaler.getPadding(1, 0),
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-                side: BorderSide(
-              width: 1,
-              color: AppColors.buttonBg,
-            )),
-            onPressed:()=>  Navigator.of(context).pop(),
-            child: AppText(
-              text: Strings.loginNo,
-              color: AppColors.buttonBg,
-              style: AppTextStyle.medium,
-              size: _scaler.getTextSize(11),
-            ),
-          ),
-        )
+
       ],
     );
   }
+
+
+
 }

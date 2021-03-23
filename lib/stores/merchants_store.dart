@@ -12,6 +12,8 @@ part 'merchants_store.g.dart';
 class MerchantStore = _MerchantStore with _$MerchantStore;
 
 abstract class _MerchantStore with Store {
+
+
   // repository instance
   Repository _repository;
 

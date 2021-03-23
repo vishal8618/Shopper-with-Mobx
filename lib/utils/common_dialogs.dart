@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:greetings_world_shopper/widgets/address_dialog.dart';
+import 'package:greetings_world_shopper/widgets/confirmation_dialog.dart';
 import 'package:greetings_world_shopper/widgets/login_dialog.dart';
 import 'package:greetings_world_shopper/widgets/report_dialog.dart';
 import 'package:material_dialog/widgets/dialog.dart';
@@ -23,5 +25,22 @@ class CommonDialogs {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) => ReportDialog(callback: callback));
+  }
+
+  static showAddressDialog(context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => AddressDialog());
+  }
+
+  static showConfirmationDialog(context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => ConfirmationDialog(yesClick: () {
+              Navigator.pop(context);
+             // Navigator.of(context).pushNamed(Routes.login);
+            }));
   }
 }

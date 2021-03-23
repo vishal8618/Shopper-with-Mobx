@@ -62,7 +62,7 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
     _productStore = Provider.of<ProductStore>(context);
     _merchantStore = Provider.of<MerchantStore>(context);
     if (!_merchantDetailStore.loading)
-      _merchantDetailStore.getProducts(id: widget.merchantInfo.id.toString());
+      _merchantDetailStore.getProducts(id: widget.merchantInfo.id.toString(),uid: _userStore.uid);
     _merchantDetailStore.updateTab(0);
   }
 
@@ -484,8 +484,8 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
                   ),
                   InkWell(
                     onTap:(){
-                      launchMap(_userStore.address1.toString());
-                      print('merchnatDetail${_userStore.address1.toString()}');
+                      _launchMapsUrl(35.045631, -85.309677);
+
                     },
                     child:  ImageView(
                       path: Assets.navigate,
@@ -683,17 +683,18 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
                           )
                               : LikeWidget(
                             liked:
-                            (product.likes != null) && product.likes.isLiked,
+                            (product.likedByCurrentUser != null) && product.likedByCurrentUser,
                             likeCallback: (isLiked) {
                               Future.delayed(Duration(
                                 milliseconds: 1,
                               )).then((value) {
                                 setState(() {
-                                  if(product.likes==null){
-                                    product.likes=Likes(id: 0,buyerId: int.parse( _userStore.uid), isLiked: false,productId: int.parse(product.id.toString()));
+                                  if(product.likedByCurrentUser==null){
+                                    //product.likes=Likes(id: 0,buyerId: int.parse( _userStore.uid), isLiked: false,productId: int.parse(product.id.toString()));
+                                    product.likedByCurrentUser=false;
                                   }
 
-                                  product.likes.isLiked = isLiked;
+                                  product.likedByCurrentUser = isLiked;
                                 });
                                 isLiked
                                     ? _productStore.addWish(
@@ -792,16 +793,17 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
               CommonDialogs.showLoginDialog(context);
             else {
               setState(() {
-                if(model.favorites==null){
-                  model.favorites=Favorites(id: 0,buyerId: int.parse( _userStore.uid), isFavorite: false,productId: int.parse(model.id.toString()));
+                if(model.favoriteByCurrentUser==null){
+                 // model.favorites=Favorites(id: 0,buyerId: int.parse( _userStore.uid), isFavorite: false,productId: int.parse(model.id.toString()));
+                  model.favoriteByCurrentUser= false;
                 }
 
-               model.favorites.isFavorite = !model.favorites.isFavorite;
+               model.favoriteByCurrentUser = !model.favoriteByCurrentUser;
               });
 
-              print( model.favorites.isFavorite);
+              print( model.favoriteByCurrentUser);
 
-             model.favorites.isFavorite
+             model.favoriteByCurrentUser
                   ? _productStore.addFavourite(
                   uid: _userStore.uid, productId: model.id.toString())
                   : _productStore.removeFavourite(
@@ -837,7 +839,7 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
           PopupMenuItem<ProductOptions>(
             value: ProductOptions.favourite,
             child: AppText(
-              text: _userStore.isLoggedIn && model.favorites!= null && model.favorites.isFavorite
+              text: _userStore.isLoggedIn && model.favoriteByCurrentUser
                   ? 'Remove from favourites'
                   : 'Add to favourites',
             ),
@@ -921,12 +923,21 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
     );
   }
 
-  void launchMap(String address) async {
+/*  void launchMap(String address) async {
     String query = Uri.encodeComponent(address);
     String googleUrl = "https://www.google.com/maps/search/?api=1&query=$query";
 
     if (await canLaunch(googleUrl)) {
       await launch(googleUrl);
+    }
+  }*/
+
+  void _launchMapsUrl(double lat, double lon) async {
+    final url = 'https://www.google.com/maps/search/?api=1&query=$lat,$lon';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:greetings_world_shopper/data/network/constants/endpoints.dart';
+import 'package:greetings_world_shopper/models/confirmation/register_confirmation_model.dart';
 import 'package:greetings_world_shopper/models/user/login_model.dart';
 import 'package:greetings_world_shopper/models/user/user_model.dart';
 
@@ -136,4 +137,18 @@ class UserApi {
       throw e;
     }
   }
+
+  //Registration confirmation
+  Future<RegisterConfirmationModel> confirmRegistration({String token}) async {
+    try {
+      final res = await _dioClient.get("${Endpoints.registrationConfirmation}?$token",
+          options: null);
+      return registerConfirmationModelFromJson(json.encode(res.data));
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+
 }

@@ -8,9 +8,10 @@ import '../../data/network/apis/merchants/merchants_api.dart' as _i7;
 import '../../data/network/apis/products/products_api.dart' as _i8;
 import '../../data/network/apis/user/user_api.dart' as _i9;
 import '../../data/network/apis/cart/cart_api.dart' as _i10;
-import '../../data/repository.dart' as _i11;
-import 'dart:async' as _i12;
-import '../../main.dart' as _i13;
+import '../../data/network/apis/receipt/receipt_api.dart' as _i11;
+import '../../data/repository.dart' as _i12;
+import 'dart:async' as _i13;
+import '../../main.dart' as _i14;
 
 class AppComponent$Injector implements _i1.AppComponent {
   AppComponent$Injector._(this._networkModule, this._preferenceModule);
@@ -33,22 +34,25 @@ class AppComponent$Injector implements _i1.AppComponent {
 
   _i10.CartApi _singletonCartApi;
 
-  _i11.Repository _singletonRepository;
+  _i11.ReceiptApi _singletonReceiptApi;
 
-  static _i12.Future<_i1.AppComponent> create(_i2.NetworkModule networkModule,
+  _i12.Repository _singletonRepository;
+
+  static _i13.Future<_i1.AppComponent> create(_i2.NetworkModule networkModule,
       _i3.PreferenceModule preferenceModule) async {
     final injector = AppComponent$Injector._(networkModule, preferenceModule);
 
     return injector;
   }
 
-  _i13.MyApp _createMyApp() => _i13.MyApp();
-  _i11.Repository _createRepository() =>
+  _i14.MyApp _createMyApp() => _i14.MyApp();
+  _i12.Repository _createRepository() =>
       _singletonRepository ??= _networkModule.provideRepository(
           _createMerchantsApi(),
           _createProductsApi(),
           _createUserApi(),
           _createCartApi(),
+          _createReceiptApi(),
           _createSharedPreferenceHelper());
   _i7.MerchantsApi _createMerchantsApi() => _singletonMerchantsApi ??=
       _networkModule.provideMerchantsApi(_createDioClient());
@@ -65,8 +69,10 @@ class AppComponent$Injector implements _i1.AppComponent {
       _singletonUserApi ??= _networkModule.provideUserApi(_createDioClient());
   _i10.CartApi _createCartApi() =>
       _singletonCartApi ??= _networkModule.provideCartApi(_createDioClient());
+  _i11.ReceiptApi _createReceiptApi() => _singletonReceiptApi ??=
+      _networkModule.provideReceiptApi(_createDioClient());
   @override
-  _i13.MyApp get app => _createMyApp();
+  _i14.MyApp get app => _createMyApp();
   @override
-  _i11.Repository getRepository() => _createRepository();
+  _i12.Repository getRepository() => _createRepository();
 }

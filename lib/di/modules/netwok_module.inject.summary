@@ -167,6 +167,28 @@
             ]
           },
           {
+            "name": "provideReceiptApi",
+            "kind": "method",
+            "injectedType": {
+              "lookupKey": {
+                "root": "asset:greetings_world_shopper/lib/data/network/apis/receipt/receipt_api.dart#ReceiptApi",
+                "qualifier": null
+              },
+              "isProvider": false
+            },
+            "singleton": true,
+            "asynchronous": false,
+            "dependencies": [
+              {
+                "lookupKey": {
+                  "root": "asset:greetings_world_shopper/lib/data/network/dio_client.dart#DioClient",
+                  "qualifier": null
+                },
+                "isProvider": false
+              }
+            ]
+          },
+          {
             "name": "provideRepository",
             "kind": "method",
             "injectedType": {
@@ -203,6 +225,13 @@
               {
                 "lookupKey": {
                   "root": "asset:greetings_world_shopper/lib/data/network/apis/cart/cart_api.dart#CartApi",
+                  "qualifier": null
+                },
+                "isProvider": false
+              },
+              {
+                "lookupKey": {
+                  "root": "asset:greetings_world_shopper/lib/data/network/apis/receipt/receipt_api.dart#ReceiptApi",
                   "qualifier": null
                 },
                 "isProvider": false

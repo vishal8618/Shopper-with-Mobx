@@ -9,8 +9,9 @@ import 'package:greetings_world_shopper/stores/language_store.dart';
 import 'package:greetings_world_shopper/stores/merchant_detail_store.dart';
 import 'package:greetings_world_shopper/stores/merchants_store.dart';
 import 'package:greetings_world_shopper/stores/product_store.dart';
+import 'package:greetings_world_shopper/stores/receipt_store.dart';
 import 'package:greetings_world_shopper/stores/user_store.dart';
-import 'package:greetings_world_shopper/ui/splash/splash.dart';
+import 'package:greetings_world_shopper/ui/home/bloc.dart';
 import 'package:greetings_world_shopper/utils/locale/app_localization.dart';
 import 'package:inject/inject.dart';
 import 'package:provider/provider.dart';
@@ -56,6 +57,9 @@ class MyApp extends StatelessWidget {
   final CartStore _cartStore = CartStore(appComponent.getRepository());
 
   final ProductStore _productStore = ProductStore(appComponent.getRepository());
+  final ReceiptStore _receiptStore = ReceiptStore(appComponent.getRepository());
+
+  final _bloc = DeepLinkBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +72,9 @@ class MyApp extends StatelessWidget {
         Provider<MerchantDetailStore>(create: (_) => _merchantDetailStore),
         Provider<CartStore>(create: (_) => _cartStore),
         Provider<ProductStore>(create: (_) => _productStore),
+        Provider<ReceiptStore>(create: (_) => _receiptStore),
+        Provider<DeepLinkBloc>.value(value: _bloc),
+
       ],
       child: Observer(
         name: 'global-observer',
@@ -93,6 +100,8 @@ class MyApp extends StatelessWidget {
               // Built-in localization of basic text for Cupertino widgets
               GlobalCupertinoLocalizations.delegate,
             ],
+
+
             // home: _userStore.isLoggedIn ? HomeScreen() : LoginScreen(),
           );
         },

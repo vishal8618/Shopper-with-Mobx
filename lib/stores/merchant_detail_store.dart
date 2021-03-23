@@ -38,8 +38,8 @@ abstract class _MerchantDetailStore with Store {
 
   // actions:-------------------------------------------------------------------
   @action
-  Future getProducts({String id}) async {
-    final future = _repository.getProducts(id: id);
+  Future getProducts({String id, String uid}) async {
+    final future = _repository.getProducts(id: id,uid: uid);
     fetchProductsFuture = ObservableFuture(future);
 
     future.then((merchantsList) {

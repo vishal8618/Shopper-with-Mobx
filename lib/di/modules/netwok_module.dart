@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:greetings_world_shopper/data/network/apis/cart/cart_api.dart';
 import 'package:greetings_world_shopper/data/network/apis/merchants/merchants_api.dart';
 import 'package:greetings_world_shopper/data/network/apis/products/products_api.dart';
+import 'package:greetings_world_shopper/data/network/apis/receipt/receipt_api.dart';
 import 'package:greetings_world_shopper/data/network/apis/user/user_api.dart';
 import 'package:greetings_world_shopper/data/network/constants/constants.dart';
 import 'package:greetings_world_shopper/data/network/constants/endpoints.dart';
@@ -99,6 +100,9 @@ class NetworkModule extends PreferenceModule {
   CartApi provideCartApi(DioClient dioClient) => CartApi(dioClient);
 
 
+  @provide
+  @singleton
+  ReceiptApi provideReceiptApi(DioClient dioClient) => ReceiptApi(dioClient);
 
 // Api Providers End:---------------------------------------------------------
 
@@ -109,8 +113,9 @@ class NetworkModule extends PreferenceModule {
     ProductsApi productsApi,
     UserApi userApi,
     CartApi cartApi,
+    ReceiptApi receiptApi,
     SharedPreferenceHelper preferenceHelper,
   ) =>
-      Repository(merchantsApi, productsApi, userApi, cartApi,
+      Repository(merchantsApi, productsApi, userApi, cartApi,receiptApi,
           preferenceHelper);
 }

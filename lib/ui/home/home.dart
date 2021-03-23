@@ -36,8 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
     _homeStore = Provider.of<HomeStore>(context);
     _cartStore = Provider.of<CartStore>(context);
     _userStore = Provider.of<UserStore>(context);
-    if (_userStore.isLoggedIn && Routes.currentRoute== Routes.home) _cartStore.getCart(uid: _userStore.uid);
-
+    if (_userStore.isLoggedIn && Routes.currentRoute == Routes.home)
+      _cartStore.getCart(uid: _userStore.uid);
   }
 
   @override
@@ -66,7 +66,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ? DashboardScreen()
             : _homeStore.selectedTab == 1
                 ? ReceiptsScreen()
-                : _userStore.isLoggedIn?ShopperProfile():Container(width: 0,),
+                : _userStore.isLoggedIn
+                    ? ShopperProfile()
+                    : Container(
+                        width: 0,
+                      ),
         bottomNavigationBar: getBottomNavigation(),
       );
     });
@@ -82,10 +86,10 @@ class _HomeScreenState extends State<HomeScreen> {
           currentIndex: _homeStore.selectedTab,
           selectedItemColor: AppColors.starYellow,
           onTap: (selected) {
-            if(selected==2 && !_userStore.isLoggedIn)
-            CommonDialogs.showLoginDialog(context);
+            if (selected == 2 && !_userStore.isLoggedIn)
+              CommonDialogs.showLoginDialog(context);
             else
-            _homeStore.selectTab(selected);
+              _homeStore.selectTab(selected);
           },
           items: [
             getItem(Assets.home),

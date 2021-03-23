@@ -12,6 +12,7 @@ import 'package:greetings_world_shopper/constants/strings.dart';
 import 'package:greetings_world_shopper/routes.dart';
 import 'package:greetings_world_shopper/stores/cart_store.dart';
 import 'package:greetings_world_shopper/stores/user_store.dart';
+import 'package:greetings_world_shopper/utils/common_dialogs.dart';
 import 'package:greetings_world_shopper/utils/common_utils.dart';
 import 'package:greetings_world_shopper/utils/device/device_utils.dart';
 import 'package:greetings_world_shopper/utils/error_bar.dart';
@@ -387,18 +388,23 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget navigate(BuildContext context) {
-    Future.delayed(Duration(milliseconds: 0), () {
+    Future.delayed(Duration(milliseconds: 100), () {
       _cartStore.getCart(uid: _userStore.uid);
-
       if (widget.sendResult) {
         Navigator.of(context).pop();
       } else
-        Navigator.of(context).pushNamedAndRemoveUntil(
-            Routes.home, (Route<dynamic> route) => false);
+        CommonDialogs.showConfirmationDialog(context);
+    //  Navigator.of(context).pushReplacementNamed(Routes.login);
+
+      /*  Navigator.of(context).pushNamedAndRemoveUntil(
+            Routes.login, (Route<dynamic> route) => false);*/
     });
 
     return Container();
   }
 
-
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }

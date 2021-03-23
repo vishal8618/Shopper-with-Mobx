@@ -3,8 +3,10 @@ import 'dart:io';
 import 'dart:io' as Io;
 import 'package:greetings_world_shopper/constants/strings.dart';
 import 'package:greetings_world_shopper/data/repository.dart';
+import 'package:greetings_world_shopper/models/confirmation/register_confirmation_model.dart';
 import 'package:greetings_world_shopper/models/user/login_model.dart';
 import 'package:greetings_world_shopper/models/user/user_model.dart';
+import 'package:greetings_world_shopper/stores/success_store.dart';
 import 'package:greetings_world_shopper/utils/dio/dio_error_util.dart';
 import 'package:mobx/mobx.dart';
 import 'error_store.dart';
@@ -20,7 +22,7 @@ abstract class _UserStore with Store {
 
   // store for handling errors
   final ErrorStore errorStore = ErrorStore();
-
+  final SuccessStore successStore = SuccessStore();
   // constructor:---------------------------------------------------------------
   _UserStore(Repository repository) : this._repository = repository {
     // setting up disposers
@@ -65,9 +67,6 @@ abstract class _UserStore with Store {
     repository.getZip.then((value) {
       this.userZip = value ?? "";
     });
-    repository.getCallback.then((value) {
-      this.userZip = value ?? "";
-    });
 
     /*repository.getFullAddress.then((value) {
        if (value != null) this. = Address.fromJson(jsonDecode(value));
@@ -105,6 +104,16 @@ abstract class _UserStore with Store {
   ObservableFuture<UserModel> fetchAddressDetailsFuture =
       ObservableFuture<UserModel>(emptyAddressDetailsResponse);
 
+
+  static ObservableFuture<RegisterConfirmationModel> emptyConfirmationRegisterResponse =
+  ObservableFuture.value(null);
+
+  @observable
+  ObservableFuture<RegisterConfirmationModel> fetchConfirmationRegisterFuture =
+  ObservableFuture<RegisterConfirmationModel>(emptyConfirmationRegisterResponse);
+
+
+
   @observable
   bool isEditing = false;
 
@@ -116,7 +125,10 @@ abstract class _UserStore with Store {
   @observable
   bool success = false;
 
+
   bool isLoggedIn = false;
+
+  bool confirmUser = false;
 
   String uid = "";
   String name = "";
@@ -144,7 +156,8 @@ abstract class _UserStore with Store {
       fetchSignupFuture.status == FutureStatus.pending ||
       fetchLoginFuture.status == FutureStatus.pending ||
       fetchProfileDetailsFuture.status == FutureStatus.pending ||
-      fetchAddressDetailsFuture.status == FutureStatus.pending;
+      fetchAddressDetailsFuture.status == FutureStatus.pending ||
+      fetchConfirmationRegisterFuture.status == FutureStatus.pending;
 
   // actions:-------------------------------------------------------------------
   @action
@@ -163,10 +176,10 @@ abstract class _UserStore with Store {
         image: image == null
             ? ""
             : "data:image/jpeg;base64," +
-            base64Encode(Io.File(image.path).readAsBytesSync()));
+                base64Encode(Io.File(image.path).readAsBytesSync()));
     fetchSignupFuture = ObservableFuture(future);
     future.then((user) {
-      _repository.saveIsLoggedIn(true);
+      //_repository.saveIsLoggedIn(true);
       _repository.saveUserId(user.id);
       _repository.saveImage(user.buyerPhoto);
       _repository
@@ -176,7 +189,7 @@ abstract class _UserStore with Store {
 
       this.user = user;
       this.success = true;
-      isLoggedIn = true;
+      //isLoggedIn = true;
       uid = user.id.toString();
       userImage = user.buyerPhoto;
       name = "${user.firstName.toString()} ${user.lastName.toString()}";
@@ -197,6 +210,7 @@ abstract class _UserStore with Store {
     fetchLoginFuture = ObservableFuture(future);
     future.then((user) {
       _repository.saveIsLoggedIn(true);
+      _repository.saveConfirmUser(user.confirmedUser);
       _repository.saveUserId(user.buyer.id);
       if (user.buyer.buyerPhoto != null) {
         _repository.saveImage(user.buyer.buyerPhoto);
@@ -368,6 +382,19 @@ abstract class _UserStore with Store {
       userCity = user.address.city;
       state = user.address.stateName;
       userZip = user.address.zip;
+      country = user.address.countryName;
+    }).catchError((error) {
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+      this.success = false;
+    });
+  }
+
+  @action
+  Future userConfirmation({String token}) async {
+    final future = _repository.confirmRegistration(token: token);
+    fetchConfirmationRegisterFuture = ObservableFuture(future);
+    future.then((user) {
+     // this.success = true;
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
       this.success = false;

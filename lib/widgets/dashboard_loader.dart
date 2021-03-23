@@ -19,8 +19,8 @@ class CustomProgressDashboardLoaderWidget extends StatelessWidget {
         child: FittedBox(
           fit: BoxFit.none,
           child: SizedBox(
-            height: 150,
-            width: 250,
+            height: 180,
+            width: 280,
             child: _loader(),
           ),
         ),
@@ -38,9 +38,9 @@ class CustomProgressDashboardLoaderWidget extends StatelessWidget {
           child: Column(
             children: [
               CircularProgressIndicator(),
-              SizedBox(height: 10,),
+              SizedBox(height: 8,),
               AppText(
-                text: "Welcome to our Hashtag Mall Shopping Center! Loading Merchant please wait…..",
+                text: "Welcome to Hashtag Mall Shopping Center… Please wait as our Merchant Stores are loading",
                 color: Colors.purple,
 
               )

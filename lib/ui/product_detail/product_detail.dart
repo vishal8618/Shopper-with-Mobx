@@ -199,17 +199,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                     )
                         : LikeWidget(
-                      liked: (widget.args.productModel.likes != null) &&
-                          widget.args.productModel.likes.isLiked,
+                      liked: (widget.args.productModel.likedByCurrentUser != null) &&
+                          widget.args.productModel.likedByCurrentUser,
                       likeCallback: (isLiked) {
                         Future.delayed(Duration(
                           milliseconds: 1,
                         )).then((value) {
                           setState(() {
-                            if(widget.args.productModel.likes==null){
-                              widget.args.productModel.likes=Likes(id: 0,buyerId: int.parse( _userStore.uid), isLiked: false,productId: int.parse(widget.args.productModel.id.toString()));
+                            if(widget.args.productModel.likedByCurrentUser==null){
+                              widget.args.productModel.likedByCurrentUser= false;
+                             // widget.args.productModel.likes=Likes(id: 0,buyerId: int.parse( _userStore.uid), isLiked: false,productId: int.parse(widget.args.productModel.id.toString()));
                             }
-                            widget.args.productModel.likes.isLiked = isLiked;
+                            widget.args.productModel.likedByCurrentUser = isLiked;
                           });
                           isLiked
                               ? _productStore.addWish(
@@ -404,14 +405,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               CommonDialogs.showLoginDialog(context);
             else {
               setState(() {
-                if(model.favorites==null){
-                  model.favorites=Favorites(id: 0,buyerId: int.parse( _userStore.uid), isFavorite: false,productId: int.parse(model.id.toString()));
+                if(model.favoriteByCurrentUser==null){
+                  model.favoriteByCurrentUser= false;
+                  //model.favorites=Favorites(id: 0,buyerId: int.parse( _userStore.uid), isFavorite: false,productId: int.parse(model.id.toString()));
                 }
 
-                model.favorites.isFavorite = !model.favorites.isFavorite;
+                model.favoriteByCurrentUser = !model.favoriteByCurrentUser;
               });
 
-              model.favorites.isFavorite
+              model.favoriteByCurrentUser
                   ? _productStore.addFavourite(
                   uid: _userStore.uid, productId: model.id.toString())
                   : _productStore.removeFavourite(
@@ -448,7 +450,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           PopupMenuItem<ProductOptions>(
             value: ProductOptions.favourite,
             child: AppText(
-              text: _userStore.isLoggedIn && model.favorites.isFavorite
+              text: _userStore.isLoggedIn && model.favoriteByCurrentUser
                   ? 'Remove from favourites'
                   : 'Add to favourites',
             ),

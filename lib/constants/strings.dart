@@ -74,6 +74,15 @@ class Strings {
   static const String reasonError= "reasonError";
 
   static const String profile= "Profile";
+  static const String transactionInfo= "Transaction Info";
+  static const String returnProduct= "Return Product";
+  static const String exportReceipt= "Export Receipt";
+
+  static const String confirmationTitle = "Confirmation Email";
+  static const String verifyRegistration = "Please check your email and verify your account";
+
+
+  static const String thankyou_Messsage = " Your email verification process is done successfully";
 
 
 }

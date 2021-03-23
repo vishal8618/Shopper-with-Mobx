@@ -18,10 +18,9 @@ class ProductsApi {
   ProductsApi(this._dioClient   );
 
   /// Returns list of post in response
-  Future<List<ProductModel>> getProducts({String id}) async {
+  Future<List<ProductModel>> getProducts({String id,String uid}) async {
     try {
-      final res = await _dioClient
-          .get("${Endpoints.getProducts}$id${Endpoints.products}");
+      final res = await _dioClient.get("${Endpoints.getProducts}$id/products.json?buyer_id=$uid");
       return productModelFromJson(json.encode(res.data));
     } catch (e) {
       print(e.toString());

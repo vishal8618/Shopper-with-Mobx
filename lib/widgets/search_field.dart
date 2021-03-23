@@ -18,7 +18,7 @@ class SearchField extends StatefulWidget {
   final TextInputAction action;
   final TextInputType inputType;
   final Function(String) onType;
-  final Function(String) onSubmit;
+  final Function(String,bool) onSubmit;
   final Function(String) onSelected;
   final TextEditingController controller;
 
@@ -46,7 +46,10 @@ class _SearchFieldSate extends State<SearchField> {
       textFieldConfiguration: TextFieldConfiguration(
           autofocus: false,
           textInputAction: TextInputAction.search,
-          onSubmitted: widget.onSubmit,
+
+          onSubmitted: (text){
+            widget.onSubmit(text,false);
+          },
           controller: widget.controller,
           style: textFieldStyle(_scaler.getTextSize(12)),
           decoration: inputDecorationWithCurve(hint, _scaler)),
@@ -112,6 +115,7 @@ class _SearchFieldSate extends State<SearchField> {
       errorStyle: TextStyle(fontSize: 0, height: 0),
       isDense: false,
       suffixIcon: IconButton(
+
         icon: Icon(
           Icons.close,
           color: Colors.grey,
@@ -119,8 +123,8 @@ class _SearchFieldSate extends State<SearchField> {
         ),
         onPressed: () {
           widget.controller.text = "";
-          widget.onSubmit("");
-          DeviceUtils.hideKeyboard(context);
+          widget.onSubmit("",true);
+        DeviceUtils.hideKeyboard(context);
         },
       ),
       prefixIcon: Icon(
@@ -150,6 +154,7 @@ class _SearchFieldSate extends State<SearchField> {
         fontFamily: FontFamily.lato,
         fontWeight: FontWeight.w500,
         fontSize: size);
+
   }
 
   static TextStyle textMedium(Color color, double textSize, {bool underline}) {

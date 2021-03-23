@@ -31,8 +31,8 @@ class PlaceApiProvider {
   final apiKey = "AIzaSyBotqZp8T6mT_tTuZB25YOe2RcTPUTMsUo";
 
   Future<Place> getPlaceDetailFromId(String placeId) async {
-    final request =
-        'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&fields=address_component&key=$apiKey';
+    final request = 'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&fields=address_component&key=$apiKey';
+   print('PlaceDetails$request');
     final response = await client.get(request);
 
     if (response.statusCode == 200) {

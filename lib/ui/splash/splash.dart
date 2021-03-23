@@ -6,6 +6,7 @@ import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:greetings_world_shopper/constants/assets.dart';
 import 'package:greetings_world_shopper/constants/colors.dart';
 import 'package:greetings_world_shopper/stores/user_store.dart';
+import 'package:greetings_world_shopper/ui/home/bloc.dart';
 import 'package:greetings_world_shopper/widgets/image_view.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,6 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _userStore = Provider.of<UserStore>(context);
+
   }
 
   @override
@@ -57,6 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   navigate() async {
     if (_userStore.isLoggedIn) {
+      print('confirmUser========>${_userStore.confirmUser}');
       Navigator.of(context).pushReplacementNamed(Routes.home);
     } else {
       Navigator.of(context).pushReplacementNamed(Routes.login);

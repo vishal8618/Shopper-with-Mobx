@@ -4,8 +4,8 @@ class Endpoints {
   Endpoints._();
 
 // base url
-  static const String baseUrl = "http://192.168.1.155:3000/";
-  //static const String baseUrl = "https://htm-app.herokuapp.com/";
+  //static const String baseUrl = "http://192.168.1.155:3000/";
+  static const String baseUrl = "https://htm-app.herokuapp.com/";
 
   static const String products = "/products.json";
   static const String getMerchants = baseUrl + "merchants.json";
@@ -30,9 +30,13 @@ class Endpoints {
 
 
   static const String addReport = baseUrl + "product_flag_reports.json";
-  static const String addMerchantReport =
-      baseUrl + "merchant_flag_reports.json";
+  static const String addMerchantReport = baseUrl + "merchant_flag_reports.json";
 
   static const String updateProfileDetail = baseUrl + "buyers/";
   static const String createOrder = baseUrl + "orders.json";
+
+  static const String getReceipt = baseUrl + "orders";
+  static const String getReceiptDetail= baseUrl + "orders/";
+
+  static const String registrationConfirmation= baseUrl + "registration/confirm_user.json";
 }

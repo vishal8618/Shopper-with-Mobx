@@ -222,6 +222,21 @@ mixin _$CartStore on _CartStore, Store {
     });
   }
 
+  final _$isEditingAtom = Atom(name: '_CartStore.isEditing');
+
+  @override
+  bool get isEditing {
+    _$isEditingAtom.reportRead();
+    return super.isEditing;
+  }
+
+  @override
+  set isEditing(bool value) {
+    _$isEditingAtom.reportWrite(value, super.isEditing, () {
+      super.isEditing = value;
+    });
+  }
+
   final _$addCartAsyncAction = AsyncAction('_CartStore.addCart');
 
   @override
@@ -269,6 +284,17 @@ mixin _$CartStore on _CartStore, Store {
   final _$_CartStoreActionController = ActionController(name: '_CartStore');
 
   @override
+  dynamic updateIsEditing() {
+    final _$actionInfo = _$_CartStoreActionController.startAction(
+        name: '_CartStore.updateIsEditing');
+    try {
+      return super.updateIsEditing();
+    } finally {
+      _$_CartStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic updateDeliveryType({@required String type, @required String id}) {
     final _$actionInfo = _$_CartStoreActionController.startAction(
         name: '_CartStore.updateDeliveryType');
@@ -295,6 +321,7 @@ cartList: ${cartList},
 cartSubTotal: ${cartSubTotal},
 deliveryEstimated: ${deliveryEstimated},
 convenienceFee: ${convenienceFee},
+isEditing: ${isEditing},
 loading: ${loading},
 createOrderLoading: ${createOrderLoading}
     ''';

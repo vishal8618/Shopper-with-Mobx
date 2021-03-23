@@ -11,6 +11,7 @@ import 'package:greetings_world_shopper/stores/cart_store.dart';
 import 'package:greetings_world_shopper/stores/user_store.dart';
 import 'package:greetings_world_shopper/utils/error_bar.dart';
 import 'package:greetings_world_shopper/widgets/app_text.dart';
+import 'package:greetings_world_shopper/widgets/app_text_field.dart';
 import 'package:greetings_world_shopper/widgets/common_message_dialog.dart';
 import 'package:greetings_world_shopper/widgets/progress_indicator_widget.dart';
 import 'package:provider/provider.dart';
@@ -29,16 +30,19 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   CartStore _cartStore;
   UserStore _userStore;
   bool initial;
+  bool showBottomButtons = true;
+  var specialCodeController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
     print("===>initState");
     // _imagePicker = ImagePicker();
     initial = true;
-   WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_cartStore.loading) _cartStore.getCart(uid: _userStore.uid);
     });
-
   }
 
   @override
@@ -57,6 +61,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return WillPopScope(
         child: Observer(builder: (context) {
           return Scaffold(
+            key: _scaffoldKey,
             appBar: AppBar(
               automaticallyImplyLeading: true,
               title: AppText(
@@ -66,7 +71,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ),
               centerTitle: true,
             ),
-            backgroundColor: AppColors.bg,
+            backgroundColor: AppColors.textColorLight,
             body: Stack(
               fit: StackFit.expand,
               children: [
@@ -81,10 +86,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           color: Colors.white,
                           child: Column(
                             children: [
-
                               _buildOwnInfo(),
                               _buildShopperInfo(),
-                              _buildDetails()
+                              _buildDetails(),
                             ],
                           ),
                         ),
@@ -95,7 +99,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                   ),
                 ),
-                _buildButtons(),
+                showBottomButtons ? _buildButtons() : Container(),
                 _handleErrorMessage(),
                 _cartStore.loading
                     ? CustomProgressIndicatorWidget()
@@ -114,6 +118,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         AppText(
           text: Strings.purchasedBy,
           style: AppTextStyle.regular,
+          size: _scaler.getTextSize(12),
         ),
         SizedBox(
           height: _scaler.getHeight(0.2),
@@ -121,47 +126,63 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         AppText(
           text: _userStore.name,
           style: AppTextStyle.medium,
-          size: _scaler.getTextSize(13),
-        ),
-        SizedBox(
-          height: _scaler.getHeight(1),
-        ),
-        AppText(
-          text: Strings.shippingAddress,
-          style: AppTextStyle.regular,
+          size: _scaler.getTextSize(11),
         ),
         SizedBox(
           height: _scaler.getHeight(0.2),
         ),
+
         Container(
-          padding: _scaler.getPaddingLTRB(0, 0, 12, 0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AppText(
+                text: Strings.shippingAddress,
+                style: AppTextStyle.regular,
+                size: _scaler.getTextSize(12),
+              ),
+              Container(
+                child: IconButton(
+                    icon: Icon(Icons.edit,size: 24.0),
+                    alignment: Alignment.centerRight,
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(Routes.completeAddress,
+                          arguments: 'checkout');
+                    }),
+              )
+            ],
+          ),
+        ),
+        SizedBox(
+          height: _scaler.getHeight(0.0),
+        ),
+        Container(
+          // padding: _scaler.getPaddingLTRB(0, 0, 12, 0),
           child: Row(
             children: [
               Expanded(
+                /*  child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,*/
                 child: AppText(
                   text: _userStore.address1 +
-                      "," +
-                      _userStore.state +
-                      "," +
+                      ", \n" +
                       _userStore.userCity +
-                      "," +
+                      ", " +
+                      _userStore.state +
+                      ", " +
+                      _userStore.country +
+                      "\n" +
                       _userStore.userZip,
                   style: AppTextStyle.medium,
-                  size: _scaler.getTextSize(11.5),
+                  maxLine: null,
+                  size: _scaler.getTextSize(11),
                 ),
-              ),
-              IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(Routes.completeAddress,arguments: 'checkout');
-                  })
+              ), //),
             ],
           ),
         ),
       ],
-
     );
-
   }
 
   Widget _buildShopperInfo() {
@@ -179,6 +200,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   style: AppTextStyle.medium,
                   size: _scaler.getTextSize(11.5),
                 ),
+                SizedBox(
+                  height: _scaler.getHeight(3.0),
+                ),
                 GestureDetector(
                   child: Icon(
                     Icons.info_outline_rounded,
@@ -192,12 +216,40 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ],
             ),
             Container(
-              padding: _scaler.getPadding(0.3, 2),
+              alignment: Alignment.center,
+              height: _scaler.getHeight(3.0),
+              width: _scaler.getWidth(13),
+              padding: EdgeInsets.all(2),
               decoration: BoxDecoration(
                 border: Border.all(color: AppColors.textColorLight),
               ),
-              child: AppText(
-                text: "54632",
+              child: TextFormField(
+                decoration: InputDecoration(
+                  contentPadding: new EdgeInsets.all(6.0),
+                  border: InputBorder.none,
+                  hintText: "1234",
+                  counter: SizedBox.shrink(),
+                ),
+                style: TextStyle(
+                  fontSize: _scaler.getTextSize(10)
+                ),
+                controller: specialCodeController,
+                maxLines: 1,
+                maxLength: 4,
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  if (value.length > 4) {}
+                },
+                onTap: (){
+                  print('========Tap');
+                  setState(() {
+                    showBottomButtons =false;
+                  });
+                },
+                onFieldSubmitted: (value){
+                  print('========onSaved');
+                  showBottomButtons = true;
+                },
               ),
             )
           ],
@@ -349,8 +401,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               padding: _scaler.getPadding(1, 0),
               color: AppColors.buttonBg,
               onPressed: () {
-                 processPayment();
-              //  Navigator.of(context).pushNamed(Routes.creditCard);
+                processPayment();
+                //  Navigator.of(context).pushNamed(Routes.creditCard);
               },
               child: AppText(
                 text: Strings.payNow,
@@ -415,7 +467,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
     // _cartStore.success=false;
 
-
     var result = await Navigator.of(context).pushNamed(Routes.creditCard);
 
     if (result != null && result is CreditCardModel) {
@@ -432,6 +483,4 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Future<bool> pop() async {
     Navigator.of(context).pop();
   }
-
-
 }

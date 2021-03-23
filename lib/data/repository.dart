@@ -6,17 +6,21 @@ import 'package:greetings_world_shopper/data/network/apis/user/user_api.dart';
 import 'package:greetings_world_shopper/data/sharedpref/shared_preference_helper.dart';
 import 'package:greetings_world_shopper/models/cart/cart_item_model.dart';
 import 'package:greetings_world_shopper/models/cart/update_cart_model.dart';
+import 'package:greetings_world_shopper/models/confirmation/register_confirmation_model.dart';
 import 'package:greetings_world_shopper/models/like/like_model.dart';
 import 'package:greetings_world_shopper/models/merchants/merchant_model.dart';
 import 'package:greetings_world_shopper/models/merchnat_follow_model/merchant_follow_order.dart';
 import 'package:greetings_world_shopper/models/orders/create_order_model.dart';
 import 'package:greetings_world_shopper/models/products/product_model.dart';
+import 'package:greetings_world_shopper/models/receipt/receipt_model.dart';
+import 'package:greetings_world_shopper/models/receipt_detail/receipt_detail_model.dart';
 import 'package:greetings_world_shopper/models/report/report_model.dart';
 import 'package:greetings_world_shopper/models/user/login_model.dart';
 import 'package:greetings_world_shopper/models/user/user_model.dart';
 import 'package:inject/inject.dart';
 
 import 'network/apis/cart/cart_api.dart';
+import 'network/apis/receipt/receipt_api.dart';
 
 @provide
 class Repository {
@@ -25,13 +29,14 @@ class Repository {
   final ProductsApi _productsApi;
   final UserApi _userApi;
   final CartApi _cartApi;
+  final ReceiptApi _receiptApi;
 
   // shared pref object
   final SharedPreferenceHelper _sharedPrefsHelper;
 
   // constructor
   Repository(this._merchantsApi, this._productsApi, this._userApi,
-      this._cartApi, this._sharedPrefsHelper);
+      this._cartApi,this._receiptApi, this._sharedPrefsHelper);
 
   // sign up
   Future<UserModel> signUp(
@@ -80,6 +85,17 @@ class Repository {
     }).catchError((error) => throw error);
   }
 
+  //get list of receipt
+
+  // get list of merchants
+  Future<List<ReceiptModel>> getReceipt({ String uid,int limit, int offset}) async {
+    return await _receiptApi
+        .getReceipt(uid:uid,limit: limit, offset: offset)
+        .then((receiptList) {
+      return receiptList;
+    }).catchError((error) => throw error);
+  }
+
   // follow merchant
   Future<FollowModel> followMerchant({String uid, String merchantId}) async {
     return await _merchantsApi
@@ -99,8 +115,8 @@ class Repository {
   }
 
   // get list of products
-  Future<List<ProductModel>> getProducts({String id}) async {
-    return await _productsApi.getProducts(id: id).then((productsList) {
+  Future<List<ProductModel>> getProducts({String id , String uid}) async {
+    return await _productsApi.getProducts(id: id,uid: uid).then((productsList) {
       return productsList;
     }).catchError((error) => throw error);
   }
@@ -229,6 +245,24 @@ class Repository {
       return user;
     }).catchError((error) => throw error);
   }
+// receipt detail
+
+  // get list of products
+  Future<ReceiptDetailModel> getReceiptDetail({String id , String uid}) async {
+    return await _receiptApi.getReceiptDetail(id: id,uid: uid).then((model) {
+      return model;
+    }).catchError((error) => throw error);
+  }
+
+  // remove wish
+  Future<RegisterConfirmationModel> confirmRegistration({String token}) async {
+    return await _userApi
+        .confirmRegistration(token: token)
+        .then((model) {
+      return model;
+    }).catchError((error) => throw error);
+  }
+
 
   //save login info in local
   Future<void> saveIsLoggedIn(bool value) =>
@@ -299,12 +333,18 @@ class Repository {
 
   Future<String> get getCountry => _sharedPrefsHelper.getCountry;
 
-  //callback
-  //country
-  Future<void> saveCallback(String value) =>
-      _sharedPrefsHelper.saveCallback(value);
+  Future<void> saveConfirmUser(bool value) =>
+      _sharedPrefsHelper.saveConfirmUser(value);
 
-  Future<String> get getCallback => _sharedPrefsHelper.getCallback;
+  Future<bool> get getConfirmUser => _sharedPrefsHelper.getConfirmUser;
+
+  Future<void> saveDeepLinkUrl(String value) {
+    print('savelink===>  $_sharedPrefsHelper');
+    _sharedPrefsHelper.saveDeepLinkUrl(value);
+  }
+
+
+  Future<String> get getDeepLinkUrl => _sharedPrefsHelper.getDeepLinkUrl;
 
   // Language: -----------------------------------------------------------------
   Future<void> changeLanguage(String value) =>

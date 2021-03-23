@@ -413,7 +413,6 @@ class ShopperProfileDetailState extends State<ShopperProfileDetail> {
   Widget navigate(BuildContext context) {
     Future.delayed(Duration(milliseconds: 0), () {
       _cartStore.getCart(uid: _userStore.uid);
-
       if (Navigator.of(context).canPop())
         Navigator.of(context).pop();
       else
