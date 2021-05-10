@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:greetings_world_shopper/routes.dart';
 
 
 abstract class Bloc {
@@ -37,6 +39,10 @@ class DeepLinkBloc extends Bloc {
   _onRedirected(String uri) {
     print('P====> _onRedirected $uri');
     stateSink.add(uri);
+    if (Navigator.of(Routes.context).canPop()) Navigator.pop(Routes.context);
+    Navigator.of(Routes.context).pushNamedAndRemoveUntil(Routes.phoneVerification, (route) => false);
+
+
   }
 
   @override
@@ -51,6 +57,7 @@ class DeepLinkBloc extends Bloc {
       return "Failed to Invoke: '${e.message}'.";
     }
   }
+
 
 }
 

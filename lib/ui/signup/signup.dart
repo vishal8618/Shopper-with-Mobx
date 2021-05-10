@@ -41,13 +41,12 @@ class _SignupScreenState extends State<SignupScreen> {
   ScreenScaler scaler;
 
   var nameController = TextEditingController();
-  var phoneController = TextEditingController();
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
 
   bool emailFocus = false;
   bool passwordFocus = false;
-  bool phoneFocus = false;
+
   bool nameFocus = false;
 
   UserStore _userStore;
@@ -75,6 +74,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Routes.context=context;
     if (scaler == null) scaler = new ScreenScaler()..init(context);
 
     return Scaffold(
@@ -261,7 +261,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 },
                               ),
                             ),
-                            SizedBox(
+                      /*      SizedBox(
                               height: scaler.getHeight(2),
                             ),
                             Focus(
@@ -291,7 +291,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   }
                                 },
                               ),
-                            ),
+                            ),*/
                             SizedBox(
                               height: scaler.getHeight(2),
                             ),
@@ -339,7 +339,6 @@ class _SignupScreenState extends State<SignupScreen> {
                         DeviceUtils.hideKeyboard(context);
 
                         _userStore.signUp(
-                          phone: phoneController.text,
                           password: passwordController.text,
                           fullName: nameController.text,
                           email: emailController.text,
@@ -390,10 +389,11 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget navigate(BuildContext context) {
     Future.delayed(Duration(milliseconds: 100), () {
       _cartStore.getCart(uid: _userStore.uid);
-      if (widget.sendResult) {
+      CommonDialogs.showConfirmationDialog(context);
+     /* if (widget.sendResult) {
         Navigator.of(context).pop();
       } else
-        CommonDialogs.showConfirmationDialog(context);
+       */
     //  Navigator.of(context).pushReplacementNamed(Routes.login);
 
       /*  Navigator.of(context).pushNamedAndRemoveUntil(

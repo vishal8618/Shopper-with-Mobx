@@ -110,6 +110,23 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
+  final _$errorsAtom = Atom(name: '_UserStore.error');
+
+  @override
+  bool get error {
+    _$errorsAtom.reportRead();
+    return super.error;
+  }
+
+  @override
+  set error(bool value) {
+    _$errorsAtom.reportWrite(value, super.error, () {
+      super.error = value;
+    });
+  }
+
+
+
   final _$imageAtom = Atom(name: '_UserStore.image');
 
   @override

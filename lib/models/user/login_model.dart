@@ -81,7 +81,7 @@ class Buyer {
     stripeId: json["stripe_id"],
     token: json["token"],
     deviceType: json["device_type"],
-    buyerPhoto: json["buyer_photo"] == null ? null : json["buyer_photo"],
+    buyerPhoto: json["buyer_photo"] == null ? "" : json["buyer_photo"],
   );
 
   Map<String, dynamic> toJson() => {

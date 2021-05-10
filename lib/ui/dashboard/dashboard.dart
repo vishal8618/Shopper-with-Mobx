@@ -72,6 +72,10 @@ class _DashboardState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    Routes.context=context;
+
+
     if (_scaler == null) {
       _scaler = ScreenScaler()..init(context);
       if (!_merchantStore.loading)

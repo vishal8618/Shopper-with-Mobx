@@ -7,7 +7,7 @@ import 'package:greetings_world_shopper/constants/colors.dart';
 import 'package:greetings_world_shopper/constants/font_family.dart';
 import 'package:greetings_world_shopper/utils/locale/app_localization.dart';
 
-class LoginTextField extends StatelessWidget {
+class PhoneTextField extends StatelessWidget {
   final String hintText;
   final TextEditingController controller;
   final FocusNode node;
@@ -25,7 +25,7 @@ class LoginTextField extends StatelessWidget {
   final int maxLines;
   final Function(String) validate;
 
-  LoginTextField({
+  PhoneTextField({
     @required this.hintText,
     @required this.controller,
     this.node,
@@ -90,20 +90,20 @@ class LoginTextField extends StatelessWidget {
       isDense: false,
       suffixIcon: suffix == null ? null : suffix,
       prefixIcon: prefix == null ? null : prefix,
-      hintStyle: textMedium(Colors.white, scaler.getTextSize(11)),
+      hintStyle: textMedium(Colors.grey, scaler.getTextSize(11)),
       contentPadding: scaler.getPaddingLTRB(0, 1.3, 1, 1.4),
       fillColor: AppColors.bg,
       enabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: Colors.white, width: 0.5),
+        borderSide: BorderSide(color: Colors.grey, width: 0.5),
       ),
       disabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: Colors.white, width: 0.5),
+        borderSide: BorderSide(color: Colors.grey, width: 0.5),
       ),
       errorBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: Colors.white, width: 0.5),
+        borderSide: BorderSide(color: Colors.grey, width: 0.5),
       ),
       focusedErrorBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: Colors.white, width: 0.5),
+        borderSide: BorderSide(color: Colors.grey, width: 0.5),
       ),
     );
   }

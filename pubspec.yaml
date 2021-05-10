@@ -57,10 +57,7 @@ dependencies:
   # search bar
   flutter_typeahead: ^2.0.0
   webview_flutter: ^1.0.7
-
   credit_card_type_detector: ^1.1.0
-
-  credit_card_number_validator: ^1.0.4
   image_picker: ^0.6.7+22
 
   stripe_payment: ^1.0.10
@@ -88,7 +85,6 @@ dependencies:
   geocoder: ^0.2.1
   geolocator: ^3.0.1
   uuid: ^2.0.4
-  email_validator: '^1.0.6'
   # This package provides internationalization and localization facilities, including message
   # translation, plurals and genders, date/number formatting and parsing, and bidirectional text.
   intl: ^0.16.1

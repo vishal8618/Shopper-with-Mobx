@@ -51,6 +51,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Routes.context=context;
     _scaler = ScreenScaler()..init(context);
 
     return WillPopScope(

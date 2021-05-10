@@ -8,7 +8,7 @@ import 'package:greetings_world_shopper/constants/strings.dart';
 import 'package:greetings_world_shopper/data/repository.dart';
 import 'package:greetings_world_shopper/stores/cart_store.dart';
 import 'package:greetings_world_shopper/stores/user_store.dart';
-import 'package:greetings_world_shopper/ui/home/bloc.dart';
+import 'package:greetings_world_shopper/ui/deep_link/bloc.dart';
 import 'package:greetings_world_shopper/utils/device/device_utils.dart';
 import 'package:greetings_world_shopper/utils/error_bar.dart';
 import 'package:greetings_world_shopper/utils/locale/app_localization.dart';
@@ -35,11 +35,9 @@ class _LoginScreen extends State<LoginScreen> {
 
   bool emailFocus = false;
   bool passwordFocus = false;
-  bool showVerifiedText = false;
   Repository _repository;
   UserStore _userStore;
   CartStore _cartStore;
-  DeepLinkBloc _bloc;
   bool hitVerifyApi = false;
 
   @override
@@ -52,71 +50,50 @@ class _LoginScreen extends State<LoginScreen> {
     super.didChangeDependencies();
     _userStore = Provider.of<UserStore>(context);
     _cartStore = Provider.of<CartStore>(context);
-    _bloc = Provider.of<DeepLinkBloc>(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    Routes.context = context;
     if (_scaler == null) _scaler = ScreenScaler()..init(context);
-
-    return StreamBuilder<String>(
-        stream: _bloc.state,
-        builder: (context,  snapshot) {
-          print('SS Data========> ${snapshot.data}');
-          if (snapshot.hasData) {
-            showVerifiedText = true;
-            final splitInviteLink = snapshot.data.split('?');
-            final inviteToken = splitInviteLink[splitInviteLink.length - 1];
-            print('tokennnn====>$inviteToken');
-
-            if (!_userStore.loading)
-             if(!hitVerifyApi){
-               hitVerifyApi = true;
-               _userStore.userConfirmation(token: inviteToken);
-               if (Navigator.of(context).canPop()) Navigator.pop(context);
-             }
-          } else {
-            showVerifiedText = false;
-          }
-          return Scaffold(
-            appBar: AppBar(
-              automaticallyImplyLeading: true,
-              title: AppText(
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        /*   title: AppText(
                 text: Strings.login,
                 color: Colors.white,
                 style: AppTextStyle.medium,
-              ),
-              centerTitle: true,
-              actions: [
-                !Navigator.of(context).canPop()
-                    ? Center(
-                        child: GestureDetector(
-                          onTap: () {
-                         /*   Navigator.of(context)
+              ),*/
+        centerTitle: true,
+        actions: [
+          !Navigator.of(context).canPop()
+              ? Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      /*   Navigator.of(context)
                                 .pushReplacementNamed(Routes.home);*/
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: AppText(
-                              text: "",
-                              style: AppTextStyle.title,
-                              color: Colors.white,
-                              underline: true,
-                              size: _scaler.getTextSize(10),
-                            ),
-                          ),
-                        ),
-                      )
-                    : Container()
-              ],
-            ),
-            body: GestureDetector(
-                onTap: () {
-                  DeviceUtils.hideKeyboard(context);
-                },
-                child: Container(color: Colors.purple, child: _buildBody())),
-          );
-        });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: AppText(
+                        text: "",
+                        style: AppTextStyle.title,
+                        color: Colors.white,
+                        underline: true,
+                        size: _scaler.getTextSize(10),
+                      ),
+                    ),
+                  ),
+                )
+              : Container()
+        ],
+      ),
+      body: GestureDetector(
+          onTap: () {
+            DeviceUtils.hideKeyboard(context);
+          },
+          child: Container(color: Colors.purple, child: _buildBody())),
+    );
   }
 
   Widget _buildBody() {
@@ -131,7 +108,6 @@ class _LoginScreen extends State<LoginScreen> {
                 width: _scaler.getWidth(30),
                 color: AppColors.starYellow,
               ),
-              showVerifiedText ? _buildText(context) : Container(),
               Form(
                 key: formKey,
                 child: Container(
@@ -265,13 +241,14 @@ class _LoginScreen extends State<LoginScreen> {
             ],
           ),
           _handleErrorMessage(),
+          _handleSuccessMessage(),
           _userStore.loading ? CustomProgressIndicatorWidget() : Container(),
         ],
       );
     });
   }
 
-  Widget _handleErrorMessage() {
+  Widget _handleSuccessMessage() {
     return Observer(
       builder: (context) {
         return _userStore.errorStore.errorMessage.isNotEmpty
@@ -295,22 +272,47 @@ class _LoginScreen extends State<LoginScreen> {
     return Container();
   }
 
-  Widget _buildText(context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        AppText(
-          text: Strings.thankyou_Messsage,
-          style: AppTextStyle.medium,
-          size: _scaler.getTextSize(10.5),
-          color: Colors.white,
-        )
-      ],
-    );
-  }
   @override
   void dispose() {
     super.dispose();
+    _userStore.errorStore.dispose();
+    _userStore.error = false;
+  }
+
+  Widget _handleErrorMessage() {
+    print("Error=========>${_userStore.errorStore.errorMessage}");
+    return Observer(
+      builder: (context) {
+        return _userStore.error ? navigates(context) : SizedBox.shrink();
+      },
+    );
+  }
+
+  Widget navigates(BuildContext context) {
+    print("userError=========>${_userStore.errorStore.errorMessage}");
+
+    if (_userStore.errorStore.errorMessage.isNotEmpty) {
+      ErrorBar.showMessage(_userStore.errorStore.errorMessage, context);
+    }
+
+    Future.delayed(Duration(milliseconds: 0), () {
+      if (_userStore.errorStore.errorMessage
+          .contains("Email or password is invalid")) {
+        if (Navigator.of(context).canPop()) Navigator.of(context).pop();
+      } else if (_userStore.errorStore.errorMessage.contains(
+          "Phone number not verified! Please verify your phone number.")) {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil(Routes.verify, (route) => false);
+      }else if(_userStore.errorStore.errorMessage.contains("Email not confirmed! Please check email and confirm.")){
+        if (Navigator.of(context).canPop()) Navigator.of(context).pop();
+      }
+
+      /*if (Navigator.of(context).canPop())
+        Navigator.of(context).pop();
+      else
+       Navigator.of(context).pushNamedAndRemoveUntil(Routes.verify, (route) => false);*/
+    });
+
+    return Container();
   }
 }

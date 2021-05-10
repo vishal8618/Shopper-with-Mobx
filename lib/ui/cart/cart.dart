@@ -54,6 +54,7 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Routes.context=context;
     _scaler = ScreenScaler()
       ..init(context);
 

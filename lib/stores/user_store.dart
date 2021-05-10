@@ -4,6 +4,7 @@ import 'dart:io' as Io;
 import 'package:greetings_world_shopper/constants/strings.dart';
 import 'package:greetings_world_shopper/data/repository.dart';
 import 'package:greetings_world_shopper/models/confirmation/register_confirmation_model.dart';
+import 'package:greetings_world_shopper/models/generate_otp/otp_model.dart';
 import 'package:greetings_world_shopper/models/user/login_model.dart';
 import 'package:greetings_world_shopper/models/user/user_model.dart';
 import 'package:greetings_world_shopper/stores/success_store.dart';
@@ -113,6 +114,14 @@ abstract class _UserStore with Store {
   ObservableFuture<RegisterConfirmationModel>(emptyConfirmationRegisterResponse);
 
 
+  static ObservableFuture<GenerateOtpModel> emptyGenerateOtpCodeResponse =
+  ObservableFuture.value(null);
+
+  @observable
+  ObservableFuture<GenerateOtpModel> fetchGenerateOtpCodeFuture =
+  ObservableFuture<GenerateOtpModel>(emptyGenerateOtpCodeResponse);
+
+
 
   @observable
   bool isEditing = false;
@@ -125,6 +134,8 @@ abstract class _UserStore with Store {
   @observable
   bool success = false;
 
+  @observable
+  bool error = false;
 
   bool isLoggedIn = false;
 
@@ -181,7 +192,9 @@ abstract class _UserStore with Store {
     future.then((user) {
       //_repository.saveIsLoggedIn(true);
       _repository.saveUserId(user.id);
-      _repository.saveImage(user.buyerPhoto);
+      if (user.buyerPhoto != null) {
+        _repository.saveImage(user.buyerPhoto);
+      }
       _repository
           .saveName("${user.firstName.toString()} ${user.lastName.toString()}");
       _repository.saveEmail(user.email.toString());
@@ -234,6 +247,7 @@ abstract class _UserStore with Store {
       }
 
       this.success = true;
+      this.error = false;
       isLoggedIn = true;
       userImage = user.buyer.buyerPhoto;
       uid = user.buyer.id.toString();
@@ -251,6 +265,7 @@ abstract class _UserStore with Store {
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
       this.success = false;
+      this.error = true;
     });
   }
 
@@ -394,12 +409,38 @@ abstract class _UserStore with Store {
     final future = _repository.confirmRegistration(token: token);
     fetchConfirmationRegisterFuture = ObservableFuture(future);
     future.then((user) {
-     // this.success = true;
+      this.success = true;
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
       this.success = false;
     });
   }
+
+  @action
+  Future getOtpCode({String uid ,String phoneNumber}) async {
+    final future = _repository.getOtpCode(uid: uid, phoneNumber: phoneNumber);
+    fetchGenerateOtpCodeFuture = ObservableFuture(future);
+    future.then((user) {
+      // this.success = true;
+    }).catchError((error) {
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+      this.success = false;
+    });
+  }
+
+  @action
+  Future phoneVerify({String phoneNumber, String otp, String uid}) async {
+    final future = _repository.phoneVerify(phoneNumber: phoneNumber, otp: otp, uid: uid);
+    fetchGenerateOtpCodeFuture = ObservableFuture(future);
+    future.then((user) {
+       this.success = true;
+    }).catchError((error) {
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+      this.success = false;
+    });
+  }
+
+
 
   // disposers:-----------------------------------------------------------------
   List<ReactionDisposer> _disposers;

@@ -7,6 +7,7 @@ import 'package:greetings_world_shopper/data/sharedpref/shared_preference_helper
 import 'package:greetings_world_shopper/models/cart/cart_item_model.dart';
 import 'package:greetings_world_shopper/models/cart/update_cart_model.dart';
 import 'package:greetings_world_shopper/models/confirmation/register_confirmation_model.dart';
+import 'package:greetings_world_shopper/models/generate_otp/otp_model.dart';
 import 'package:greetings_world_shopper/models/like/like_model.dart';
 import 'package:greetings_world_shopper/models/merchants/merchant_model.dart';
 import 'package:greetings_world_shopper/models/merchnat_follow_model/merchant_follow_order.dart';
@@ -253,8 +254,18 @@ class Repository {
       return model;
     }).catchError((error) => throw error);
   }
-
-  // remove wish
+  // get list of products
+  //update shopper detail
+  Future<LikeModel> cancelOrder(String orderId,
+      {String uid}) async {
+    return await _receiptApi
+        .cancelOrder(orderId,
+        uid: uid)
+        .then((model) {
+      return model;
+    }).catchError((error) => throw error);
+  }
+  // verify Email
   Future<RegisterConfirmationModel> confirmRegistration({String token}) async {
     return await _userApi
         .confirmRegistration(token: token)
@@ -263,7 +274,23 @@ class Repository {
     }).catchError((error) => throw error);
   }
 
+  // get otp
+  Future<GenerateOtpModel> getOtpCode({String uid, String phoneNumber}) async {
+    return await _userApi
+        .getGenerateOtp(uid: uid,phoneNumber: phoneNumber)
+        .then((model) {
+      return model;
+    }).catchError((error) => throw error);
+  }
 
+  // get otp
+  Future<GenerateOtpModel> phoneVerify({String phoneNumber, String otp, String uid}) async {
+    return await _userApi
+        .phoneNumberVerify(phoneNumber: phoneNumber, otp:otp, uid:uid)
+        .then((model) {
+      return model;
+    }).catchError((error) => throw error);
+  }
   //save login info in local
   Future<void> saveIsLoggedIn(bool value) =>
       _sharedPrefsHelper.saveIsLoggedIn(value);

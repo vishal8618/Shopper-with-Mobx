@@ -26,9 +26,15 @@ class _ShopperProfileState extends State<ShopperProfile> {
     super.didChangeDependencies();
     _userStore = Provider.of<UserStore>(context);
   }
-
+ @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // print("Imageeeeeeeeeee${_userStore.image}");
+  }
   @override
   Widget build(BuildContext context) {
+    Routes.context=context;
     _scaler = ScreenScaler()..init(context);
     return Scaffold(
       body: Material(
@@ -100,10 +106,9 @@ class _ShopperProfileState extends State<ShopperProfile> {
                         borderRadius: BorderRadius.circular(30.0),
                         gradient: AppColors.transParentGradient,
                         image: DecorationImage(
-                            image: _userStore.image != null
-                                ? FileImage(_userStore.image)
-                                : NetworkImage(
-                                _userStore.userImage),
+                            image: _userStore.userImage.trim().isEmpty
+                                ? AssetImage(Assets.user)
+                                : NetworkImage(_userStore.userImage),
                             fit: BoxFit.contain))
 
 

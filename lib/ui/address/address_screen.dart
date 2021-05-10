@@ -50,6 +50,7 @@ class _AddressScreenState extends State<AddressScreen> {
   String countryName;
   String selectedValue;
   final controller = ScrollController();
+  var prefix = 'Kyiv, ';
 
   String address = '';
 
@@ -79,7 +80,7 @@ class _AddressScreenState extends State<AddressScreen> {
       }
 
       setState(() {
-        zipCodeCheck = zipController.text.isNotEmpty;
+        zipCodeCheck = zipController.text.isEmpty;
       });
 
       print('Address=====>${_userStore.address1}');
@@ -95,38 +96,41 @@ class _AddressScreenState extends State<AddressScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Routes.context = context;
     _scaler = ScreenScaler()..init(context);
-    return WillPopScope(
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        actions: [
+          Observer(builder: (snapshot) {
+            return _userStore.isEditing
+                ? Container(
+                    width: 50,
+                  )
+                : IconButton(
+                    icon: Icon(
+                      Icons.edit_outlined,
+                      color: AppColors.starYellow,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _userStore.updateIsEditing();
+                        _status = false;
+                      });
+                    },
+                  );
+          })
+        ],
+      ),
+      body: _buildBody(),
+    );
+    /* return WillPopScope(
       child: Observer(builder: (context) {
-        return Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            actions: [
-              Observer(builder: (snapshot) {
-                return _userStore.isEditing
-                    ? Container(
-                        width: 50,
-                      )
-                    : IconButton(
-                        icon: Icon(
-                          Icons.edit_outlined,
-                          color: AppColors.starYellow,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _userStore.updateIsEditing();
-                            _status = false;
-                          });
-                        },
-                      );
-              })
-            ],
-          ),
-          body: _buildBody(),
-        );
+
       }),
       onWillPop: pop,
-    );
+    );*/
   }
 
   Widget _buildBody() {
@@ -151,12 +155,21 @@ class _AddressScreenState extends State<AddressScreen> {
                                 : () {
                                     DeviceUtils.hideKeyboard(context);
                                     openSuggestions();
+                                    FocusScopeNode currentFocus =
+                                        FocusScope.of(context);
+
+
                                   },
                             child: AppTextField(
                               hintText: 'Address line 1',
                               controller: address1Controller,
-                              editabled: false,
                               maxLines: null,
+                              editabled: false,
+                              validate: (value) => value == null
+                                  ? 'Please select address'
+                                  : null,
+
+
                             ),
                           ),
                           /*    SizedBox(
@@ -191,7 +204,7 @@ class _AddressScreenState extends State<AddressScreen> {
                           SizedBox(
                             height: _scaler.getHeight(2),
                           ),
-                          !zipCodeCheck
+                          zipCodeCheck
                               ? Container(
                                   padding: _scaler.getPadding(0.5, 1),
                                   child: DropdownButtonHideUnderline(
@@ -248,9 +261,6 @@ class _AddressScreenState extends State<AddressScreen> {
         mode: Mode.overlay,
         // Mode.fullscreen
         language: "en",
-        /* types: [
-          '(cities)'
-        ],*/
         components: [
           new Component(Component.country, "us"),
         ]);
@@ -296,19 +306,25 @@ class _AddressScreenState extends State<AddressScreen> {
   void getPlaceDetails(Prediction prediction) async {
     final placeDetails =
         await PlaceApiProvider().getPlaceDetailFromId(prediction.placeId);
-    if(mounted){
-      setState(() {
-     //   address = placeDetails.streetNumber + " " + placeDetails.street;
-        print('<=== ${placeDetails.streetNumber} - ${placeDetails.street}');
-        address1Controller.text = placeDetails.streetNumber + "" + placeDetails.street;
-        stateController.text = placeDetails.administrativeArea;
-        cityController.text = placeDetails.city;
-        print('City==========>${placeDetails.city}');
-        zipController.text = placeDetails.zipCode;
-        countryName = placeDetails.country;
-      });
-    }
+    if (mounted) {
+      print('<=== ${placeDetails.streetNumber} - ${placeDetails.street}');
 
+      address1Controller.text =
+          "${placeDetails.streetNumber == null ? "" : placeDetails.streetNumber}  "
+          "${placeDetails.street == null ? "" : placeDetails.street}";
+      stateController.text = placeDetails.administrativeArea;
+      cityController.text = placeDetails.city;
+      print('City==========>${placeDetails.city}');
+      print('zipCode==========>${placeDetails.zipCode}');
+      zipController.text = placeDetails.zipCode;
+      countryName = placeDetails.country;
+
+      address1Controller.text.trim().isEmpty
+          ? zipCodeCheck = true
+          : zipCodeCheck = false;
+
+      setState(() {});
+    }
   }
 
   Widget _getActionButtons() {
@@ -331,28 +347,35 @@ class _AddressScreenState extends State<AddressScreen> {
                 textColor: Colors.white,
                 color: AppColors.primaryColor,
                 onPressed: () {
-                  setState(() {
-                    FocusScope.of(context).requestFocus(new FocusNode());
-                    if (formKey.currentState.validate()) {
-                      DeviceUtils.hideKeyboard(context);
-                      _status = true;
-                      _userStore.updateUserAddress(_userStore.uid,
-                          street1: address.trim(),
-                          street2: address2Controller.text.trim(),
-                          city: cityController.text.trim(),
-                          stateName: stateController.text.trim(),
-                          countryName:
-                              countryName == null || countryName.isEmpty
-                                  ? "USA"
-                                  : countryName,
-                          zip: zipController.text == null ||
-                                  zipController.text.trim().isEmpty
-                              ? selectedValue
-                              : zipController.text.trim(),
-                          lat: latitude.toString().trim(),
-                          lng: longitude.toString().trim());
-                    }
-                  });
+                  if(address1Controller.text.trim().isEmpty){
+                    ErrorBar.showMessage("Please fill valid address", context);
+                  }else{
+                    setState(() {
+                      FocusScope.of(context).requestFocus(new FocusNode());
+                      if (formKey.currentState.validate()) {
+                        DeviceUtils.hideKeyboard(context);
+                        _status = true;
+
+                        _userStore.updateUserAddress(_userStore.uid,
+                            street1: address1Controller.text.trim(),
+                            street2: "",
+                            city: cityController.text.trim(),
+                            stateName: stateController.text.trim(),
+                            countryName:
+                            countryName == null || countryName.isEmpty
+                                ? "USA"
+                                : countryName,
+                            zip: zipController.text == null ||
+                                zipController.text.trim().isEmpty
+                                ? selectedValue
+                                : zipController.text.trim(),
+                            lat: latitude.toString().trim(),
+                            lng: longitude.toString().trim());
+                      }
+                    });
+                  }
+
+
                 },
                 shape: new RoundedRectangleBorder(
                     borderRadius: new BorderRadius.circular(20.0)),

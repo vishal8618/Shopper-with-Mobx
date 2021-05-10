@@ -11,7 +11,7 @@ import 'package:greetings_world_shopper/stores/merchants_store.dart';
 import 'package:greetings_world_shopper/stores/product_store.dart';
 import 'package:greetings_world_shopper/stores/receipt_store.dart';
 import 'package:greetings_world_shopper/stores/user_store.dart';
-import 'package:greetings_world_shopper/ui/home/bloc.dart';
+import 'package:greetings_world_shopper/ui/deep_link/bloc.dart';
 import 'package:greetings_world_shopper/utils/locale/app_localization.dart';
 import 'package:inject/inject.dart';
 import 'package:provider/provider.dart';
@@ -34,6 +34,7 @@ void main() {
       NetworkModule(),
       PreferenceModule(),
     );
+    print("==========>main");
     runApp(appComponent.app);
   });
 }
@@ -84,7 +85,6 @@ class MyApp extends StatelessWidget {
             title: Strings.appName,
             theme: themeData,
             initialRoute: Routes.splash,
-
             onGenerateRoute: Routes.generateRoute,
             locale: Locale(_languageStore.locale),
             supportedLocales: _languageStore.supportedLanguages

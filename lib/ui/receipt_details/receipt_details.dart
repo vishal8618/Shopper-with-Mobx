@@ -8,14 +8,22 @@ import 'package:greetings_world_shopper/constants/strings.dart';
 import 'package:greetings_world_shopper/models/receipt/receipt_model.dart';
 import 'package:greetings_world_shopper/stores/receipt_store.dart';
 import 'package:greetings_world_shopper/stores/user_store.dart';
+import 'package:greetings_world_shopper/utils/error_bar.dart';
+import 'package:greetings_world_shopper/utils/success_bar.dart';
 import 'package:greetings_world_shopper/widgets/app_text.dart';
+import 'package:greetings_world_shopper/widgets/common_message_dialog.dart';
+import 'package:greetings_world_shopper/widgets/progress_indicator_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../routes.dart';
 
 class ReceiptDetailScreen extends StatefulWidget {
   final ReceiptModel receiptInfo;
 
   ReceiptDetailScreen({this.receiptInfo});
+
   @override
   _ReceiptDetailState createState() => _ReceiptDetailState();
 }
@@ -25,22 +33,39 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   UserStore _userStore;
   ReceiptStore _receiptStore;
- String orderPlaceTime='';
+  String orderPlaceTime = '';
+  bool initial;
+  bool showCancelledText = false;
+
+  @override
+  void initState() {
+    super.initState();
+    initial = true;
+
+    if (widget.receiptInfo.status.contains("Canceled")) {
+      showCancelledText = true;
+    } else {
+      showCancelledText = false;
+    }
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
     _userStore = Provider.of<UserStore>(context);
     _receiptStore = Provider.of<ReceiptStore>(context);
-    if (!_receiptStore.loading)
-       _receiptStore.getReceiptDetail(id: widget.receiptInfo.id.toString(),uid: _userStore.uid);
+    if (!_receiptStore.receiptDetailLoading)
+      _receiptStore.getReceiptDetail(
+          id: widget.receiptInfo.id.toString(), uid: _userStore.uid);
 
     timeConverter(widget.receiptInfo.createdAt.toString());
-
+    initial = false;
   }
 
   @override
   Widget build(BuildContext context) {
+    Routes.context = context;
     _scaler = ScreenScaler()..init(context);
     return WillPopScope(
         child: Observer(builder: (context) {
@@ -109,9 +134,10 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
               decoration: BoxDecoration(
                   image: DecorationImage(
                       image: widget.receiptInfo.orderItems.productPhoto != null
-                          ? NetworkImage(widget.receiptInfo.orderItems.productPhoto)
-                          : AssetImage(Assets.logo), fit: BoxFit.cover)
-              ),
+                          ? NetworkImage(
+                              widget.receiptInfo.orderItems.productPhoto)
+                          : AssetImage(Assets.logo),
+                      fit: BoxFit.cover)),
             ),
           ),
           SizedBox(
@@ -194,13 +220,25 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
                 ),
               ),
               Align(
-                alignment: Alignment.topRight,
-                child: AppText(
-                  text:widget.receiptInfo.trackingNumber,
-                  style: AppTextStyle.medium,
-                  size: _scaler.getTextSize(11),
-                ),
-              ),
+                  alignment: Alignment.topRight,
+                  child: InkWell(
+                    onTap: () {
+                      
+                      if(widget.receiptInfo.status.contains("Canceled")){
+                        showCancelOrderDialog();
+                      }else{
+                        _launchURL();
+                      }
+
+                    },
+                    child: AppText(
+                      text: widget.receiptInfo.trackingNumber,
+                      style: AppTextStyle.medium,
+                      size: _scaler.getTextSize(11),
+                      color: Colors.blue,
+                      underline: true,
+                    ),
+                  )),
             ],
           ),
         ],
@@ -224,18 +262,26 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
             child: MaterialButton(
               height: _scaler.getHeight(3.5),
               padding: _scaler.getPadding(1, 0),
-              color: AppColors.buttonBg,
+              color: showCancelledText ? Colors.red : AppColors.buttonBg,
               onPressed: () {
-                //  Navigator.of(context).pushNamed(Routes.creditCard);
+                if (!_receiptStore.cancelOrderLoading)
+                  _receiptStore.cancelOrder(widget.receiptInfo.id.toString(),
+                      uid: _userStore.uid);
               },
               child: AppText(
-                text: Strings.viewReturnPolicy,
+                text:
+                    showCancelledText ? Strings.alreadyCancel : Strings.cancel,
                 color: Colors.white,
                 style: AppTextStyle.medium,
                 size: _scaler.getTextSize(11),
               ),
             ),
           ),
+          _handleErrorMessage(),
+          _handleSuccessMessage(),
+          _receiptStore.cancelOrderLoading
+              ? CustomProgressIndicatorWidget()
+              : Container(),
           Container(
             width: _scaler.getWidth(100),
             margin: _scaler.getMargin(0, 3),
@@ -249,30 +295,7 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
                 color: AppColors.buttonBg,
               )),
               onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: AppText(
-                text: Strings.returnProduct,
-                color: AppColors.buttonBg,
-                style: AppTextStyle.medium,
-                size: _scaler.getTextSize(11),
-              ),
-            ),
-          ),
-          Container(
-            width: _scaler.getWidth(100),
-            margin: _scaler.getMargin(0, 3),
-            child: MaterialButton(
-              height: _scaler.getHeight(3.5),
-              padding: _scaler.getPadding(1, 0),
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                width: 1,
-                color: AppColors.buttonBg,
-              )),
-              onPressed: () {
-                Navigator.of(context).pop();
+                _downloadLaunchURL();
               },
               child: AppText(
                 text: Strings.exportReceipt,
@@ -281,7 +304,30 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
                 size: _scaler.getTextSize(11),
               ),
             ),
-          )
+          ),
+          Container(
+            width: _scaler.getWidth(100),
+            margin: _scaler.getMargin(0, 3),
+            child: MaterialButton(
+              height: _scaler.getHeight(3.5),
+              padding: _scaler.getPadding(1, 0),
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                width: 1,
+                color: AppColors.buttonBg,
+              )),
+              onPressed: () {
+                showReturnPolicyDialog();
+              },
+              child: AppText(
+                text: Strings.viewReturnPolicy,
+                color: AppColors.buttonBg,
+                style: AppTextStyle.medium,
+                size: _scaler.getTextSize(11),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -291,15 +337,99 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
     Navigator.of(context).pop();
   }
 
-  void timeConverter(String date){
-   // var  date = '2021-01-26T03:17:00.000000Z';
+  void timeConverter(String date) {
+    // var  date = '2021-01-26T03:17:00.000000Z';
     DateTime parseDate =
-    new DateFormat("yyyy-MM-dd HH:mm:ss.SSS'Z'").parse(date);
+        new DateFormat("yyyy-MM-dd HH:mm:ss.SSS'Z'").parse(date);
     var inputDate = DateTime.parse(parseDate.toString());
     var outputFormat = DateFormat('MM/dd/yyyy hh:mm aa');
-    orderPlaceTime = outputFormat.format(inputDate).split(" ")[0]+ " at " + outputFormat.format(inputDate).split(" ")[1] + " " + outputFormat.format(inputDate).split(" ")[2];
+    orderPlaceTime = outputFormat.format(inputDate).split(" ")[0] +
+        " at " +
+        outputFormat.format(inputDate).split(" ")[1] +
+        " " +
+        outputFormat.format(inputDate).split(" ")[2] +
+        " UTC ";
     print("===Time====$orderPlaceTime");
   }
 
+  showReturnPolicyDialog() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => CommonMessageDialog(
+              message: Strings.content,
+              title: Strings.returnPolicy,
+            ));
+  }
 
+  showCancelOrderDialog() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => CommonMessageDialog(
+              message: Strings.cancelOrderContent,
+              title: Strings.cancelOrderDialog,
+            ));
+  }
+
+  _launchURL() async {
+    if (await canLaunch(widget.receiptInfo.trackingUrl)) {
+      await launch(widget.receiptInfo.trackingUrl);
+    } else {
+      throw 'Could not launch $widget.receiptInfo.trackingUrl';
+    }
+  }
+
+  _downloadLaunchURL() async {
+    if (await canLaunch(
+        widget.receiptInfo.pdfUrl + "?buyer_id=${_userStore.uid}")) {
+      await launch(widget.receiptInfo.pdfUrl + "?buyer_id=${_userStore.uid}");
+    } else {
+      throw 'Could not launch $widget.receiptInfo.pdfUrl';
+    }
+  }
+
+  Widget _handleErrorMessage() {
+    return Observer(
+      builder: (context) {
+        return _receiptStore.errorStore.errorMessage.isNotEmpty
+            ? ErrorBar.showMessage(
+                _receiptStore.errorStore.errorMessage, context)
+            : _receiptStore.successStore.successMessage.isNotEmpty
+                ? navigate(context)
+                : SizedBox.shrink();
+      },
+    );
+  }
+
+  Widget _handleSuccessMessage() {
+    return Observer(
+      builder: (context) {
+        return _receiptStore.successStore.successMessage.isNotEmpty
+            ? SuccessBar.showMessage(
+                _receiptStore.successStore.successMessage, context)
+            : SizedBox.shrink();
+      },
+    );
+  }
+
+  Widget navigate(BuildContext context) {
+    Future.delayed(Duration(milliseconds: 0), () {
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          Routes.home, (Route<dynamic> route) => false);
+      /* if (Navigator.of(context).canPop())
+        Navigator.of(context).pop();
+      else
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            Routes.home, (Route<dynamic> route) => false);*/
+    });
+
+    return Container();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _userStore.successStore.dispose();
+  }
 }

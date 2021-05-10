@@ -57,6 +57,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Routes.context=context;
     _scaler = ScreenScaler()..init(context);
     return WillPopScope(
         child: Observer(builder: (context) {

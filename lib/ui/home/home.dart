@@ -42,6 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Routes.context=context;
+
     if (_scaler == null) _scaler = ScreenScaler()..init(context);
     return Observer(builder: (context) {
       return Scaffold(

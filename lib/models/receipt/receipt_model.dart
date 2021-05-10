@@ -29,6 +29,7 @@ class ReceiptModel {
     this.createdAt,
     this.updatedAt,
     this.url,
+    this.pdfUrl,
     this.orderItems,
   });
 
@@ -40,7 +41,7 @@ class ReceiptModel {
   dynamic deliveryType;
   String status;
   dynamic paymentId;
-  dynamic transactionId;
+  String transactionId;
   double shippingAmount;
   String trackingNumber;
   String trackingUrl;
@@ -51,6 +52,7 @@ class ReceiptModel {
   DateTime createdAt;
   DateTime updatedAt;
   String url;
+  String pdfUrl;
   OrderItems orderItems;
 
   factory ReceiptModel.fromJson(Map<String, dynamic> json) => ReceiptModel(
@@ -73,6 +75,7 @@ class ReceiptModel {
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
     url: json["url"],
+    pdfUrl: json["pdf_url"],
     orderItems: OrderItems.fromJson(json["order_items"]),
   );
 
@@ -96,6 +99,7 @@ class ReceiptModel {
     "created_at": createdAt.toIso8601String(),
     "updated_at": updatedAt.toIso8601String(),
     "url": url,
+    "pdf_url": pdfUrl,
     "order_items": orderItems.toJson(),
   };
 }

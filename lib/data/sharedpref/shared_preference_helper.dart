@@ -276,4 +276,5 @@ class SharedPreferenceHelper {
       return prefs.setString(Preferences.current_language, language);
     });
   }
+
 }

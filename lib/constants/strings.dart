@@ -8,6 +8,7 @@ class Strings {
   static const String email = "email";
   static const String fullName = "fullName";
   static const String phoneNumber = "phoneNumber";
+  static const String otpNumber = "OtpNumber";
   static const String password = "password";
   static const String proceed = "proceed";
 
@@ -17,6 +18,7 @@ class Strings {
 
   static const String dismiss = "dismiss";
   static const String returnPolicy = "returnPolicy";
+  static const String cancelOrderDialog = "cancelOrderDialog";
 
    static const String login= "login";
   static const String dontHaveAccount= "dontHaveAccount";
@@ -31,6 +33,7 @@ class Strings {
 
   static const String securePay= "securePay";
   static const String cancel= "cancel";
+  static const String alreadyCancel= "alreadyCancel";
   static const String save= "Save";
 
   static const String pickup= "pickup";
@@ -72,17 +75,25 @@ class Strings {
   static const String cityError= "Please fill city";
   static const String phoneError= "phoneError";
   static const String reasonError= "reasonError";
+  static const String otpError= "otpError";
 
   static const String profile= "Profile";
   static const String transactionInfo= "Transaction Info";
   static const String returnProduct= "Return Product";
   static const String exportReceipt= "Export Receipt";
+  static const String otpVerify= "OTP Verification";
 
   static const String confirmationTitle = "Confirmation Email";
   static const String verifyRegistration = "Please check your email and verify your account";
 
 
-  static const String thankyou_Messsage = " Your email verification process is done successfully";
+  static const String thankyou_Messsage = "Your email verification process is complete. Please verify phone number below.";
 
+  static const String logoutTitle = "logoutTitle";
+  static const String logoutDesc = "logoutDesc";
+  static const String logoutYes = "logoutYes";
+  static const String logoutNo = "logoutNo";
 
+  static const String content = "returnContent";
+  static const String cancelOrderContent = "You not able to track this order!!";
 }

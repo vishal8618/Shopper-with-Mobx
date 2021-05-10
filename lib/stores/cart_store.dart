@@ -53,10 +53,7 @@ abstract class _CartStore with Store {
   @computed
   bool get loading =>
       fetchUpdateCartFuture.status == FutureStatus.pending ||
-      fetchCartFuture.status == FutureStatus.pending
-      ;
-
-
+      fetchCartFuture.status == FutureStatus.pending;
 
 
   @computed

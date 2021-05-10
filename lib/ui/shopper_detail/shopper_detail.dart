@@ -10,6 +10,7 @@ import 'package:greetings_world_shopper/constants/colors.dart';
 import 'package:greetings_world_shopper/constants/strings.dart';
 import 'package:greetings_world_shopper/stores/cart_store.dart';
 import 'package:greetings_world_shopper/stores/user_store.dart';
+import 'package:greetings_world_shopper/utils/common_dialogs.dart';
 import 'package:greetings_world_shopper/utils/common_utils.dart';
 import 'package:greetings_world_shopper/utils/device/device_utils.dart';
 import 'package:greetings_world_shopper/utils/error_bar.dart';
@@ -22,6 +23,7 @@ import 'package:greetings_world_shopper/widgets/polygon_clipper/polygon_clipper.
 import 'package:greetings_world_shopper/widgets/progress_indicator_widget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:validators/validators.dart';
 
 import '../../routes.dart';
@@ -80,6 +82,7 @@ class ShopperProfileDetailState extends State<ShopperProfileDetail> {
 
   @override
   Widget build(BuildContext context) {
+    Routes.context = context;
     if (scaler == null) scaler = new ScreenScaler()..init(context);
 
     return Scaffold(
@@ -94,24 +97,44 @@ class ShopperProfileDetailState extends State<ShopperProfileDetail> {
         ),
         actions: <Widget>[
           Observer(builder: (snapshot) {
-            return _userStore.isEditing
-                ? Container(
-                    width: 0,
-                  )
-                : IconButton(
+            return Container(
+              child: Row(
+                children: [
+                  _userStore.isEditing
+                      ? Container(
+                          width: 0,
+                        )
+                      : IconButton(
+                          icon: Icon(
+                            Icons.edit_outlined,
+                            color: AppColors.starYellow,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _userStore.updateIsEditing();
+                              _status = false;
+                              nameFocus = true;
+                              phoneFocus = true;
+                            });
+                          },
+                        ),
+                  IconButton(
                     icon: Icon(
-                      Icons.edit_outlined,
+                      Icons.settings_power,
                       color: AppColors.starYellow,
                     ),
                     onPressed: () {
-                      setState(() {
-                        _userStore.updateIsEditing();
-                        _status = false;
-                        nameFocus = true;
-                        phoneFocus = true;
-                      });
+                      if(mounted){
+                        setState(() {
+                        //  CommonDialogs.showLogoutDialog(context);
+                        });
+                      }
+
                     },
-                  );
+                  )
+                ],
+              ),
+            );
           })
         ],
       ),
@@ -342,24 +365,21 @@ class ShopperProfileDetailState extends State<ShopperProfileDetail> {
                 textColor: Colors.white,
                 color: AppColors.primaryColor,
                 onPressed: () {
-
-                    FocusScope.of(context).requestFocus(new FocusNode());
-                    print("<====   ${formKey.currentState.validate()}");
-                    if (nameController.text.trim().isEmpty) {
-                      return "Invalid name";
-                    } else if (phoneController.text.trim().isEmpty) {
-                      return "Invalid phone";
-
-                    } else if(phoneController.text.trim().length < 7){
-                      return "phoneError";
-                    }else {
-                      _status = true;
-                      DeviceUtils.hideKeyboard(context);
-                      _userStore.updateUserDetails(_userStore.uid,
-                          phone: phoneController.text.trim(),
-                          fullName: nameController.text.trim());
-                    }
-
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                  print("<====   ${formKey.currentState.validate()}");
+                  if (nameController.text.trim().isEmpty) {
+                    return "Invalid name";
+                  } else if (phoneController.text.trim().isEmpty) {
+                    return "Invalid phone";
+                  } else if (phoneController.text.trim().length < 7) {
+                    return "phoneError";
+                  } else {
+                    _status = true;
+                    DeviceUtils.hideKeyboard(context);
+                    _userStore.updateUserDetails(_userStore.uid,
+                        phone: phoneController.text.trim(),
+                        fullName: nameController.text.trim());
+                  }
                 },
                 shape: new RoundedRectangleBorder(
                     borderRadius: new BorderRadius.circular(20.0)),
@@ -428,7 +448,10 @@ class ShopperProfileDetailState extends State<ShopperProfileDetail> {
     // Clean up the controller when the Widget is disposed
     myFocusNode.dispose();
     if (_userStore.isEditing) _userStore.updateIsEditing();
-    _userStore.image= null;
+    _userStore.image = null;
     super.dispose();
   }
+
+
+
 }

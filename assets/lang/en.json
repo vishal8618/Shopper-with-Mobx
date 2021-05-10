@@ -55,6 +55,7 @@
   "emailError": "Invalid email!",
   "nameError": "Please enter name",
   "phoneError": "Invalid phone",
+  "otpError": "Invalid otp",
   "reason": "Reason",
   "reportNow":"Report Now",
   "profile": "Profile",
@@ -62,6 +63,15 @@
   "address": "Please update the address",
   "transactionInfo": "Transaction Info",
   "returnProduct" : "Return Product",
-  "exportReceipt": "Export Receipt"
+  "exportReceipt": "Export Receipt",
+  "otpVerify": "OTP Verification",
 
+  "logoutTitle": "Logout",
+  "logoutDesc": "Are You sure you want to logout?",
+  "logoutYes": "Ok",
+  "logoutNo": "Cancel",
+  "alreadyCancel": "Already Cancelled",
+  "cancelOrderDialog": "Order cancelled",
+  "cancelOrderContent": "Your order is cancelled",
+  "returnContent": "A Return and Refund Policy is the agreement where you inform customers about your policies regarding returns and refunds.\nIt usually includes the following pieces of information:\nHow many days they have to return a product\nHow will they receive the refund (credit or replacement)\nIf you offer refunds for digital products or in-app purchases\nWho pays for shipping to return the product"
 }

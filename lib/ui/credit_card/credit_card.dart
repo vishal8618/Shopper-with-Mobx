@@ -67,6 +67,7 @@ class _CreditCardState extends State<CreditCardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Routes.context=context;
     if (_scaler == null) _scaler = new ScreenScaler()..init(context);
 
     return Scaffold(

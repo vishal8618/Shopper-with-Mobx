@@ -8,7 +8,10 @@ import 'package:greetings_world_shopper/ui/checkout/checkout.dart';
 import 'package:greetings_world_shopper/ui/credit_card/credit_card.dart';
 import 'package:greetings_world_shopper/ui/home/home.dart';
 import 'package:greetings_world_shopper/ui/login/login.dart';
+import 'package:greetings_world_shopper/ui/login/verify.dart';
 import 'package:greetings_world_shopper/ui/merchant_detail/merchant_detail.dart';
+import 'package:greetings_world_shopper/ui/phone_verify_screen/phone_verify.dart';
+import 'package:greetings_world_shopper/ui/phone_verify_screen/welcome.dart';
 import 'package:greetings_world_shopper/ui/product_detail/product_detail.dart';
 import 'package:greetings_world_shopper/ui/profile/shopper_profile.dart';
 import 'package:greetings_world_shopper/ui/receipt_details/receipt_details.dart';
@@ -17,8 +20,6 @@ import 'package:greetings_world_shopper/ui/shopper_detail/shopper_detail.dart';
 import 'package:greetings_world_shopper/ui/signup/signup.dart';
 import 'package:greetings_world_shopper/ui/splash/splash.dart';
 import 'package:greetings_world_shopper/ui/web_view/web_view.dart';
-import 'package:greetings_world_shopper/ui/welcome_screen/welcome.dart';
-import 'package:greetings_world_shopper/utils/device/device_utils.dart';
 import 'package:greetings_world_shopper/widgets/image_preview.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -45,12 +46,14 @@ class Routes {
   static const String shopperProfile= '/shopperProfile';
   static const String receipt= '/receipt';
   static const String receiptDetail= '/receiptDetail';
+  static const String phoneVerification= '/phoneVerificationScreen';
+  static const String verify= '/verificationScreen';
   static const String welcome= '/welcomeScreen';
+  static  BuildContext context;
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
 
     currentRoute=settings.name;
-
     switch (settings.name) {
       case splash:
         return MaterialPageRoute(
@@ -176,9 +179,27 @@ class Routes {
             duration: Duration(milliseconds: 300),
             reverseDuration: Duration(milliseconds: 300),
             settings: settings);
+
+
+      case phoneVerification:
+        return PageTransition(
+            child: PhoneVerifyScreen(),
+            type: PageTransitionType.fade,
+            duration: Duration(milliseconds: 300),
+            reverseDuration: Duration(milliseconds: 300),
+            settings: settings);
+
       case welcome:
         return PageTransition(
             child: WelcomeScreen(),
+            type: PageTransitionType.fade,
+            duration: Duration(milliseconds: 300),
+            reverseDuration: Duration(milliseconds: 300),
+            settings: settings);
+
+      case verify:
+        return PageTransition(
+            child: VerifyScreen(),
             type: PageTransitionType.fade,
             duration: Duration(milliseconds: 300),
             reverseDuration: Duration(milliseconds: 300),

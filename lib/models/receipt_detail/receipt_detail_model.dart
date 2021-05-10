@@ -29,6 +29,7 @@ class ReceiptDetailModel {
     this.createdAt,
     this.updatedAt,
     this.url,
+    this.pdfUrl,
     this.orderItems,
   });
 
@@ -38,19 +39,20 @@ class ReceiptDetailModel {
   double totalAmount;
   double subTotal;
   dynamic deliveryType;
-  dynamic status;
-  String paymentId;
-  dynamic transactionId;
+  String status;
+  dynamic paymentId;
+  String transactionId;
   double shippingAmount;
   String trackingNumber;
   String trackingUrl;
   String trackingStatus;
   double taxCharges;
   dynamic serviceCharges;
-  dynamic deliveryEstimatedDays;
+  String deliveryEstimatedDays;
   DateTime createdAt;
   DateTime updatedAt;
   String url;
+  String pdfUrl;
   OrderItems orderItems;
 
   factory ReceiptDetailModel.fromJson(Map<String, dynamic> json) => ReceiptDetailModel(
@@ -63,7 +65,7 @@ class ReceiptDetailModel {
     status: json["status"],
     paymentId: json["payment_id"],
     transactionId: json["transaction_id"],
-    shippingAmount: json["shipping_amount"].toDouble(),
+    shippingAmount: json["shipping_amount"],
     trackingNumber: json["tracking_number"],
     trackingUrl: json["tracking_url"],
     trackingStatus: json["tracking_status"],
@@ -73,6 +75,7 @@ class ReceiptDetailModel {
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
     url: json["url"],
+    pdfUrl: json["pdf_url"],
     orderItems: OrderItems.fromJson(json["order_items"]),
   );
 
@@ -96,6 +99,7 @@ class ReceiptDetailModel {
     "created_at": createdAt.toIso8601String(),
     "updated_at": updatedAt.toIso8601String(),
     "url": url,
+    "pdf_url": pdfUrl,
     "order_items": orderItems.toJson(),
   };
 }

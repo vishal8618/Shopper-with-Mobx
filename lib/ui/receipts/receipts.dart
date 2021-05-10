@@ -59,6 +59,7 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Routes.context=context;
     if (_scaler == null) {
       _scaler = ScreenScaler()..init(context);
       if (!_receiptStore.loading) _receiptStore.getReceipt(uid:_userStore.uid,paginated: false);
@@ -171,7 +172,7 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
                     onTap: () async {
                       await FlutterShare.share(
                           title: 'Shopper share to',
-                          linkUrl: receipt.url,
+                          linkUrl: receipt.pdfUrl+"?buyer_id=${_userStore.uid}",
                           chooserTitle: 'Shopper share to');
                     },
                     child: Icon(
