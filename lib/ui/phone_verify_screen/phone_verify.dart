@@ -64,7 +64,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
 
             if (!_userStore.loading) if (!hitVerifyApi) {
               hitVerifyApi = true;
-              _userStore.userConfirmation(token: inviteToken);
+              // _userStore.userConfirmation(token: inviteToken);
               if (Navigator.of(context).canPop()) Navigator.pop(context);
             }
 

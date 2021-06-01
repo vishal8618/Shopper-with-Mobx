@@ -56,6 +56,8 @@ class _SignupScreenState extends State<SignupScreen> {
 
   bool initial;
   Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+ String deviceType = "";
+
   @override
   void initState() {
     super.initState();
@@ -76,6 +78,12 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     Routes.context=context;
     if (scaler == null) scaler = new ScreenScaler()..init(context);
+
+    if (Platform.isAndroid) {
+      deviceType = "android";
+    } else if (Platform.isIOS) {
+      deviceType = "ios";
+    }
 
     return Scaffold(
       backgroundColor: AppColors.bg,
@@ -342,6 +350,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           password: passwordController.text,
                           fullName: nameController.text,
                           email: emailController.text,
+                          deviceType: deviceType
                         );
                       }
                     },

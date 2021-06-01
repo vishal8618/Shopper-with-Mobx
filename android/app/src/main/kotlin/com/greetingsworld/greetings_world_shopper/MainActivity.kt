@@ -145,7 +145,9 @@ super.onCreate(savedInstanceState)
 
 val intent = getIntent()
 startString = intent.data?.toString()
-}*//*
+}*/
+
+/*
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)

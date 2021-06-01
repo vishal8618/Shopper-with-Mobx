@@ -9,15 +9,26 @@ part of 'receipt_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$ReceiptStore on _ReceiptStore, Store {
+  Computed<bool> _$loadingComputed;
+
+  @override
+  bool get loading => (_$loadingComputed ??=
+          Computed<bool>(() => super.loading, name: '_ReceiptStore.loading'))
+      .value;
+  Computed<bool> _$receiptDetailLoadingComputed;
+
+  @override
+  bool get receiptDetailLoading => (_$receiptDetailLoadingComputed ??=
+          Computed<bool>(() => super.receiptDetailLoading,
+              name: '_ReceiptStore.receiptDetailLoading'))
+      .value;
   Computed<bool> _$cancelOrderLoadingComputed;
 
   @override
   bool get cancelOrderLoading => (_$cancelOrderLoadingComputed ??=
-      Computed<bool>(() => super.cancelOrderLoading,
-          name: '_ReceiptStore.cancelOrderLoading'))
+          Computed<bool>(() => super.cancelOrderLoading,
+              name: '_ReceiptStore.cancelOrderLoading'))
       .value;
-
-
 
   final _$successAtom = Atom(name: '_ReceiptStore.success');
 
@@ -64,7 +75,7 @@ mixin _$ReceiptStore on _ReceiptStore, Store {
       super.receiptList = value;
     });
   }
-//receiptDetail
+
   final _$fetchReceiptDetailFutureAtom =
       Atom(name: '_ReceiptStore.fetchReceiptDetailFuture');
 
@@ -81,25 +92,23 @@ mixin _$ReceiptStore on _ReceiptStore, Store {
       super.fetchReceiptDetailFuture = value;
     });
   }
-//cancelOrder
 
   final _$fetchCancelOrderFutureAtom =
-  Atom(name: '_ReceiptStore.fetchCancelOrderFuture');
+      Atom(name: '_ReceiptStore.fetchCancelOrderFuture');
 
   @override
   ObservableFuture<LikeModel> get fetchCancelOrderFuture {
-    _$fetchReceiptDetailFutureAtom.reportRead();
+    _$fetchCancelOrderFutureAtom.reportRead();
     return super.fetchCancelOrderFuture;
   }
 
   @override
   set fetchCancelOrderFuture(ObservableFuture<LikeModel> value) {
     _$fetchCancelOrderFutureAtom
-        .reportWrite(value, super.fetchReceiptDetailFuture, () {
+        .reportWrite(value, super.fetchCancelOrderFuture, () {
       super.fetchCancelOrderFuture = value;
     });
   }
-
 
   final _$getReceiptAsyncAction = AsyncAction('_ReceiptStore.getReceipt');
 
@@ -118,16 +127,13 @@ mixin _$ReceiptStore on _ReceiptStore, Store {
         .run(() => super.getReceiptDetail(id: id, uid: uid));
   }
 
-  final _$cancelOrderAsyncAction =
-  AsyncAction('_ReceiptStore.cancelOrder');
+  final _$cancelOrderAsyncAction = AsyncAction('_ReceiptStore.cancelOrder');
 
   @override
-  Future<dynamic> cancelOrder(String orderId,
-      {String uid}) {
-    return _$cancelOrderAsyncAction.run(() => super.cancelOrder(orderId,
-        uid: uid));
+  Future<dynamic> cancelOrder(String orderId, {String uid}) {
+    return _$cancelOrderAsyncAction
+        .run(() => super.cancelOrder(orderId, uid: uid));
   }
-
 
   @override
   String toString() {
@@ -136,6 +142,9 @@ success: ${success},
 fetchReceiptFuture: ${fetchReceiptFuture},
 receiptList: ${receiptList},
 fetchReceiptDetailFuture: ${fetchReceiptDetailFuture},
+fetchCancelOrderFuture: ${fetchCancelOrderFuture},
+loading: ${loading},
+receiptDetailLoading: ${receiptDetailLoading},
 cancelOrderLoading: ${cancelOrderLoading}
     ''';
   }

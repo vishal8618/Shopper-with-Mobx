@@ -83,7 +83,7 @@ class _AddressScreenState extends State<AddressScreen> {
         zipCodeCheck = zipController.text.isEmpty;
       });
 
-      print('Address=====>${_userStore.address1}');
+      print('Address=====>${_userStore.address1}  pp');
     });
   }
 
@@ -153,6 +153,7 @@ class _AddressScreenState extends State<AddressScreen> {
                             onTap: !_userStore.isEditing
                                 ? null
                                 : () {
+                              print("Prediction Data: ===> 0");
                                     DeviceUtils.hideKeyboard(context);
                                     openSuggestions();
                                     FocusScopeNode currentFocus =
@@ -255,6 +256,7 @@ class _AddressScreenState extends State<AddressScreen> {
   }
 
   openSuggestions() async {
+    print("Prediction Data: ===> 1");
     Prediction p = await PlacesAutocomplete.show(
         context: context,
         apiKey: Constants.googleApiKey,
@@ -264,7 +266,8 @@ class _AddressScreenState extends State<AddressScreen> {
         components: [
           new Component(Component.country, "us"),
         ]);
-
+    print("Prediction Data: ===>  2");
+    print("Prediction Data: $mounted, ${p.placeId}");
     getPlaceDetails(p);
   }
 
@@ -304,6 +307,7 @@ class _AddressScreenState extends State<AddressScreen> {
 */
 
   void getPlaceDetails(Prediction prediction) async {
+    print("Location Data: $mounted, ${prediction.placeId}");
     final placeDetails =
         await PlaceApiProvider().getPlaceDetailFromId(prediction.placeId);
     if (mounted) {

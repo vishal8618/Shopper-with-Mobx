@@ -178,12 +178,13 @@ abstract class _UserStore with Store {
 
   @action
   Future signUp(
-      {String fullName, String email, String password, String phone}) async {
+      {String fullName, String email, String password, String phone, String deviceType}) async {
     final future = _repository.signUp(
         email: email,
         fullName: fullName,
         password: password,
         phone: phone,
+        deviceType: deviceType,
         image: image == null
             ? ""
             : "data:image/jpeg;base64," +

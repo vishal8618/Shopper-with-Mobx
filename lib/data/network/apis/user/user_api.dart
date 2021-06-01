@@ -25,7 +25,8 @@ class UserApi {
       String email,
       String password,
       String image,
-      String phone}) async {
+      String phone,
+      String deviceType}) async {
     try {
       var map = Map<String, dynamic>();
       map["first_name"] = fullName.contains(" ")
@@ -41,6 +42,7 @@ class UserApi {
       map["email"] = email;
       map["phone_number"] = phone;
       map["password"] = password;
+      // map["deviceType"] = deviceType;
 
       final res =
           await _dioClient.post(Endpoints.signUp, data: map, options: null);

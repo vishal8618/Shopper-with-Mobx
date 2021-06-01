@@ -37,13 +37,14 @@ class Repository {
 
   // constructor
   Repository(this._merchantsApi, this._productsApi, this._userApi,
-      this._cartApi,this._receiptApi, this._sharedPrefsHelper);
+      this._cartApi, this._receiptApi, this._sharedPrefsHelper);
 
   // sign up
   Future<UserModel> signUp(
       {String fullName,
       String email,
       String password,
+      String deviceType,
       String image,
       String phone}) async {
     return await _userApi
@@ -52,7 +53,8 @@ class Repository {
             email: email,
             fullName: fullName,
             password: password,
-            phone: phone)
+            phone: phone,
+            deviceType: deviceType)
         .then((user) {
       return user;
     }).catchError((error) => throw error);
@@ -78,7 +80,8 @@ class Repository {
   }
 
   // get list of merchants
-  Future<List<MerchantModel>> getMerchants({String search, String tab, int limit, int offset}) async {
+  Future<List<MerchantModel>> getMerchants(
+      {String search, String tab, int limit, int offset}) async {
     return await _merchantsApi
         .getMerchants(search: search, tab: tab, limit: limit, offset: offset)
         .then((merchantsList) {
@@ -89,9 +92,10 @@ class Repository {
   //get list of receipt
 
   // get list of merchants
-  Future<List<ReceiptModel>> getReceipt({ String uid,int limit, int offset}) async {
+  Future<List<ReceiptModel>> getReceipt(
+      {String uid, int limit, int offset}) async {
     return await _receiptApi
-        .getReceipt(uid:uid,limit: limit, offset: offset)
+        .getReceipt(uid: uid, limit: limit, offset: offset)
         .then((receiptList) {
       return receiptList;
     }).catchError((error) => throw error);
@@ -116,8 +120,10 @@ class Repository {
   }
 
   // get list of products
-  Future<List<ProductModel>> getProducts({String id , String uid}) async {
-    return await _productsApi.getProducts(id: id,uid: uid).then((productsList) {
+  Future<List<ProductModel>> getProducts({String id, String uid}) async {
+    return await _productsApi
+        .getProducts(id: id, uid: uid)
+        .then((productsList) {
       return productsList;
     }).catchError((error) => throw error);
   }
@@ -130,6 +136,7 @@ class Repository {
       return model;
     }).catchError((error) => throw error);
   }
+
   // add favourite
   Future<LikeModel> addFavourite({String uid, String productId}) async {
     return await _productsApi
@@ -138,6 +145,7 @@ class Repository {
       return model;
     }).catchError((error) => throw error);
   }
+
 //product report
   Future<ReportModel> addProductReport(
       {String uid, String productId, String reason}) async {
@@ -177,7 +185,6 @@ class Repository {
     }).catchError((error) => throw error);
   }
 
-
   // add item to cart
   Future<UpdateCartModel> addCart({String id, String productId}) async {
     return await _cartApi.addCart(productId: productId, uid: id).then((model) {
@@ -203,9 +210,23 @@ class Repository {
   }
 
 // place order
-  Future<OrdersModel> createOrder({String uid, String totalAmount, String subTotal, String shippingAmount, String taxCharges, String serviceCharges, String stripeToken}) async {
+  Future<OrdersModel> createOrder(
+      {String uid,
+      String totalAmount,
+      String subTotal,
+      String shippingAmount,
+      String taxCharges,
+      String serviceCharges,
+      String stripeToken}) async {
     return await _cartApi
-        .createOrder(uid: uid, totalAmount: totalAmount, subTotal: subTotal, shippingAmount: shippingAmount, taxCharges: taxCharges, serviceCharges: serviceCharges, stripeToken: stripeToken)
+        .createOrder(
+            uid: uid,
+            totalAmount: totalAmount,
+            subTotal: subTotal,
+            shippingAmount: shippingAmount,
+            taxCharges: taxCharges,
+            serviceCharges: serviceCharges,
+            stripeToken: stripeToken)
         .then((model) {
       return model;
     }).catchError((error) => throw error);
@@ -246,30 +267,27 @@ class Repository {
       return user;
     }).catchError((error) => throw error);
   }
+
 // receipt detail
 
   // get list of products
-  Future<ReceiptDetailModel> getReceiptDetail({String id , String uid}) async {
-    return await _receiptApi.getReceiptDetail(id: id,uid: uid).then((model) {
+  Future<ReceiptDetailModel> getReceiptDetail({String id, String uid}) async {
+    return await _receiptApi.getReceiptDetail(id: id, uid: uid).then((model) {
       return model;
     }).catchError((error) => throw error);
   }
+
   // get list of products
   //update shopper detail
-  Future<LikeModel> cancelOrder(String orderId,
-      {String uid}) async {
-    return await _receiptApi
-        .cancelOrder(orderId,
-        uid: uid)
-        .then((model) {
+  Future<LikeModel> cancelOrder(String orderId, {String uid}) async {
+    return await _receiptApi.cancelOrder(orderId, uid: uid).then((model) {
       return model;
     }).catchError((error) => throw error);
   }
+
   // verify Email
   Future<RegisterConfirmationModel> confirmRegistration({String token}) async {
-    return await _userApi
-        .confirmRegistration(token: token)
-        .then((model) {
+    return await _userApi.confirmRegistration(token: token).then((model) {
       return model;
     }).catchError((error) => throw error);
   }
@@ -277,20 +295,22 @@ class Repository {
   // get otp
   Future<GenerateOtpModel> getOtpCode({String uid, String phoneNumber}) async {
     return await _userApi
-        .getGenerateOtp(uid: uid,phoneNumber: phoneNumber)
+        .getGenerateOtp(uid: uid, phoneNumber: phoneNumber)
         .then((model) {
       return model;
     }).catchError((error) => throw error);
   }
 
   // get otp
-  Future<GenerateOtpModel> phoneVerify({String phoneNumber, String otp, String uid}) async {
+  Future<GenerateOtpModel> phoneVerify(
+      {String phoneNumber, String otp, String uid}) async {
     return await _userApi
-        .phoneNumberVerify(phoneNumber: phoneNumber, otp:otp, uid:uid)
+        .phoneNumberVerify(phoneNumber: phoneNumber, otp: otp, uid: uid)
         .then((model) {
       return model;
     }).catchError((error) => throw error);
   }
+
   //save login info in local
   Future<void> saveIsLoggedIn(bool value) =>
       _sharedPrefsHelper.saveIsLoggedIn(value);
@@ -317,6 +337,7 @@ class Repository {
       _sharedPrefsHelper.savePhoneNumber(value);
 
   Future<String> get getPhoneNumber => _sharedPrefsHelper.getPhoneNumber;
+
 //address
 
   Future<void> saveAddress(String value) =>
@@ -369,7 +390,6 @@ class Repository {
     print('savelink===>  $_sharedPrefsHelper');
     _sharedPrefsHelper.saveDeepLinkUrl(value);
   }
-
 
   Future<String> get getDeepLinkUrl => _sharedPrefsHelper.getDeepLinkUrl;
 

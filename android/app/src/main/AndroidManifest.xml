@@ -33,7 +33,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTask"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
@@ -63,7 +63,12 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:scheme="http"
-                    android:host="greetings_world_shopper.com"/>
+                    android:host="greetingsworldshopper.com" />
+
+                <!-- custom url scheme example://app/home -->
+                <!--<data android:scheme="greetingsworldshopper.com"
+                    android:host="deep_conform"
+                    android:pathPrefix="/home"/>-->
             </intent-filter>
             <meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
         </activity>

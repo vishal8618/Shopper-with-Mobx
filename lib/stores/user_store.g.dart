@@ -80,6 +80,42 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
+  final _$fetchConfirmationRegisterFutureAtom =
+      Atom(name: '_UserStore.fetchConfirmationRegisterFuture');
+
+  @override
+  ObservableFuture<RegisterConfirmationModel>
+      get fetchConfirmationRegisterFuture {
+    _$fetchConfirmationRegisterFutureAtom.reportRead();
+    return super.fetchConfirmationRegisterFuture;
+  }
+
+  @override
+  set fetchConfirmationRegisterFuture(
+      ObservableFuture<RegisterConfirmationModel> value) {
+    _$fetchConfirmationRegisterFutureAtom
+        .reportWrite(value, super.fetchConfirmationRegisterFuture, () {
+      super.fetchConfirmationRegisterFuture = value;
+    });
+  }
+
+  final _$fetchGenerateOtpCodeFutureAtom =
+      Atom(name: '_UserStore.fetchGenerateOtpCodeFuture');
+
+  @override
+  ObservableFuture<GenerateOtpModel> get fetchGenerateOtpCodeFuture {
+    _$fetchGenerateOtpCodeFutureAtom.reportRead();
+    return super.fetchGenerateOtpCodeFuture;
+  }
+
+  @override
+  set fetchGenerateOtpCodeFuture(ObservableFuture<GenerateOtpModel> value) {
+    _$fetchGenerateOtpCodeFutureAtom
+        .reportWrite(value, super.fetchGenerateOtpCodeFuture, () {
+      super.fetchGenerateOtpCodeFuture = value;
+    });
+  }
+
   final _$isEditingAtom = Atom(name: '_UserStore.isEditing');
 
   @override
@@ -110,22 +146,20 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
-  final _$errorsAtom = Atom(name: '_UserStore.error');
+  final _$errorAtom = Atom(name: '_UserStore.error');
 
   @override
   bool get error {
-    _$errorsAtom.reportRead();
+    _$errorAtom.reportRead();
     return super.error;
   }
 
   @override
   set error(bool value) {
-    _$errorsAtom.reportWrite(value, super.error, () {
+    _$errorAtom.reportWrite(value, super.error, () {
       super.error = value;
     });
   }
-
-
 
   final _$imageAtom = Atom(name: '_UserStore.image');
 
@@ -161,9 +195,17 @@ mixin _$UserStore on _UserStore, Store {
 
   @override
   Future<dynamic> signUp(
-      {String fullName, String email, String password, String phone}) {
+      {String fullName,
+      String email,
+      String password,
+      String phone,
+      String deviceType}) {
     return _$signUpAsyncAction.run(() => super.signUp(
-        fullName: fullName, email: email, password: password, phone: phone));
+        fullName: fullName,
+        email: email,
+        password: password,
+        phone: phone,
+        deviceType: deviceType));
   }
 
   final _$loginAsyncAction = AsyncAction('_UserStore.login');
@@ -205,6 +247,31 @@ mixin _$UserStore on _UserStore, Store {
         lng: lng));
   }
 
+  final _$userConfirmationAsyncAction =
+      AsyncAction('_UserStore.userConfirmation');
+
+  @override
+  Future<dynamic> userConfirmation({String token}) {
+    return _$userConfirmationAsyncAction
+        .run(() => super.userConfirmation(token: token));
+  }
+
+  final _$getOtpCodeAsyncAction = AsyncAction('_UserStore.getOtpCode');
+
+  @override
+  Future<dynamic> getOtpCode({String uid, String phoneNumber}) {
+    return _$getOtpCodeAsyncAction
+        .run(() => super.getOtpCode(uid: uid, phoneNumber: phoneNumber));
+  }
+
+  final _$phoneVerifyAsyncAction = AsyncAction('_UserStore.phoneVerify');
+
+  @override
+  Future<dynamic> phoneVerify({String phoneNumber, String otp, String uid}) {
+    return _$phoneVerifyAsyncAction.run(
+        () => super.phoneVerify(phoneNumber: phoneNumber, otp: otp, uid: uid));
+  }
+
   final _$_UserStoreActionController = ActionController(name: '_UserStore');
 
   @override
@@ -236,8 +303,11 @@ fetchSignupFuture: ${fetchSignupFuture},
 fetchLoginFuture: ${fetchLoginFuture},
 fetchProfileDetailsFuture: ${fetchProfileDetailsFuture},
 fetchAddressDetailsFuture: ${fetchAddressDetailsFuture},
+fetchConfirmationRegisterFuture: ${fetchConfirmationRegisterFuture},
+fetchGenerateOtpCodeFuture: ${fetchGenerateOtpCodeFuture},
 isEditing: ${isEditing},
 success: ${success},
+error: ${error},
 image: ${image},
 user: ${user},
 loading: ${loading}
