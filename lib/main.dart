@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:greetings_world_shopper/constants/colors.dart';
 import 'package:greetings_world_shopper/routes.dart';
 import 'package:greetings_world_shopper/stores/cart_store.dart';
 import 'package:greetings_world_shopper/stores/home_store.dart';
@@ -36,6 +37,9 @@ void main() {
     );
     print("==========>main");
     runApp(appComponent.app);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: AppColors.primaryColor,
+    ));
   });
 }
 

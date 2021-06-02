@@ -74,6 +74,17 @@ abstract class _UserStore with Store {
      });*/
   }
 
+  void resetData() {
+    this.user = null;
+    this.success = false;
+    isLoggedIn = false;
+    uid = "";
+    userImage = "";
+    name = "";
+    userEmail = "";
+    phoneNumber = "";
+  }
+
   // store variables:-----------------------------------------------------------
   static ObservableFuture<UserModel> emptySignupResponse =
       ObservableFuture.value(null);

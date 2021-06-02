@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
+import 'package:greetings_world_shopper/stores/home_store.dart';
+import 'package:greetings_world_shopper/stores/user_store.dart';
 import 'package:greetings_world_shopper/widgets/address_dialog.dart';
 import 'package:greetings_world_shopper/widgets/confirmation_dialog.dart';
 import 'package:greetings_world_shopper/widgets/login_dialog.dart';
 import 'package:greetings_world_shopper/widgets/logout_dialog.dart';
 import 'package:greetings_world_shopper/widgets/report_dialog.dart';
 import 'package:material_dialog/widgets/dialog.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../routes.dart';
@@ -45,15 +48,18 @@ class CommonDialogs {
              // Navigator.of(context).pushNamed(Routes.login);
             }));
   }
-  static showLogoutDialog(context) {
+  static showLogoutDialog(parentContext) {
     showDialog(
-        context: context,
+        context: parentContext,
         barrierDismissible: false,
         builder: (BuildContext context) => LogoutDialog(yesClick: () async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs?.clear();
-          Navigator.of(context).pushNamedAndRemoveUntil(Routes.login, (route) => false);
-
+          var isLoggedOut = await prefs?.clear();
+          Provider.of<UserStore>(parentContext, listen: false).resetData();
+          Provider.of<HomeStore>(context, listen: false).selectedTab = 0;
+          if(isLoggedOut){
+            Navigator.of(context).pushNamedAndRemoveUntil(Routes.login, (route) => false);
+          }
         }));
   }
 

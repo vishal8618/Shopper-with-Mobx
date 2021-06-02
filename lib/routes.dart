@@ -6,6 +6,7 @@ import 'package:greetings_world_shopper/ui/address/address_screen.dart';
 import 'package:greetings_world_shopper/ui/cart/cart.dart';
 import 'package:greetings_world_shopper/ui/checkout/checkout.dart';
 import 'package:greetings_world_shopper/ui/credit_card/credit_card.dart';
+import 'package:greetings_world_shopper/ui/forgot/forgot.dart';
 import 'package:greetings_world_shopper/ui/home/home.dart';
 import 'package:greetings_world_shopper/ui/login/login.dart';
 import 'package:greetings_world_shopper/ui/login/verify.dart';
@@ -34,6 +35,7 @@ class Routes {
   static const String home = '/home';
   static const String login = '/login';
   static const String signUp = '/signup';
+  static const String forgotPassword = '/forgotPassword';
   static const String merchantDetail = '/merchantDetail';
   static const String productDetail = '/productDetail';
   static const String cart = '/cart';
@@ -75,6 +77,10 @@ class Routes {
             duration: Duration(milliseconds: 300),
             reverseDuration: Duration(milliseconds: 300),
             settings: settings);
+
+      case forgotPassword:
+        return MaterialPageRoute(
+            builder: (_) => ForgotScreen(), settings: settings);
       case merchantDetail:
         return PageTransition(
             child: MerchantDetailScreen(

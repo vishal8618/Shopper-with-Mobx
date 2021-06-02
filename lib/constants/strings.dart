@@ -11,6 +11,7 @@ class Strings {
   static const String otpNumber = "OtpNumber";
   static const String password = "password";
   static const String proceed = "proceed";
+  static const String submit = "submit";
 
   static const String follow = "follow";
   static const String following = "following";
@@ -23,6 +24,9 @@ class Strings {
    static const String login= "login";
   static const String dontHaveAccount= "dontHaveAccount";
   static const String registerNow= "registerNow";
+  static const String forgotPasswordQues= "forgotPasswordQues";
+  static const String forgotPassword= "forgotPassword";
+  static const String forgot= "forgot";
 
   static const String store= "store";
   static const String viewSellerProfile= "viewSellerProfile";

@@ -22,12 +22,12 @@ import 'package:validators/validators.dart';
 
 import '../../routes.dart';
 
-class LoginScreen extends StatefulWidget {
+class ForgotScreen extends StatefulWidget {
   @override
-  _LoginScreen createState() => _LoginScreen();
+  _ForgotScreenState createState() => _ForgotScreenState();
 }
 
-class _LoginScreen extends State<LoginScreen> {
+class _ForgotScreenState extends State<ForgotScreen> {
   ScreenScaler _scaler;
   final formKey = GlobalKey<FormState>();
   var emailController = TextEditingController();
@@ -60,65 +60,14 @@ class _LoginScreen extends State<LoginScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: AppText(
-          text: Strings.login,
+          text: Strings.forgotPassword,
           color: Colors.white,
           style: AppTextStyle.medium,
         ),
         elevation: 0,
         centerTitle: true,
-        actions: [
-          !Navigator.of(context).canPop()
-              ? Center(
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).pushReplacementNamed(Routes.home);
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: AppText(
-                  text: Strings.skip,
-                  style: AppTextStyle.title,
-                  color: Colors.white,
-                  underline: true,
-                  size: _scaler.getTextSize(10),
-                ),
-              ),
-            ),
-          )
-              : Container()
-        ],
       ),
-      // appBar: AppBar(
-      //   automaticallyImplyLeading: true,
-      //   /*   title: AppText(
-      //           text: Strings.login,
-      //           color: Colors.white,
-      //           style: AppTextStyle.medium,
-      //         ),*/
-      //   centerTitle: true,
-      //   actions: [
-      //     !Navigator.of(context).canPop()
-      //         ? Center(
-      //             child: GestureDetector(
-      //               onTap: () {
-      //                 /*   Navigator.of(context)
-      //                           .pushReplacementNamed(Routes.home);*/
-      //               },
-      //               child: Padding(
-      //                 padding: const EdgeInsets.all(8.0),
-      //                 child: AppText(
-      //                   text: "",
-      //                   style: AppTextStyle.title,
-      //                   color: Colors.white,
-      //                   underline: true,
-      //                   size: _scaler.getTextSize(10),
-      //                 ),
-      //               ),
-      //             ),
-      //           )
-      //         : Container()
-      //   ],
-      // ),
+
       body: GestureDetector(
           onTap: () {
             DeviceUtils.hideKeyboard(context);
@@ -172,69 +121,11 @@ class _LoginScreen extends State<LoginScreen> {
                             },
                           ),
                         ),
-                        SizedBox(
-                          height: _scaler.getHeight(2),
-                        ),
-                        Focus(
-                          onFocusChange: (has) {
-                            if (mounted) {
-                              setState(() {
-                                this.passwordFocus = has;
-                              });
-                            }
-                          },
-                          child: LoginTextField(
-                            hintText: Strings.password,
-                            controller: passwordController,
-                            maxLines: 1,
-                            password: true,
-                            prefix: Icon(
-                              Icons.vpn_key,
-                              color:
-                                  passwordFocus ? AppColors.bg : AppColors.bg,
-                              size: _scaler.getTextSize(14),
-                            ),
-                            validate: (value) {
-                              if (value.trim().length < 6) {
-                                return AppLocalizations.of(context)
-                                    .translate(Strings.passwordError);
-                              } else {
-                                return null;
-                              }
-                            },
-                          ),
-                        ),
                       ],
                     ),
                   ),
                 ),
               ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.end,
-              //   children: [
-              //     Padding(
-              //       padding: EdgeInsets.only(right: _scaler.getWidth(2,), bottom: _scaler.getWidth(2,),),
-              //       child: GestureDetector(
-              //         onTap: () {
-              //           Navigator.of(context)
-              //               .pushNamed(Routes.forgotPassword,
-              //               arguments: Navigator.of(context).canPop())
-              //               .then((value) => () {
-              //             // if (mounted) {
-              //             //   setState(() {});
-              //             // }
-              //           });
-              //         },
-              //         child: AppText(
-              //           text: Strings.forgotPasswordQues,
-              //           style: AppTextStyle.title,
-              //           color: AppColors.bg,
-              //           size: _scaler.getTextSize(10),
-              //         ),
-              //       ),
-              //     ),
-              //   ],
-              // ),
               Container(
                 margin: _scaler.getMargin(1, 3),
                 child: MaterialButton(
@@ -255,42 +146,6 @@ class _LoginScreen extends State<LoginScreen> {
                     color: Colors.purple,
                   ),
                 ),
-              ),
-              SizedBox(
-                height: _scaler.getHeight(2),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  AppText(
-                    text: Strings.dontHaveAccount,
-                    style: AppTextStyle.regular,
-                    color: AppColors.bg,
-                    size: _scaler.getTextSize(10),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context)
-                          .pushNamed(Routes.signUp,
-                              arguments: Navigator.of(context).canPop())
-                          .then((value) => () {
-                                if (mounted) {
-                                  setState(() {});
-                                }
-                              });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: AppText(
-                        text: Strings.registerNow,
-                        style: AppTextStyle.title,
-                        color: AppColors.bg,
-                        size: _scaler.getTextSize(10),
-                      ),
-                    ),
-                  )
-                ],
               ),
               SizedBox(
                 height: _scaler.getHeight(3),

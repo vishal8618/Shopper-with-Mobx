@@ -126,7 +126,7 @@ class ShopperProfileDetailState extends State<ShopperProfileDetail> {
                     onPressed: () {
                       if(mounted){
                         setState(() {
-                        //  CommonDialogs.showLogoutDialog(context);
+                          CommonDialogs.showLogoutDialog(context);
                         });
                       }
 
