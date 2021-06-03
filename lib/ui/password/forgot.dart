@@ -7,6 +7,8 @@ import 'package:greetings_world_shopper/constants/colors.dart';
 import 'package:greetings_world_shopper/constants/strings.dart';
 import 'package:greetings_world_shopper/data/repository.dart';
 import 'package:greetings_world_shopper/stores/cart_store.dart';
+import 'package:greetings_world_shopper/stores/password_store.dart';
+import 'package:greetings_world_shopper/stores/success_store.dart';
 import 'package:greetings_world_shopper/stores/user_store.dart';
 import 'package:greetings_world_shopper/ui/deep_link/bloc.dart';
 import 'package:greetings_world_shopper/utils/device/device_utils.dart';
@@ -35,9 +37,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
 
   bool emailFocus = false;
   bool passwordFocus = false;
-  Repository _repository;
-  UserStore _userStore;
-  CartStore _cartStore;
+  PasswordStore _passwordStore;
   bool hitVerifyApi = false;
 
   @override
@@ -48,8 +48,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _userStore = Provider.of<UserStore>(context);
-    _cartStore = Provider.of<CartStore>(context);
+    _passwordStore = Provider.of<PasswordStore>(context);
   }
 
   @override
@@ -72,7 +71,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
           onTap: () {
             DeviceUtils.hideKeyboard(context);
           },
-          child: Container(color: /*Colors.purple*/AppColors.primaryColor, child: _buildBody())),
+          child: Container(color: AppColors.primaryColor, child: _buildBody())),
     );
   }
 
@@ -135,9 +134,8 @@ class _ForgotScreenState extends State<ForgotScreen> {
                     if (formKey.currentState.validate()) {
                       DeviceUtils.hideKeyboard(context);
 
-                      _userStore.login(
+                      _passwordStore.forgotPassword(
                         email: emailController.text,
-                        password: passwordController.text,
                       );
                     }
                   },
@@ -154,7 +152,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
           ),
           _handleErrorMessage(),
           _handleSuccessMessage(),
-          _userStore.loading ? CustomProgressIndicatorWidget() : Container(),
+          _passwordStore.loading ? CustomProgressIndicatorWidget() : Container(),
         ],
       );
     });
@@ -163,22 +161,26 @@ class _ForgotScreenState extends State<ForgotScreen> {
   Widget _handleSuccessMessage() {
     return Observer(
       builder: (context) {
-        return _userStore.errorStore.errorMessage.isNotEmpty
-            ? ErrorBar.showMessage(_userStore.errorStore.errorMessage, context)
-            : _userStore.success
-                ? navigate(context)
+        return _passwordStore.successStore.successMessage.isNotEmpty
+            ?  navigate(context, _passwordStore)
                 : SizedBox.shrink();
       },
     );
   }
 
-  Widget navigate(BuildContext context) {
+  Widget navigate(BuildContext context, PasswordStore userStore, ) {
+    SuccessStore successStore = userStore.successStore;
+
     Future.delayed(Duration(milliseconds: 0), () {
-      _cartStore.getCart(uid: _userStore.uid);
-      if (Navigator.of(context).canPop())
-        Navigator.of(context).pop();
-      else
-        Navigator.of(context).pushReplacementNamed(Routes.home);
+      var success = _passwordStore.success;
+      print('sucess = $success');
+      // move reset password screen
+      if(success){
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          Navigator.of(context).pushNamed(Routes.resetPassword, arguments: successStore.successMessage);
+        });
+      }
+
     });
 
     return Container();
@@ -187,43 +189,25 @@ class _ForgotScreenState extends State<ForgotScreen> {
   @override
   void dispose() {
     super.dispose();
-    _userStore.errorStore.dispose();
-    _userStore.error = false;
+    _passwordStore.errorStore.dispose();
+    _passwordStore.error = false;
   }
 
   Widget _handleErrorMessage() {
-    print("Error=========>${_userStore.errorStore.errorMessage}");
     return Observer(
       builder: (context) {
-        return _userStore.error ? navigates(context) : SizedBox.shrink();
+        return _passwordStore.error ? navigates(context) : SizedBox.shrink();
       },
     );
   }
 
   Widget navigates(BuildContext context) {
-    print("userError=========>${_userStore.errorStore.errorMessage}");
+    print("userError=========>${_passwordStore.errorStore.errorMessage}");
 
-    if (_userStore.errorStore.errorMessage.isNotEmpty) {
-      ErrorBar.showMessage(_userStore.errorStore.errorMessage, context);
+    if (_passwordStore.errorStore.errorMessage.isNotEmpty) {
+      ErrorBar.showMessage(_passwordStore.errorStore.errorMessage, context);
+      _passwordStore.errorStore.errorMessage = "";
     }
-
-    Future.delayed(Duration(milliseconds: 0), () {
-      if (_userStore.errorStore.errorMessage
-          .contains("Email or password is invalid")) {
-        if (Navigator.of(context).canPop()) Navigator.of(context).pop();
-      } else if (_userStore.errorStore.errorMessage.contains(
-          "Phone number not verified! Please verify your phone number.")) {
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil(Routes.verify, (route) => false);
-      }else if(_userStore.errorStore.errorMessage.contains("Email not confirmed! Please check email and confirm.")){
-        if (Navigator.of(context).canPop()) Navigator.of(context).pop();
-      }
-
-      /*if (Navigator.of(context).canPop())
-        Navigator.of(context).pop();
-      else
-       Navigator.of(context).pushNamedAndRemoveUntil(Routes.verify, (route) => false);*/
-    });
 
     return Container();
   }

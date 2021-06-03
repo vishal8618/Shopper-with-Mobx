@@ -16,6 +16,8 @@ class Endpoints {
   static const String getProducts = baseUrl + "merchants/";
   static const String signUp = baseUrl + "buyers.json";
   static const String login = baseUrl + "users/login.json";
+  static const String forgotPassword = baseUrl + "password/forgot_password";
+  static const String resetPassword = baseUrl + "password/reset_password";
   static const String userDetail = baseUrl + "buyers/";
 
   static const String addCart = baseUrl + "cart/add_item.json";

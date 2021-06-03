@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:greetings_world_shopper/routes.dart';
+import 'package:greetings_world_shopper/stores/user_store.dart';
 
 
 abstract class Bloc {
@@ -28,11 +29,17 @@ class DeepLinkBloc extends Bloc {
     startUri().then(_onRedirected);
 //Checking broadcast stream, if deep link was clicked in opened appication
     stream.receiveBroadcastStream().listen((d) {
-      final splitInviteLink = d.split('/');
-      final inviteToken = splitInviteLink[splitInviteLink.length - 1];
 
-      print('P====> receiveBroadcastStream $d');
-      _onRedirected(d);
+      print('link: $d');
+      if(d.contains("settings")){
+        navigateToSettingScreen();
+      }else{
+        final splitInviteLink = d.split('/');
+        final inviteToken = splitInviteLink[splitInviteLink.length - 1];
+
+        print('P====> receiveBroadcastStream $d');
+        _onRedirected(d);
+      }
     });
   }
 
@@ -56,6 +63,14 @@ class DeepLinkBloc extends Bloc {
     } on PlatformException catch (e) {
       return "Failed to Invoke: '${e.message}'.";
     }
+  }
+
+  void navigateToSettingScreen() async {
+  //  if(userStore.isLoggedIn){
+      Navigator.of(Routes.context).pushNamedAndRemoveUntil(Routes.home, (route) => false);
+    // }else{
+    //   Navigator.of(Routes.context).pushNamedAndRemoveUntil(Routes.login, (route) => false);
+    // }
   }
 
 

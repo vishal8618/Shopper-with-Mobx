@@ -6,11 +6,12 @@ import 'package:greetings_world_shopper/ui/address/address_screen.dart';
 import 'package:greetings_world_shopper/ui/cart/cart.dart';
 import 'package:greetings_world_shopper/ui/checkout/checkout.dart';
 import 'package:greetings_world_shopper/ui/credit_card/credit_card.dart';
-import 'package:greetings_world_shopper/ui/forgot/forgot.dart';
 import 'package:greetings_world_shopper/ui/home/home.dart';
 import 'package:greetings_world_shopper/ui/login/login.dart';
 import 'package:greetings_world_shopper/ui/login/verify.dart';
 import 'package:greetings_world_shopper/ui/merchant_detail/merchant_detail.dart';
+import 'package:greetings_world_shopper/ui/password/forgot.dart';
+import 'package:greetings_world_shopper/ui/password/reset_password.dart';
 import 'package:greetings_world_shopper/ui/phone_verify_screen/phone_verify.dart';
 import 'package:greetings_world_shopper/ui/phone_verify_screen/welcome.dart';
 import 'package:greetings_world_shopper/ui/product_detail/product_detail.dart';
@@ -36,6 +37,7 @@ class Routes {
   static const String login = '/login';
   static const String signUp = '/signup';
   static const String forgotPassword = '/forgotPassword';
+  static const String resetPassword = '/resetPassword';
   static const String merchantDetail = '/merchantDetail';
   static const String productDetail = '/productDetail';
   static const String cart = '/cart';
@@ -81,6 +83,10 @@ class Routes {
       case forgotPassword:
         return MaterialPageRoute(
             builder: (_) => ForgotScreen(), settings: settings);
+
+      case resetPassword:
+        return MaterialPageRoute(
+            builder: (_) => ResetPasswordScreen(message: settings.arguments), settings: settings,);
       case merchantDetail:
         return PageTransition(
             child: MerchantDetailScreen(

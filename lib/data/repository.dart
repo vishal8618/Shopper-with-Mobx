@@ -6,6 +6,7 @@ import 'package:greetings_world_shopper/data/network/apis/user/user_api.dart';
 import 'package:greetings_world_shopper/data/sharedpref/shared_preference_helper.dart';
 import 'package:greetings_world_shopper/models/cart/cart_item_model.dart';
 import 'package:greetings_world_shopper/models/cart/update_cart_model.dart';
+import 'package:greetings_world_shopper/models/common/general_response.dart';
 import 'package:greetings_world_shopper/models/confirmation/register_confirmation_model.dart';
 import 'package:greetings_world_shopper/models/generate_otp/otp_model.dart';
 import 'package:greetings_world_shopper/models/like/like_model.dart';
@@ -66,6 +67,30 @@ class Repository {
         .login(
       email: email,
       password: password,
+    )
+        .then((user) {
+      return user;
+    }).catchError((error) => throw error);
+  }
+
+  // Forgot Password
+  Future<GeneralResponse> forgotPassword({String email}) async {
+    return await _userApi
+        .forgotPassword(
+      email: email,
+    )
+        .then((user) {
+      return user;
+    }).catchError((error) => throw error);
+  }
+
+  // Reset Password
+  Future<GeneralResponse> resetPassword({String email, String password, String confirmPassword}) async {
+    return await _userApi
+        .resetPassword(
+      email: email,
+      password: password,
+      confirmPassword: confirmPassword
     )
         .then((user) {
       return user;

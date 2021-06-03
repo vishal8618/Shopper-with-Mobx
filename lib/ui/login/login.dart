@@ -59,11 +59,11 @@ class _LoginScreen extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: AppText(
+        /*title: AppText(
           text: Strings.login,
           color: Colors.white,
           style: AppTextStyle.medium,
-        ),
+        ),*/
         elevation: 0,
         centerTitle: true,
         actions: [
@@ -76,7 +76,7 @@ class _LoginScreen extends State<LoginScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: AppText(
-                  text: Strings.skip,
+                  text: Strings.tourApp,
                   style: AppTextStyle.title,
                   color: Colors.white,
                   underline: true,
@@ -209,32 +209,32 @@ class _LoginScreen extends State<LoginScreen> {
                   ),
                 ),
               ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.end,
-              //   children: [
-              //     Padding(
-              //       padding: EdgeInsets.only(right: _scaler.getWidth(2,), bottom: _scaler.getWidth(2,),),
-              //       child: GestureDetector(
-              //         onTap: () {
-              //           Navigator.of(context)
-              //               .pushNamed(Routes.forgotPassword,
-              //               arguments: Navigator.of(context).canPop())
-              //               .then((value) => () {
-              //             // if (mounted) {
-              //             //   setState(() {});
-              //             // }
-              //           });
-              //         },
-              //         child: AppText(
-              //           text: Strings.forgotPasswordQues,
-              //           style: AppTextStyle.title,
-              //           color: AppColors.bg,
-              //           size: _scaler.getTextSize(10),
-              //         ),
-              //       ),
-              //     ),
-              //   ],
-              // ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(right: _scaler.getWidth(2,), bottom: _scaler.getWidth(2,),),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(Routes.forgotPassword,
+                            arguments: Navigator.of(context).canPop())
+                            .then((value) => () {
+                          // if (mounted) {
+                          //   setState(() {});
+                          // }
+                        });
+                      },
+                      child: AppText(
+                        text: Strings.forgotPasswordQues,
+                        style: AppTextStyle.title,
+                        color: AppColors.bg,
+                        size: _scaler.getTextSize(10),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               Container(
                 margin: _scaler.getMargin(1, 3),
                 child: MaterialButton(
@@ -292,6 +292,26 @@ class _LoginScreen extends State<LoginScreen> {
                   )
                 ],
               ),
+              // if(!Navigator.of(context).canPop())
+              //      Container(
+              //        margin: EdgeInsets.only(top: _scaler.getHeight(0.5),),
+              //   alignment: Alignment.center,
+              //   child: GestureDetector(
+              //     onTap: () {
+              //       Navigator.of(context).pushReplacementNamed(Routes.home);
+              //     },
+              //     child: Padding(
+              //       padding: const EdgeInsets.all(8.0),
+              //       child: AppText(
+              //         text: Strings.tourApp,
+              //         style: AppTextStyle.title,
+              //         color: Colors.white,
+              //         underline: true,
+              //         size: _scaler.getTextSize(10),
+              //       ),
+              //     ),
+              //   ),
+              // ),
               SizedBox(
                 height: _scaler.getHeight(3),
               ),

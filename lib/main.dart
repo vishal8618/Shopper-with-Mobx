@@ -9,6 +9,7 @@ import 'package:greetings_world_shopper/stores/home_store.dart';
 import 'package:greetings_world_shopper/stores/language_store.dart';
 import 'package:greetings_world_shopper/stores/merchant_detail_store.dart';
 import 'package:greetings_world_shopper/stores/merchants_store.dart';
+import 'package:greetings_world_shopper/stores/password_store.dart';
 import 'package:greetings_world_shopper/stores/product_store.dart';
 import 'package:greetings_world_shopper/stores/receipt_store.dart';
 import 'package:greetings_world_shopper/stores/user_store.dart';
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
 
   final UserStore _userStore = UserStore(appComponent.getRepository());
   final CartStore _cartStore = CartStore(appComponent.getRepository());
+  final PasswordStore _passwordStore = PasswordStore(appComponent.getRepository());
 
   final ProductStore _productStore = ProductStore(appComponent.getRepository());
   final ReceiptStore _receiptStore = ReceiptStore(appComponent.getRepository());
@@ -74,12 +76,12 @@ class MyApp extends StatelessWidget {
         Provider<HomeStore>(create: (_) => _homeStore),
         Provider<MerchantStore>(create: (_) => _merchantStore),
         Provider<UserStore>(create: (_) => _userStore),
+        Provider<PasswordStore>(create: (_) => _passwordStore),
         Provider<MerchantDetailStore>(create: (_) => _merchantDetailStore),
         Provider<CartStore>(create: (_) => _cartStore),
         Provider<ProductStore>(create: (_) => _productStore),
         Provider<ReceiptStore>(create: (_) => _receiptStore),
         Provider<DeepLinkBloc>.value(value: _bloc),
-
       ],
       child: Observer(
         name: 'global-observer',

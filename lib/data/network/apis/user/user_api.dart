@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:convert';
 
 import 'package:greetings_world_shopper/data/network/constants/endpoints.dart';
+import 'package:greetings_world_shopper/models/common/general_response.dart';
 import 'package:greetings_world_shopper/models/confirmation/register_confirmation_model.dart';
 import 'package:greetings_world_shopper/models/generate_otp/otp_model.dart';
 import 'package:greetings_world_shopper/models/like/like_model.dart';
@@ -66,6 +67,44 @@ class UserApi {
       final res =
           await _dioClient.post(Endpoints.login, data: map, options: null);
       return loginModelFromJson(json.encode(res.data));
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  // Forgot Password
+  Future<GeneralResponse> forgotPassword({
+    String email,
+  }) async {
+    try {
+      var map = Map<String, dynamic>();
+      map["email"] = email;
+
+      final res =
+          await _dioClient.post(Endpoints.forgotPassword, data: map, options: null);
+      return generalResponseFromJson(json.encode(res.data));
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  // Reset Password
+  Future<GeneralResponse> resetPassword({
+    String email,
+   String password,
+    String confirmPassword
+  }) async {
+    try {
+      var map = Map<String, dynamic>();
+      map["token"] = email;
+      map["password"] = password;
+      map["password_confirmation"] = confirmPassword;
+
+      final res =
+          await _dioClient.post(Endpoints.resetPassword, data: map, options: null);
+      return generalResponseFromJson(json.encode(res.data));
     } catch (e) {
       print(e.toString());
       throw e;

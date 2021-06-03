@@ -10,12 +10,14 @@ class Strings {
   static const String phoneNumber = "phoneNumber";
   static const String otpNumber = "OtpNumber";
   static const String password = "password";
+  static const String confirmPassword = "confirmPassword";
   static const String proceed = "proceed";
   static const String submit = "submit";
+  static const String token = "token";
 
   static const String follow = "follow";
   static const String following = "following";
-  static const String skip = "skip";
+  static const String tourApp = "tourApp";
 
   static const String dismiss = "dismiss";
   static const String returnPolicy = "returnPolicy";
@@ -76,10 +78,12 @@ class Strings {
   static const String emailError= "emailError";
   static const String passwordError= "passwordError";
   static const String nameError= "nameError";
+  static const String tokenError= "tokenError";
   static const String cityError= "Please fill city";
   static const String phoneError= "phoneError";
   static const String reasonError= "reasonError";
   static const String otpError= "otpError";
+  static const String confirmPasswordError= "confirmPasswordError";
 
   static const String profile= "Profile";
   static const String transactionInfo= "Transaction Info";

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:io' as Io;
 import 'package:greetings_world_shopper/constants/strings.dart';
 import 'package:greetings_world_shopper/data/repository.dart';
+import 'package:greetings_world_shopper/models/common/general_response.dart';
 import 'package:greetings_world_shopper/models/confirmation/register_confirmation_model.dart';
 import 'package:greetings_world_shopper/models/generate_otp/otp_model.dart';
 import 'package:greetings_world_shopper/models/user/login_model.dart';
@@ -100,6 +101,13 @@ abstract class _UserStore with Store {
   ObservableFuture<LoginModel> fetchLoginFuture =
       ObservableFuture<LoginModel>(emptyLoginResponse);
 
+  static ObservableFuture<GeneralResponse> emptyFetchForgotPasswordResponse =
+  ObservableFuture.value(null);
+
+  @observable
+  ObservableFuture<GeneralResponse> fetchForgotPasswordFuture =
+      ObservableFuture<GeneralResponse>(emptyFetchForgotPasswordResponse);
+
   // store variables:-----------------------------------------------------------
   static ObservableFuture<UserModel> emptyProfileDetailsResponse =
       ObservableFuture.value(null);
@@ -177,6 +185,7 @@ abstract class _UserStore with Store {
   bool get loading =>
       fetchSignupFuture.status == FutureStatus.pending ||
       fetchLoginFuture.status == FutureStatus.pending ||
+          fetchForgotPasswordFuture.status == FutureStatus.pending ||
       fetchProfileDetailsFuture.status == FutureStatus.pending ||
       fetchAddressDetailsFuture.status == FutureStatus.pending ||
       fetchConfirmationRegisterFuture.status == FutureStatus.pending;
@@ -449,6 +458,22 @@ abstract class _UserStore with Store {
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
       this.success = false;
+    });
+  }
+
+  @action
+  Future forgotPassword({String email}) async {
+    final future = _repository.forgotPassword(
+      email: email,
+    );
+    fetchForgotPasswordFuture = ObservableFuture(future);
+    future.then((value) {
+      successStore.successMessage = value.message;
+      this.success = value.status;
+    }).catchError((error) {
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+      this.success = false;
+      this.error = true;
     });
   }
 

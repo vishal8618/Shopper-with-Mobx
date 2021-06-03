@@ -34,7 +34,9 @@
 
   "securePay": "Secure pay",
   "cancel": "Cancel",
-  "skip": "Skip",
+  "tourApp": "Tour App",
+  "token": "Token",
+  "confirmPassword": "Confirm password",
 
   "loginTitle": "Login Required",
   "loginDesc": "To continue you need to be logged in.",
@@ -58,6 +60,7 @@
   "passwordError": "Password must be minimum of 6 characters",
   "emailError": "Invalid email!",
   "nameError": "Please enter name",
+  "tokenError": "Please enter token",
   "phoneError": "Invalid phone",
   "otpError": "Invalid otp",
   "reason": "Reason",
@@ -69,6 +72,7 @@
   "returnProduct" : "Return Product",
   "exportReceipt": "Export Receipt",
   "otpVerify": "OTP Verification",
+  "confirmPasswordError": "The Confirm Password must match password",
 
   "logoutTitle": "Logout",
   "logoutDesc": "Are You sure you want to logout?",

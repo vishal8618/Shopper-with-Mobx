@@ -46,6 +46,21 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
+  final _$fetchForgotPasswordFutureAtom = Atom(name: '_UserStore.fetchForgotPasswordFuture');
+
+  @override
+  ObservableFuture<GeneralResponse> get fetchForgotPasswordFuture {
+    _$fetchForgotPasswordFutureAtom.reportRead();
+    return super.fetchForgotPasswordFuture;
+  }
+
+  @override
+  set fetchForgotPasswordFuture(ObservableFuture<GeneralResponse> value) {
+    _$fetchForgotPasswordFutureAtom.reportWrite(value, super.fetchForgotPasswordFuture, () {
+      super.fetchForgotPasswordFuture = value;
+    });
+  }
+
   final _$fetchProfileDetailsFutureAtom =
       Atom(name: '_UserStore.fetchProfileDetailsFuture');
 
@@ -216,6 +231,22 @@ mixin _$UserStore on _UserStore, Store {
         .run(() => super.login(email: email, password: password));
   }
 
+  // final _$resetPasswordAsyncAction = AsyncAction('_UserStore.resetPassword');
+  //
+  // @override
+  // Future<dynamic> resetPassword({String email, String password, String confirmPassword}) {
+  //   return _$resetPasswordAsyncAction
+  //       .run(() => super.login(email: email, password: password));
+  // }
+
+  final _$forgotPasswordAsyncAction = AsyncAction('_UserStore.forgotPassword');
+
+  @override
+  Future<dynamic> forgotPassword({String email}) {
+    return _$forgotPasswordAsyncAction
+        .run(() => super.forgotPassword(email: email));
+  }
+
   final _$userDetailsAsyncAction = AsyncAction('_UserStore.userDetails');
 
   @override
@@ -301,6 +332,7 @@ mixin _$UserStore on _UserStore, Store {
     return '''
 fetchSignupFuture: ${fetchSignupFuture},
 fetchLoginFuture: ${fetchLoginFuture},
+fetchForgotPasswordFuture: ${fetchForgotPasswordFuture},
 fetchProfileDetailsFuture: ${fetchProfileDetailsFuture},
 fetchAddressDetailsFuture: ${fetchAddressDetailsFuture},
 fetchConfirmationRegisterFuture: ${fetchConfirmationRegisterFuture},
