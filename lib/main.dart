@@ -65,8 +65,8 @@ class MyApp extends StatelessWidget {
 
   final ProductStore _productStore = ProductStore(appComponent.getRepository());
   final ReceiptStore _receiptStore = ReceiptStore(appComponent.getRepository());
-
   final _bloc = DeepLinkBloc();
+
 
   @override
   Widget build(BuildContext context) {

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:greetings_world_shopper/constants/assets.dart';
 import 'package:greetings_world_shopper/constants/colors.dart';
@@ -21,9 +22,22 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
+  //Event Channel creation
+  static const stream = const EventChannel('com.deeplink.flutter.dev/events');
+//Method channel creation
+  static const platform =
+  const MethodChannel('com.deeplink.flutter.dev/channel');
+
   @override
   void initState() {
     super.initState();
+    startUri().then(_onRedirected);
+//Checking broadcast stream, if deep link was clicked in opened appication
+    stream.receiveBroadcastStream().listen((d) {
+      _onRedirected(d);
+
+    });
     startTimer();
   }
 
@@ -41,11 +55,13 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Routes.context=context;
-
-
-
     if (_scaler == null) _scaler = ScreenScaler()..init(context);
 
     return Material(
@@ -72,7 +88,38 @@ class _SplashScreenState extends State<SplashScreen> {
     }else{
       Navigator.of(context).pushReplacementNamed(Routes.login);
     }
+  }
 
+  _onRedirected(String uri) {
+    print('link: $uri');
+    if(uri.contains("settings")){
+      navigateToSettingScreen();
+    }else{
+      final splitInviteLink = uri.split('/');
+      final inviteToken = splitInviteLink[splitInviteLink.length - 1];
+
+      print('P====> receiveBroadcastStream $uri');
+      print('P====> _onRedirected $uri');
+      _bloc.stateSink.add(uri);
+      if (Navigator.of(Routes.context).canPop()) Navigator.pop(Routes.context);
+      Navigator.of(Routes.context).pushNamedAndRemoveUntil(Routes.phoneVerification, (route) => false);
+    }
+  }
+
+  void navigateToSettingScreen() async {
+    //  if(userStore.isLoggedIn){
+    Navigator.of(Routes.context).pushNamedAndRemoveUntil(Routes.home, (route) => false);
+    // }else{
+    //   Navigator.of(Routes.context).pushNamedAndRemoveUntil(Routes.login, (route) => false);
+    // }
+  }
+
+  Future<String> startUri() async {
+    try {
+      return platform.invokeMethod('initialLink');
+    } on PlatformException catch (e) {
+      return "Failed to Invoke: '${e.message}'.";
+    }
   }
 
 }
