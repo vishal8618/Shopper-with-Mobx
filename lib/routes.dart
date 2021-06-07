@@ -65,11 +65,11 @@ class Routes {
 
       case login:
         return MaterialPageRoute(
-            builder: (_) => LoginScreen(), settings: settings);
+            builder: (_) => LoginScreen(screenType: settings.arguments), settings: settings);
 
       case home:
         return MaterialPageRoute(
-            builder: (_) => HomeScreen(), settings: settings);
+            builder: (_) => HomeScreen(screenType: settings.arguments), settings: settings);
 
       case signUp:
         return PageTransition(

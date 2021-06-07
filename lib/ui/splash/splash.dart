@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:greetings_world_shopper/constants/assets.dart';
 import 'package:greetings_world_shopper/constants/colors.dart';
+import 'package:greetings_world_shopper/constants/deep_link_navigation_helper.dart';
 import 'package:greetings_world_shopper/stores/user_store.dart';
 import 'package:greetings_world_shopper/ui/deep_link/bloc.dart';
 import 'package:greetings_world_shopper/ui/login/login.dart';
@@ -107,11 +108,11 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void navigateToSettingScreen() async {
-    //  if(userStore.isLoggedIn){
-    Navigator.of(Routes.context).pushNamedAndRemoveUntil(Routes.home, (route) => false);
-    // }else{
-    //   Navigator.of(Routes.context).pushNamedAndRemoveUntil(Routes.login, (route) => false);
-    // }
+      if(_userStore.isLoggedIn){
+    Navigator.of(Routes.context).pushNamedAndRemoveUntil(Routes.home, (route) => false, arguments: DeepLinkNavigationHelper.openSettingScreen);
+    }else{
+      Navigator.of(Routes.context).pushNamedAndRemoveUntil(Routes.login, (route) => false, arguments: DeepLinkNavigationHelper.openSettingScreen);
+    }
   }
 
   Future<String> startUri() async {

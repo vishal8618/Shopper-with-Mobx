@@ -23,6 +23,11 @@ import 'package:validators/validators.dart';
 import '../../routes.dart';
 
 class LoginScreen extends StatefulWidget {
+
+  final String screenType;
+
+  const LoginScreen({Key key, this.screenType}) : super(key: key);
+
   @override
   _LoginScreen createState() => _LoginScreen();
 }
@@ -343,7 +348,7 @@ class _LoginScreen extends State<LoginScreen> {
       if (Navigator.of(context).canPop())
         Navigator.of(context).pop();
       else
-        Navigator.of(context).pushReplacementNamed(Routes.home);
+        Navigator.of(context).pushReplacementNamed(Routes.home, arguments: widget.screenType);
     });
 
     return Container();

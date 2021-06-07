@@ -4,6 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:greetings_world_shopper/constants/assets.dart';
 import 'package:greetings_world_shopper/constants/colors.dart';
+import 'package:greetings_world_shopper/constants/deep_link_navigation_helper.dart';
 import 'package:greetings_world_shopper/routes.dart';
 import 'package:greetings_world_shopper/stores/cart_store.dart';
 import 'package:greetings_world_shopper/stores/home_store.dart';
@@ -20,6 +21,11 @@ import 'package:greetings_world_shopper/widgets/nav_cart_button.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
+
+  final String screenType;
+
+  const HomeScreen({Key key, this.screenType}) : super(key: key);
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -29,6 +35,16 @@ class _HomeScreenState extends State<HomeScreen> {
   HomeStore _homeStore;
   UserStore _userStore;
   CartStore _cartStore;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if(widget.screenType != null && widget.screenType == DeepLinkNavigationHelper.openSettingScreen){
+        _homeStore.selectTab(2);
+      }
+    });
+  }
 
   @override
   void didChangeDependencies() {
