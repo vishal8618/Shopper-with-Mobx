@@ -65,8 +65,7 @@ class MyApp extends StatelessWidget {
 
   final ProductStore _productStore = ProductStore(appComponent.getRepository());
   final ReceiptStore _receiptStore = ReceiptStore(appComponent.getRepository());
-  final _bloc = DeepLinkBloc();
-
+  final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +80,7 @@ class MyApp extends StatelessWidget {
         Provider<CartStore>(create: (_) => _cartStore),
         Provider<ProductStore>(create: (_) => _productStore),
         Provider<ReceiptStore>(create: (_) => _receiptStore),
-        Provider<DeepLinkBloc>.value(value: _bloc),
+        Provider<DeepLinkBloc>.value(value: DeepLinkBloc(_userStore, navigatorKey)),
       ],
       child: Observer(
         name: 'global-observer',
@@ -92,6 +91,7 @@ class MyApp extends StatelessWidget {
             theme: themeData,
             initialRoute: Routes.splash,
             onGenerateRoute: Routes.generateRoute,
+            navigatorKey: navigatorKey,
             locale: Locale(_languageStore.locale),
             supportedLocales: _languageStore.supportedLanguages
                 .map((language) => Locale(language.locale, language.code))

@@ -10,6 +10,7 @@ import 'package:greetings_world_shopper/constants/deep_link_navigation_helper.da
 import 'package:greetings_world_shopper/stores/user_store.dart';
 import 'package:greetings_world_shopper/ui/deep_link/bloc.dart';
 import 'package:greetings_world_shopper/ui/login/login.dart';
+import 'package:greetings_world_shopper/utils/dynamic_link_service.dart';
 import 'package:greetings_world_shopper/widgets/image_view.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,43 +23,33 @@ class SplashScreen extends StatefulWidget {
   State<StatefulWidget> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>{
 
-  //Event Channel creation
-  static const stream = const EventChannel('com.deeplink.flutter.dev/events');
-//Method channel creation
-  static const platform =
-  const MethodChannel('com.deeplink.flutter.dev/channel');
+  Timer _timerLink;
 
   @override
   void initState() {
     super.initState();
-    startUri().then(_onRedirected);
-//Checking broadcast stream, if deep link was clicked in opened appication
-    stream.receiveBroadcastStream().listen((d) {
-      _onRedirected(d);
-
-    });
     startTimer();
   }
 
   ScreenScaler _scaler;
   UserStore _userStore;
-  DeepLinkBloc _bloc;
+ // DeepLinkBloc _bloc;
   // bool shouldOpen=true;
-
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _userStore = Provider.of<UserStore>(context);
-     _bloc = Provider.of<DeepLinkBloc>(context);
-  }
 
   @override
   void dispose() {
     super.dispose();
   }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _userStore = Provider.of<UserStore>(context);
+   //  _bloc = Provider.of<DeepLinkBloc>(context);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -90,37 +81,4 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.of(context).pushReplacementNamed(Routes.login);
     }
   }
-
-  _onRedirected(String uri) {
-    print('link: $uri');
-    if(uri.contains("settings")){
-      navigateToSettingScreen();
-    }else{
-      final splitInviteLink = uri.split('/');
-      final inviteToken = splitInviteLink[splitInviteLink.length - 1];
-
-      print('P====> receiveBroadcastStream $uri');
-      print('P====> _onRedirected $uri');
-      _bloc.stateSink.add(uri);
-      if (Navigator.of(Routes.context).canPop()) Navigator.pop(Routes.context);
-      Navigator.of(Routes.context).pushNamedAndRemoveUntil(Routes.phoneVerification, (route) => false);
-    }
-  }
-
-  void navigateToSettingScreen() async {
-      if(_userStore.isLoggedIn){
-    Navigator.of(Routes.context).pushNamedAndRemoveUntil(Routes.home, (route) => false, arguments: DeepLinkNavigationHelper.openSettingScreen);
-    }else{
-      Navigator.of(Routes.context).pushNamedAndRemoveUntil(Routes.login, (route) => false, arguments: DeepLinkNavigationHelper.openSettingScreen);
-    }
-  }
-
-  Future<String> startUri() async {
-    try {
-      return platform.invokeMethod('initialLink');
-    } on PlatformException catch (e) {
-      return "Failed to Invoke: '${e.message}'.";
-    }
-  }
-
 }

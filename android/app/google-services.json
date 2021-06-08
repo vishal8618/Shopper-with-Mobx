@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "753249283176",
+    "project_id": "greetings-world-shopper",
+    "storage_bucket": "greetings-world-shopper.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:753249283176:android:cdf48398f36b5dcb711fdd",
+        "android_client_info": {
+          "package_name": "com.greetingsworld.greetings_world_shopper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "753249283176-kj4gtlnd8pjgj8a39oqnkdic6kkj1t22.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.greetingsworld.greetings_world_shopper",
+            "certificate_hash": "bbbafe66b5e971cded40a8febb8ffe73885cb38d"
+          }
+        },
+        {
+          "client_id": "753249283176-ko56ks0gom7irf9a4o9eriks911v8434.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyRiX0TwaIsvUwDJpPB29tO8U9B2Jn9Fw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "753249283176-ko56ks0gom7irf9a4o9eriks911v8434.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

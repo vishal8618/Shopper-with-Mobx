@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>753249283176-hqj4cq8tl98j3vp3l391udjepaslip3j.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.753249283176-hqj4cq8tl98j3vp3l391udjepaslip3j</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>753249283176-kj4gtlnd8pjgj8a39oqnkdic6kkj1t22.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCzFavSKQRAI9ZPIccFodXznz3CP38l5YY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>753249283176</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.hashtag.shopper</string>
+	<key>PROJECT_ID</key>
+	<string>greetings-world-shopper</string>
+	<key>STORAGE_BUCKET</key>
+	<string>greetings-world-shopper.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:753249283176:ios:ec8e33a2d9c14a47711fdd</string>
+</dict>
+</plist>

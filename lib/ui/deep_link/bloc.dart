@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:greetings_world_shopper/routes.dart';
 import 'package:greetings_world_shopper/stores/user_store.dart';
+import 'package:greetings_world_shopper/utils/dynamic_link_service.dart';
 
 
 abstract class Bloc {
@@ -21,11 +22,14 @@ class DeepLinkBloc extends Bloc {
   Stream<String> get state => _stateController.stream;
 
   Sink<String> get stateSink => _stateController.sink;
+  DynamicLinkService _dynamicLinkService;
 
 //Adding the listener into contructor
-  DeepLinkBloc() {
+  DeepLinkBloc(UserStore userStore, GlobalKey<NavigatorState> navigatorKey) {
+    _dynamicLinkService = DynamicLinkService();
+    _dynamicLinkService.retrieveDynamicLink(userStore, this, navigatorKey);
 //Checking application start by deep link
-    print('P====> DeepLinkBloc');
+   // print('P====> DeepLinkBloc');
 //     startUri().then(_onRedirected);
 // //Checking broadcast stream, if deep link was clicked in opened appication
 //     stream.receiveBroadcastStream().listen((d) {

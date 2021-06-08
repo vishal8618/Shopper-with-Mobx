@@ -62,8 +62,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
-                    android:scheme="http"
-                    android:host="greetingsworldshopper.com" />
+                    android:scheme="https"
+                    android:host="greetingsworld.page.link" />
 
                 <!-- custom url scheme example://app/home -->
                 <!--<data android:scheme="greetingsworldshopper.com"
