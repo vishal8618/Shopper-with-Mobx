@@ -16,6 +16,7 @@ class AppText extends StatelessWidget {
 
   final AppTextStyle style;
   final dynamic size;
+  final TextAlign textAlign;
 
   AppText({
     @required this.text,
@@ -26,6 +27,7 @@ class AppText extends StatelessWidget {
     this.underline,
     this.capitalise,
     this.size,
+    this.textAlign,
   });
 
   @override
@@ -42,7 +44,7 @@ class AppText extends StatelessWidget {
       capitalise == null || !capitalise
           ? translatedText
           : translatedText.toUpperCase(),
-      textAlign: align == null || !align ? null : TextAlign.center,
+      textAlign: textAlign != null ? textAlign :  (align == null || !align ? null : TextAlign.center),
        maxLines: maxLine ?? 8,
       style: getStyle(color == null ? AppColors.textColorDark : color,
           size == null ? getTextSize(_scaler) : size,

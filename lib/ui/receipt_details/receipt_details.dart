@@ -111,7 +111,10 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
                     ),
                   ),
                 ),
-                _buildButtons()
+                _buildButtons(),
+                _receiptStore.cancelOrderLoading
+                    ? CustomProgressIndicatorWidget()
+                    : Container(),
               ],
             ),
           );
@@ -121,7 +124,7 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
 
   Widget _buildReceiptDetailInfo() {
     return Container(
-      height: _scaler.getHeight(50),
+    //  height: _scaler.getHeight(50),
       width: _scaler.getWidth(80),
       child: Column(
         children: [
@@ -159,7 +162,7 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Align(
                 alignment: Alignment.topLeft,
@@ -169,11 +172,12 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
                   size: _scaler.getTextSize(11),
                 ),
               ),
-              Align(
-                alignment: Alignment.topRight,
+              SizedBox(width: _scaler.getWidth(1.0),),
+              Expanded(
                 child: AppText(
                   text: orderPlaceTime,
                   style: AppTextStyle.medium,
+                  textAlign: TextAlign.end,
                   size: _scaler.getTextSize(11),
                 ),
               ),
@@ -209,7 +213,7 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Align(
                 alignment: Alignment.topLeft,
@@ -219,26 +223,29 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
                   size: _scaler.getTextSize(11),
                 ),
               ),
-              Align(
-                  alignment: Alignment.topRight,
-                  child: InkWell(
-                    onTap: () {
-                      
-                      if(widget.receiptInfo.status.contains("Canceled")){
-                        showCancelOrderDialog();
-                      }else{
-                        _launchURL();
-                      }
+              SizedBox(width: _scaler.getWidth(1.0),),
+              Expanded(
+                child: Align(
+                    alignment: Alignment.topRight,
+                    child: InkWell(
+                      onTap: () {
 
-                    },
-                    child: AppText(
-                      text: widget.receiptInfo.trackingNumber,
-                      style: AppTextStyle.medium,
-                      size: _scaler.getTextSize(11),
-                      color: Colors.blue,
-                      underline: true,
-                    ),
-                  )),
+                        if(widget.receiptInfo.status.contains("Canceled")){
+                          showCancelOrderDialog();
+                        }else{
+                          _launchURL();
+                        }
+
+                      },
+                      child: AppText(
+                        text: widget.receiptInfo.trackingNumber ?? '',
+                        style: AppTextStyle.medium,
+                        size: _scaler.getTextSize(11),
+                        color: Colors.blue,
+                        underline: true,
+                      ),
+                    )),
+              ),
             ],
           ),
         ],
@@ -279,9 +286,6 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
           ),
           _handleErrorMessage(),
           _handleSuccessMessage(),
-          _receiptStore.cancelOrderLoading
-              ? CustomProgressIndicatorWidget()
-              : Container(),
           Container(
             width: _scaler.getWidth(100),
             margin: _scaler.getMargin(0, 3),

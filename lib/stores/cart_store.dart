@@ -102,8 +102,8 @@ abstract class _CartStore with Store {
 
 
   @action
-  Future addCart({String uid, String productId}) async {
-    final future = _repository.addCart(productId: productId, id: uid);
+  Future addCart({String uid, String productId, String deliveryType}) async {
+    final future = _repository.addCart(productId: productId, id: uid, deliveryType: deliveryType);
     fetchUpdateCartFuture = ObservableFuture(future);
     print(fetchUpdateCartFuture.status.toString());
     future.then((model) {
@@ -290,11 +290,21 @@ abstract class _CartStore with Store {
   }
 
   @action
-  updateDeliveryType({@required String type, @required String id}) {
-    cartList
-        .lastWhere((element) => element.cartItem.id.toString() == id)
-        .cartItem
-        .deliveryType = type;
+  Future updateDeliveryType({@required String buyerId, @required String id, @required String deliveryType}) async {
+    final future = _repository.updateDeliveryType(
+        buyerId: buyerId, id: id, deliveryType: deliveryType);
+    fetchUpdateCartFuture = ObservableFuture(future);
+    future.then((model) {
+      this.success = true;
+      successStore.successMessage = model.message;
+      cartList
+          .lastWhere((element) => element.cartItem.id.toString() == id)
+          .cartItem
+          .deliveryType = deliveryType;
+    }).catchError((error) {
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+      this.success = false;
+    });
   }
 
   @action

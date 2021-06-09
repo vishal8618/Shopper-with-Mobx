@@ -12,19 +12,23 @@ class CartItemModel {
   CartItemModel({
     this.cartItem,
     this.url,
+    this.deliverTypes,
   });
 
   CartItem cartItem;
   String url;
+  List<String> deliverTypes;
 
   factory CartItemModel.fromJson(Map<String, dynamic> json) => CartItemModel(
     cartItem: CartItem.fromJson(json["cart_item"]),
     url: json["url"],
+    deliverTypes: json["delivery_types"] == null ? null : List<String>.from(json["delivery_types"].map((x) => x)),
   );
 
   Map<String, dynamic> toJson() => {
     "cart_item": cartItem.toJson(),
     "url": url,
+    "delivery_types": deliverTypes == null ? null : List<dynamic>.from(deliverTypes.map((x) => x)),
   };
 }
 
@@ -47,7 +51,7 @@ class CartItem {
   int subTotal;
   int itemQuantity;
   Product product;
-  dynamic deliveryType;
+  String deliveryType;
   double shippingAmount;
   String shipmentId;
   double taxCharges;

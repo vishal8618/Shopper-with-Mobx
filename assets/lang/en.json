@@ -43,6 +43,8 @@
   "loginYes": "Login/SignUp now",
   "loginNo": "Later",
 
+  "deliveryTypes": "Delivery Types",
+
   "dontHaveAccount": "Don't have an Account?",
   "registerNow": "Register Now",
   "forgotPasswordQues": "Forgot password?",

@@ -53,7 +53,8 @@ class ReceiptApi {
     try {
       var map = Map<String, dynamic>();
       map["buyer_id"] = uid;
-      final res = await _dioClient.put("${Endpoints.cancelOrder}$orderId.json", data: map, options: null);
+      var data = jsonEncode(map);
+      final res = await _dioClient.put("${Endpoints.order}$orderId${Endpoints.cancelOrder}.json", data: data);
       return likeModelFromJson(json.encode(res.data));
     } catch (e) {
       print(e.toString());

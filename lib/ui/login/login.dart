@@ -133,7 +133,9 @@ class _LoginScreen extends State<LoginScreen> {
   }
 
   Widget _buildBody() {
-    return Observer(builder: (context) {
+    return Observer(
+        key: UniqueKey(),
+        builder: (context) {
       return Stack(
         children: [
           ListView(

@@ -211,8 +211,8 @@ class Repository {
   }
 
   // add item to cart
-  Future<UpdateCartModel> addCart({String id, String productId}) async {
-    return await _cartApi.addCart(productId: productId, uid: id).then((model) {
+  Future<UpdateCartModel> addCart({String id, String productId, String deliveryType}) async {
+    return await _cartApi.addCart(productId: productId, uid: id, deliveryType: deliveryType).then((model) {
       return model;
     }).catchError((error) => throw error);
   }
@@ -222,6 +222,16 @@ class Repository {
       {String id, String productId, String quantity}) async {
     return await _cartApi
         .removeCart(productId: productId, uid: id, quantity: quantity)
+        .then((model) {
+      return model;
+    }).catchError((error) => throw error);
+  }
+
+  // change item delivery type
+  Future<UpdateCartModel> updateDeliveryType(
+      {String buyerId, String id, String deliveryType}) async {
+    return await _cartApi
+        .updateDeliveryType(buyerId: buyerId, id: id, deliveryType: deliveryType)
         .then((model) {
       return model;
     }).catchError((error) => throw error);

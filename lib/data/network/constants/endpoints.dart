@@ -23,6 +23,7 @@ class Endpoints {
   static const String addCart = baseUrl + "cart/add_item.json";
   static const String removeCart = baseUrl + "cart/remove_item.json";
   static const String cartList = baseUrl + "carts.json";
+  static const String updateCartItem = baseUrl + "cart/update_item.json";
 
   static const String addWish = baseUrl + "like/like_product.json";
   static const String removeWish = baseUrl + "like/unlike_product.json";
@@ -44,5 +45,6 @@ class Endpoints {
   static const String generate_otp_code="registration/generate_otp_code.json";
   static const String phone_number_verify="registration/verify_phone_number.json";
 
-  static const String cancelOrder= "order/cancel_order/";
+  static const String order= "order/";
+  static const String cancelOrder= "/cancel_order";
 }

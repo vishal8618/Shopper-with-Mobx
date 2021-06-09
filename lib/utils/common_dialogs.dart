@@ -3,6 +3,7 @@ import 'package:greetings_world_shopper/stores/home_store.dart';
 import 'package:greetings_world_shopper/stores/user_store.dart';
 import 'package:greetings_world_shopper/widgets/address_dialog.dart';
 import 'package:greetings_world_shopper/widgets/confirmation_dialog.dart';
+import 'package:greetings_world_shopper/widgets/delivery_type_dialog.dart';
 import 'package:greetings_world_shopper/widgets/login_dialog.dart';
 import 'package:greetings_world_shopper/widgets/logout_dialog.dart';
 import 'package:greetings_world_shopper/widgets/report_dialog.dart';
@@ -22,6 +23,16 @@ class CommonDialogs {
                 Navigator.pop(context);
                 Navigator.of(context).pushNamed(Routes.login);
               },
+            ));
+  }
+
+  static showDeliveryTypeDialog(context, ValueChanged proceedCallback, List<String> deliverTypes) {
+    showDialog(
+        context: context,
+      //  barrierDismissible: false,
+        builder: (BuildContext context) => DeliveryTypeDialog(
+              yesClick: proceedCallback,
+          deliverTypes: deliverTypes,
             ));
   }
 

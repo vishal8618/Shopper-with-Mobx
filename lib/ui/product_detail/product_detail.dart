@@ -21,7 +21,6 @@ import 'package:greetings_world_shopper/widgets/app_text.dart';
 import 'package:greetings_world_shopper/widgets/common_message_dialog.dart';
 import 'package:greetings_world_shopper/widgets/image_view.dart';
 import 'package:greetings_world_shopper/widgets/like_button.dart';
-import 'package:greetings_world_shopper/widgets/login_dialog.dart';
 import 'package:greetings_world_shopper/widgets/nav_cart_button.dart';
 import 'package:greetings_world_shopper/widgets/progress_indicator_widget.dart';
 import 'package:provider/provider.dart';
@@ -51,7 +50,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Routes.context=context;
+    Routes.context = context;
     _scaler = ScreenScaler()..init(context);
 
     return WillPopScope(
@@ -190,41 +189,47 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   children: [
                     !_userStore.isLoggedIn
                         ? GestureDetector(
-                      onTap: () {
-                        CommonDialogs.showLoginDialog(context);
-                      },
-                      child: Icon(
-                        Icons.favorite_border,
-                        color: AppColors.textColorDark,
-                        size: _scaler.getTextSize(14),
-                      ),
-                    )
+                            onTap: () {
+                              CommonDialogs.showLoginDialog(context);
+                            },
+                            child: Icon(
+                              Icons.favorite_border,
+                              color: AppColors.textColorDark,
+                              size: _scaler.getTextSize(14),
+                            ),
+                          )
                         : LikeWidget(
-                      liked: (widget.args.productModel.likedByCurrentUser != null) &&
-                          widget.args.productModel.likedByCurrentUser,
-                      likeCallback: (isLiked) {
-                        Future.delayed(Duration(
-                          milliseconds: 1,
-                        )).then((value) {
-                          setState(() {
-                            if(widget.args.productModel.likedByCurrentUser==null){
-                              widget.args.productModel.likedByCurrentUser= false;
-                             // widget.args.productModel.likes=Likes(id: 0,buyerId: int.parse( _userStore.uid), isLiked: false,productId: int.parse(widget.args.productModel.id.toString()));
-                            }
-                            widget.args.productModel.likedByCurrentUser = isLiked;
-                          });
-                          isLiked
-                              ? _productStore.addWish(
-                              productId: widget.args.productModel.id
-                                  .toString(),
-                              uid: _userStore.uid)
-                              : _productStore.removeWish(
-                              productId: widget.args.productModel.id
-                                  .toString(),
-                              uid: _userStore.uid);
-                        });
-                      },
-                    ),
+                            liked:
+                                (widget.args.productModel.likedByCurrentUser !=
+                                        null) &&
+                                    widget.args.productModel.likedByCurrentUser,
+                            likeCallback: (isLiked) {
+                              Future.delayed(Duration(
+                                milliseconds: 1,
+                              )).then((value) {
+                                setState(() {
+                                  if (widget.args.productModel
+                                          .likedByCurrentUser ==
+                                      null) {
+                                    widget.args.productModel
+                                        .likedByCurrentUser = false;
+                                    // widget.args.productModel.likes=Likes(id: 0,buyerId: int.parse( _userStore.uid), isLiked: false,productId: int.parse(widget.args.productModel.id.toString()));
+                                  }
+                                  widget.args.productModel.likedByCurrentUser =
+                                      isLiked;
+                                });
+                                isLiked
+                                    ? _productStore.addWish(
+                                        productId: widget.args.productModel.id
+                                            .toString(),
+                                        uid: _userStore.uid)
+                                    : _productStore.removeWish(
+                                        productId: widget.args.productModel.id
+                                            .toString(),
+                                        uid: _userStore.uid);
+                              });
+                            },
+                          ),
                     SizedBox(
                       width: _scaler.getWidth(1),
                     ),
@@ -325,9 +330,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               if (!_userStore.isLoggedIn)
                 CommonDialogs.showLoginDialog(context);
               else
-                _cartStore.addCart(
-                    uid: _userStore.uid,
-                    productId: widget.args.productModel.id.toString());
+                showDeliveryDialog(widget.args.productModel);
             },
             child: AppText(
               text: Strings.addToCart,
@@ -345,9 +348,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             padding: _scaler.getPadding(1, 0),
             shape: RoundedRectangleBorder(
                 side: BorderSide(
-                  width: 1,
-                  color: AppColors.buttonBg,
-                )),
+              width: 1,
+              color: AppColors.buttonBg,
+            )),
             onPressed: () {
               showReturnPolicyDialog();
             },
@@ -378,7 +381,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       builder: (context) {
         return _cartStore.successStore.successMessage.isNotEmpty
             ? SuccessBar.showMessage(
-            _cartStore.successStore.successMessage, context)
+                _cartStore.successStore.successMessage, context)
             : SizedBox.shrink();
       },
     );
@@ -389,12 +392,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) => CommonMessageDialog(
-          message: widget.args.merchantModel.returnPolicy == null ||
-              widget.args.merchantModel.returnPolicy.name == null
-              ? "No returns for this product"
-              : widget.args.merchantModel.returnPolicy.name,
-          title: Strings.returnPolicy,
-        ));
+              message: widget.args.merchantModel.returnPolicy == null ||
+                      widget.args.merchantModel.returnPolicy.name == null
+                  ? "No returns for this product"
+                  : widget.args.merchantModel.returnPolicy.name,
+              title: Strings.returnPolicy,
+            ));
   }
 
   Widget getProductOptions(ProductModel model) {
@@ -406,8 +409,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               CommonDialogs.showLoginDialog(context);
             else {
               setState(() {
-                if(model.favoriteByCurrentUser==null){
-                  model.favoriteByCurrentUser= false;
+                if (model.favoriteByCurrentUser == null) {
+                  model.favoriteByCurrentUser = false;
                   //model.favorites=Favorites(id: 0,buyerId: int.parse( _userStore.uid), isFavorite: false,productId: int.parse(model.id.toString()));
                 }
 
@@ -416,18 +419,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
               model.favoriteByCurrentUser
                   ? _productStore.addFavourite(
-                  uid: _userStore.uid, productId: model.id.toString())
+                      uid: _userStore.uid, productId: model.id.toString())
                   : _productStore.removeFavourite(
-                  uid: _userStore.uid, productId: model.id.toString());
+                      uid: _userStore.uid, productId: model.id.toString());
             }
-          }
-
-          else if (selected == ProductOptions.cart) {
+          } else if (selected == ProductOptions.cart) {
             if (!_userStore.isLoggedIn)
               CommonDialogs.showLoginDialog(context);
             else
-              _cartStore.addCart(
-                  uid: _userStore.uid, productId: model.id.toString());
+              showDeliveryDialog(model);
           } else if (selected == ProductOptions.report) {
             if (_userStore.isLoggedIn) {
               setState(() {
@@ -467,14 +467,32 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             child: AppText(
               text: 'Report',
             ),
-
-          )],
+          )
+        ],
       ),
     );
   }
 
   Future<bool> pop() async {
     Navigator.of(context).pop(widget.args.productModel);
+  }
+
+  void showDeliveryDialog(ProductModel model) {
+    if (model.deliverTypes != null && model.deliverTypes.isNotEmpty) {
+      CommonDialogs.showDeliveryTypeDialog(context, (value) {
+        Navigator.pop(context);
+        addToCart(value, model);
+      }, model.deliverTypes);
+    } else {
+      addToCart("", model);
+    }
+  }
+
+  void addToCart(value, ProductModel model) {
+    _cartStore.addCart(
+        uid: _userStore.uid,
+        productId: model.id.toString(),
+        deliveryType: value);
   }
 }
 

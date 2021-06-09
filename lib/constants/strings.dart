@@ -74,6 +74,9 @@ class Strings {
   static const String addAddress = "Please Add Address";
   static const String address = "Add Address";
 
+  // Delivery type dialog
+  static const String deliveryTypes = "deliveryTypes";
+
 //  errors
   static const String emailError= "emailError";
   static const String passwordError= "passwordError";

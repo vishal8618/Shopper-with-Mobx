@@ -28,6 +28,7 @@ class ProductModel {
     this.good,
     this.likes,
     this.favorites,
+    this.deliverTypes,
   });
 
   int id;
@@ -48,6 +49,7 @@ class ProductModel {
   Good good;
   Likes likes;
   Favorites favorites;
+  List<String> deliverTypes;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
     id: json["id"],
@@ -68,7 +70,7 @@ class ProductModel {
     good: Good.fromJson(json["good"]),
     likes: json["likes"] == null ? null : Likes.fromJson(json["likes"]),
     favorites: json["favorites"] == null ? null : Favorites.fromJson(json["favorites"]),
-
+    deliverTypes: json["delivery_types"] == null ? null : List<String>.from(json["delivery_types"].map((x) => x)),
   );
 
   Map<String, dynamic> toJson() => {
@@ -90,6 +92,7 @@ class ProductModel {
     "good": good.toJson(),
     "likes": likes.toJson(),
     "favorites": favorites.toJson(),
+    "delivery_types": deliverTypes == null ? null : List<dynamic>.from(deliverTypes.map((x) => x)),
   };
 }
 class Favorites {

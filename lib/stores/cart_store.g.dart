@@ -240,9 +240,9 @@ mixin _$CartStore on _CartStore, Store {
   final _$addCartAsyncAction = AsyncAction('_CartStore.addCart');
 
   @override
-  Future<dynamic> addCart({String uid, String productId}) {
+  Future<dynamic> addCart({String uid, String productId, String deliveryType}) {
     return _$addCartAsyncAction
-        .run(() => super.addCart(uid: uid, productId: productId));
+        .run(() => super.addCart(uid: uid, productId: productId, deliveryType: deliveryType));
   }
 
   final _$removeCartAsyncAction = AsyncAction('_CartStore.removeCart');
@@ -294,15 +294,12 @@ mixin _$CartStore on _CartStore, Store {
     }
   }
 
+  final _$updateCartAsyncAction = AsyncAction('_CartStore.updateCart');
+
   @override
-  dynamic updateDeliveryType({@required String type, @required String id}) {
-    final _$actionInfo = _$_CartStoreActionController.startAction(
-        name: '_CartStore.updateDeliveryType');
-    try {
-      return super.updateDeliveryType(type: type, id: id);
-    } finally {
-      _$_CartStoreActionController.endAction(_$actionInfo);
-    }
+  Future<dynamic> updateDeliveryType({@required String buyerId, @required String id, @required String deliveryType}) {
+    return _$updateCartAsyncAction.run(() =>
+        super.updateDeliveryType(buyerId: buyerId, id: id, deliveryType: deliveryType));
   }
 
   @override

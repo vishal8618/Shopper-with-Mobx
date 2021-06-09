@@ -815,8 +815,7 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
             if (!_userStore.isLoggedIn)
               CommonDialogs.showLoginDialog(context);
             else
-              _cartStore.addCart(
-                  uid: _userStore.uid, productId: model.id.toString());
+              showDeliveryDialog(model);
           } else if (selected == ProductOptions.report) {
             if (_userStore.isLoggedIn) {
               setState(() {
@@ -940,5 +939,21 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  void showDeliveryDialog(ProductModel model) {
+    if(model.deliverTypes != null && model.deliverTypes.isNotEmpty){
+      CommonDialogs.showDeliveryTypeDialog(context, (value){
+        Navigator.pop(context);
+        addToCart(value, model);
+      }, model.deliverTypes);
+    }else{
+      addToCart("", model);
+    }
+  }
+
+  void addToCart(value, ProductModel model) {
+    _cartStore.addCart(
+        uid: _userStore.uid, productId: model.id.toString(), deliveryType: value);
   }
 }

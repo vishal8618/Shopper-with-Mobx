@@ -18,11 +18,14 @@ class CartApi {
   // injecting dio instance
   CartApi(this._dioClient);
 
-  Future<UpdateCartModel> addCart({String uid, String productId}) async {
+  Future<UpdateCartModel> addCart({String uid, String productId, String deliveryType}) async {
     try {
       var map = HashMap<String, dynamic>();
       map["buyer_id"] = int.parse(uid);
       map["product_id"] = int.parse(productId);
+      if(deliveryType != null && deliveryType.isNotEmpty){
+        map["delivery_type"] = deliveryType;
+      }
 
       final res = await _dioClient.post(Endpoints.addCart, data: map);
       return updateCartModelFromJson(json.encode(res.data));
@@ -43,6 +46,22 @@ class CartApi {
       if (quantity != null) map["item_quantity"] = int.parse(quantity);
 
       final res = await _dioClient.delete(Endpoints.removeCart, data: map);
+      return updateCartModelFromJson(json.encode(res.data));
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  Future<UpdateCartModel> updateDeliveryType(
+      {String buyerId, String id, String deliveryType}) async {
+    try {
+      var map = HashMap<String, dynamic>();
+      map["buyer_id"] = int.parse(buyerId);
+      map["item_id"] = int.parse(id);
+      map["delivery_type"] = deliveryType;
+
+      final res = await _dioClient.put(Endpoints.updateCartItem, data: map);
       return updateCartModelFromJson(json.encode(res.data));
     } catch (e) {
       print(e.toString());
