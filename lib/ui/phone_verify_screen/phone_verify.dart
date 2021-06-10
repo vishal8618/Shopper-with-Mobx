@@ -17,6 +17,11 @@ import 'package:provider/provider.dart';
 import '../../routes.dart';
 
 class PhoneVerifyScreen extends StatefulWidget {
+
+  final String token;
+
+  const PhoneVerifyScreen({Key key, this.token}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _PhoneVerifyScreenState();
 }
@@ -38,6 +43,9 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      verifyEmail();
+    });
   }
 
   @override
@@ -51,45 +59,21 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   Widget build(BuildContext context) {
     Routes.context = context;
     if (_scaler == null) _scaler = ScreenScaler()..init(context);
-    return StreamBuilder<String>(
-        stream: _bloc.state,
-        builder: (context, snapshot) {
-          print('SS Data========> ${snapshot.data}');
-          if (snapshot.hasData) {
+    return Material(
+      child: Container(
+        padding: _scaler.getPadding(1, 1),
+        decoration: BoxDecoration(gradient: AppColors.splashGradient),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            !showOtpWidget ? buildPhoneVerify(context) : Container(),
+            showOtpWidget ? buildOtpVerify(context) : Container(),
+          ],
 
-            showVerifiedText = true;
-            final splitInviteLink = snapshot.data.split('?');
-            final inviteToken = splitInviteLink[splitInviteLink.length - 1];
-            print('tokennnn====>$inviteToken');
-
-            if (!_userStore.loading) if (!hitVerifyApi) {
-              hitVerifyApi = true;
-               _userStore.userConfirmation(token: inviteToken);
-              if (Navigator.of(context).canPop()) Navigator.pop(context);
-            }
-
-          }else {
-            showVerifiedText = false;
-          }
-
-          return Material(
-            child: Container(
-              padding: _scaler.getPadding(1, 1),
-              decoration: BoxDecoration(gradient: AppColors.splashGradient),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  !showOtpWidget ? buildPhoneVerify(context) : Container(),
-                  showOtpWidget ? buildOtpVerify(context) : Container(),
-                ],
-
-              ),
-            ),
-
-          );
-        });
-
+        ),
+      ),
+    );
   }
 
   Widget buildPhoneVerify(context) {
@@ -376,6 +360,19 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
     }*/);
 
     return Container();
+  }
+
+  void verifyEmail() {
+    if (widget.token != null && widget.token.isNotEmpty) {
+      showVerifiedText = true;
+      if (!_userStore.loading) if (!hitVerifyApi) {
+        hitVerifyApi = true;
+       _userStore.userConfirmation(token: widget.token);
+        if (Navigator.of(context).canPop()) Navigator.pop(context);
+      }
+    }else {
+      showVerifiedText = false;
+    }
   }
 
 }

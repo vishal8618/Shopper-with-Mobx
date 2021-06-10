@@ -185,8 +185,11 @@ class UserApi {
   //Registration confirmation
   Future<RegisterConfirmationModel> confirmRegistration({String token}) async {
     try {
-      final res = await _dioClient.get("${Endpoints.registrationConfirmation}?$token",
-          options: null);
+      final res = await _dioClient.get("${Endpoints.registrationConfirmation}",
+          options: null,
+      queryParameters: {
+        "confirmation_token": token
+      });
       return registerConfirmationModelFromJson(json.encode(res.data));
     } catch (e) {
       print(e.toString());

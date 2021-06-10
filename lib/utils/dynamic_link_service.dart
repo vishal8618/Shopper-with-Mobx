@@ -12,15 +12,14 @@ class DynamicLinkService {
       final PendingDynamicLinkData data =
           await FirebaseDynamicLinks.instance.getInitialLink();
       final Uri deepLink = data?.link;
-
       if (deepLink != null) {
-        _onRedirected(deepLink.toString(), userStore, bloc, navigatorKey);
+        _onRedirected(deepLink.toString(), userStore, bloc, navigatorKey, deepLink);
       }
 
       FirebaseDynamicLinks.instance.onLink(
           onSuccess: (PendingDynamicLinkData dynamicLink) async {
         _onRedirected(
-            dynamicLink.link.toString(), userStore, bloc, navigatorKey);
+            dynamicLink.link.toString(), userStore, bloc, navigatorKey, dynamicLink.link);
       });
     } catch (e) {
       print(e.toString());
@@ -28,26 +27,30 @@ class DynamicLinkService {
   }
 
   _onRedirected(String uri, UserStore userStore, DeepLinkBloc bloc,
-      GlobalKey<NavigatorState> navigatorKey) {
+      GlobalKey<NavigatorState> navigatorKey, Uri deepLink, ) {
     print('link: $uri');
     if (uri.contains("settings")) {
       navigateToSettingScreen(userStore, navigatorKey);
-    } else {
-      final splitInviteLink = uri.split('/');
-      final inviteToken = splitInviteLink[splitInviteLink.length - 1];
+    } else if(uri.contains("token")){
+      var queryParameters = deepLink.queryParameters;
+      var link = queryParameters["link"];
 
-      print('P====> receiveBroadcastStream $uri');
-      print('P====> _onRedirected $uri');
-      bloc.stateSink.add(uri);
-      if (Navigator.of(Routes.context).canPop()) Navigator.pop(Routes.context);
-      navigatorKey.currentState
-          .pushNamedAndRemoveUntil(Routes.phoneVerification, (route) => false);
+      if(link != null){
+        var data = link.split("_");
+        if(data != null && data.length > 1){
+          var token = data[1];
+          Future.delayed(Duration(milliseconds: 500)).then((value) {
+            Navigator.of(navigatorKey.currentContext).pushNamedAndRemoveUntil(
+                Routes.phoneVerification, (route) => false, arguments: token);
+          });
+        }
+      }
     }
   }
 
   void navigateToSettingScreen(
       UserStore userStore, GlobalKey<NavigatorState> navigatorKey) async {
-    Future.delayed(Duration(seconds: 1)).then((value) {
+    Future.delayed(Duration(milliseconds: 500)).then((value) {
       if (userStore.isLoggedIn) {
         Navigator.of(navigatorKey.currentContext).pushNamedAndRemoveUntil(
             Routes.home, (route) => false,

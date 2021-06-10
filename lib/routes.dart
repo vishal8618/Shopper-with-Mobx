@@ -195,7 +195,7 @@ class Routes {
 
       case phoneVerification:
         return PageTransition(
-            child: PhoneVerifyScreen(),
+            child: PhoneVerifyScreen(token: settings.arguments),
             type: PageTransitionType.fade,
             duration: Duration(milliseconds: 300),
             reverseDuration: Duration(milliseconds: 300),
