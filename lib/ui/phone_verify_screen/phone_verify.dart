@@ -373,6 +373,9 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
     }else {
       showVerifiedText = false;
     }
+    setState(() {
+      
+    });
   }
 
 }
