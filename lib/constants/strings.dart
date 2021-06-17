@@ -34,6 +34,7 @@ class Strings {
   static const String viewSellerProfile= "viewSellerProfile";
   static const String addToCart= "addToCart";
   static const String viewReturnPolicy= "viewReturnPolicy";
+  static const String waitingForService= "waitingForService";
   static const String description= "description";
   static const String shoppingCart= "shoppingCart";
 

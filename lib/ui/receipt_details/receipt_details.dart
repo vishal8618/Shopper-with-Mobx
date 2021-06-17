@@ -332,6 +332,29 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
               ),
             ),
           ),
+          widget.receiptInfo.deliveryType != "Delivery" && widget.receiptInfo.status.compareTo("Ready") == 0 ? Container(
+            width: _scaler.getWidth(100),
+            margin: _scaler.getMargin(0, 3),
+            child: MaterialButton(
+              height: _scaler.getHeight(3.5),
+              padding: _scaler.getPadding(1, 0),
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                    width: 1,
+                    color: AppColors.buttonBg,
+                  )),
+              onPressed: () {
+                showReturnPolicyDialog();
+              },
+              child: AppText(
+                text: Strings.waitingForService,
+                color: AppColors.buttonBg,
+                style: AppTextStyle.medium,
+                size: _scaler.getTextSize(11),
+              ),
+            ),
+          ) : Container(),
         ],
       ),
     );

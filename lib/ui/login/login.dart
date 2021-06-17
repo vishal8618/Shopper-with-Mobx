@@ -23,7 +23,6 @@ import 'package:validators/validators.dart';
 import '../../routes.dart';
 
 class LoginScreen extends StatefulWidget {
-
   final String screenType;
 
   const LoginScreen({Key key, this.screenType}) : super(key: key);
@@ -72,25 +71,25 @@ class _LoginScreen extends State<LoginScreen> {
         elevation: 0,
         centerTitle: true,
         actions: [
-          !Navigator.of(context).canPop()
+          /*!Navigator.of(context).canPop()
               ? Center(
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).pushReplacementNamed(Routes.home);
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: AppText(
-                  text: Strings.tourApp,
-                  style: AppTextStyle.title,
-                  color: Colors.white,
-                  underline: true,
-                  size: _scaler.getTextSize(10),
-                ),
-              ),
-            ),
-          )
-              : Container()
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushReplacementNamed(Routes.home);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: AppText(
+                        text: Strings.tourApp,
+                        style: AppTextStyle.title,
+                        color: Colors.white,
+                        underline: true,
+                        size: _scaler.getTextSize(10),
+                      ),
+                    ),
+                  ),
+                )
+              : Container()*/
         ],
       ),
       // appBar: AppBar(
@@ -128,7 +127,9 @@ class _LoginScreen extends State<LoginScreen> {
           onTap: () {
             DeviceUtils.hideKeyboard(context);
           },
-          child: Container(color: /*Colors.purple*/AppColors.primaryColor, child: _buildBody())),
+          child: Container(
+              color: /*Colors.purple*/ AppColors.primaryColor,
+              child: _buildBody())),
     );
   }
 
@@ -136,200 +137,214 @@ class _LoginScreen extends State<LoginScreen> {
     return Observer(
         key: UniqueKey(),
         builder: (context) {
-      return Stack(
-        children: [
-          ListView(
+          return Stack(
             children: [
-              ImageView(
-                path: Assets.logo,
-                height: _scaler.getHeight(25),
-                width: _scaler.getWidth(30),
-                color: AppColors.starYellow,
-              ),
-              Form(
-                key: formKey,
-                child: Container(
-                  margin: _scaler.getPadding(1, 1),
-                  child: Container(
-                    padding: _scaler.getPadding(1, 1),
-                    child: Column(
-                      children: [
-                        Focus(
-                          onFocusChange: (has) {
-                            if (mounted) {
-                              setState(() {
-                                this.emailFocus = has;
-                              });
-                            }
-                          },
-                          child: LoginTextField(
-                            hintText: Strings.email,
-                            controller: emailController,
-                            inputType: TextInputType.emailAddress,
-                            prefix: Icon(
-                              Icons.email,
-                              color: emailFocus ? AppColors.bg : AppColors.bg,
-                              size: _scaler.getTextSize(14),
+              ListView(
+                children: [
+                  ImageView(
+                    path: Assets.logo,
+                    height: _scaler.getHeight(25),
+                    width: _scaler.getWidth(30),
+                    color: AppColors.starYellow,
+                  ),
+                  Form(
+                    key: formKey,
+                    child: Container(
+                      margin: _scaler.getPadding(1, 1),
+                      child: Container(
+                        padding: _scaler.getPadding(1, 1),
+                        child: Column(
+                          children: [
+                            Focus(
+                              onFocusChange: (has) {
+                                if (mounted) {
+                                  setState(() {
+                                    this.emailFocus = has;
+                                  });
+                                }
+                              },
+                              child: LoginTextField(
+                                hintText: Strings.email,
+                                controller: emailController,
+                                inputType: TextInputType.emailAddress,
+                                prefix: Icon(
+                                  Icons.email,
+                                  color:
+                                      emailFocus ? AppColors.bg : AppColors.bg,
+                                  size: _scaler.getTextSize(14),
+                                ),
+                                validate: (text) {
+                                  return isEmail(text)
+                                      ? null
+                                      : AppLocalizations.of(context)
+                                          .translate(Strings.emailError);
+                                },
+                              ),
                             ),
-                            validate: (text) {
-                              return isEmail(text)
-                                  ? null
-                                  : AppLocalizations.of(context)
-                                      .translate(Strings.emailError);
-                            },
-                          ),
-                        ),
-                        SizedBox(
-                          height: _scaler.getHeight(2),
-                        ),
-                        Focus(
-                          onFocusChange: (has) {
-                            if (mounted) {
-                              setState(() {
-                                this.passwordFocus = has;
-                              });
-                            }
-                          },
-                          child: LoginTextField(
-                            hintText: Strings.password,
-                            controller: passwordController,
-                            maxLines: 1,
-                            password: true,
-                            prefix: Icon(
-                              Icons.vpn_key,
-                              color:
-                                  passwordFocus ? AppColors.bg : AppColors.bg,
-                              size: _scaler.getTextSize(14),
+                            SizedBox(
+                              height: _scaler.getHeight(2),
                             ),
-                            validate: (value) {
-                              if (value.trim().length < 6) {
-                                return AppLocalizations.of(context)
-                                    .translate(Strings.passwordError);
-                              } else {
-                                return null;
-                              }
-                            },
-                          ),
+                            Focus(
+                              onFocusChange: (has) {
+                                if (mounted) {
+                                  setState(() {
+                                    this.passwordFocus = has;
+                                  });
+                                }
+                              },
+                              child: LoginTextField(
+                                hintText: Strings.password,
+                                controller: passwordController,
+                                maxLines: 1,
+                                password: true,
+                                prefix: Icon(
+                                  Icons.vpn_key,
+                                  color: passwordFocus
+                                      ? AppColors.bg
+                                      : AppColors.bg,
+                                  size: _scaler.getTextSize(14),
+                                ),
+                                validate: (value) {
+                                  if (value.trim().length < 6) {
+                                    return AppLocalizations.of(context)
+                                        .translate(Strings.passwordError);
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(right: _scaler.getWidth(2,), bottom: _scaler.getWidth(2,),),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context)
-                            .pushNamed(Routes.forgotPassword,
-                            arguments: Navigator.of(context).canPop())
-                            .then((value) => () {
-                          // if (mounted) {
-                          //   setState(() {});
-                          // }
-                        });
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                          right: _scaler.getWidth(
+                            2,
+                          ),
+                          bottom: _scaler.getWidth(
+                            2,
+                          ),
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context)
+                                .pushNamed(Routes.forgotPassword,
+                                    arguments: Navigator.of(context).canPop())
+                                .then((value) => () {
+                                      // if (mounted) {
+                                      //   setState(() {});
+                                      // }
+                                    });
+                          },
+                          child: AppText(
+                            text: Strings.forgotPasswordQues,
+                            style: AppTextStyle.title,
+                            color: AppColors.bg,
+                            size: _scaler.getTextSize(10),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    margin: _scaler.getMargin(1, 3),
+                    child: MaterialButton(
+                      height: _scaler.getHeight(3.5),
+                      color: AppColors.bg,
+                      onPressed: () {
+                        if (formKey.currentState.validate()) {
+                          DeviceUtils.hideKeyboard(context);
+
+                          _userStore.login(
+                            email: emailController.text,
+                            password: passwordController.text,
+                          );
+                        }
                       },
                       child: AppText(
-                        text: Strings.forgotPasswordQues,
-                        style: AppTextStyle.title,
-                        color: AppColors.bg,
-                        size: _scaler.getTextSize(10),
+                        text: Strings.proceed,
+                        color: Colors.purple,
                       ),
                     ),
                   ),
-                ],
-              ),
-              Container(
-                margin: _scaler.getMargin(1, 3),
-                child: MaterialButton(
-                  height: _scaler.getHeight(3.5),
-                  color: AppColors.bg,
-                  onPressed: () {
-                    if (formKey.currentState.validate()) {
-                      DeviceUtils.hideKeyboard(context);
-
-                      _userStore.login(
-                        email: emailController.text,
-                        password: passwordController.text,
-                      );
-                    }
-                  },
-                  child: AppText(
-                    text: Strings.proceed,
-                    color: Colors.purple,
+                  SizedBox(
+                    height: _scaler.getHeight(2),
                   ),
-                ),
-              ),
-              SizedBox(
-                height: _scaler.getHeight(2),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  AppText(
-                    text: Strings.dontHaveAccount,
-                    style: AppTextStyle.regular,
-                    color: AppColors.bg,
-                    size: _scaler.getTextSize(10),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context)
-                          .pushNamed(Routes.signUp,
-                              arguments: Navigator.of(context).canPop())
-                          .then((value) => () {
-                                if (mounted) {
-                                  setState(() {});
-                                }
-                              });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: AppText(
-                        text: Strings.registerNow,
-                        style: AppTextStyle.title,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AppText(
+                        text: Strings.dontHaveAccount,
+                        style: AppTextStyle.regular,
                         color: AppColors.bg,
                         size: _scaler.getTextSize(10),
                       ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context)
+                              .pushNamed(Routes.signUp,
+                                  arguments: Navigator.of(context).canPop())
+                              .then((value) => () {
+                                    if (mounted) {
+                                      setState(() {});
+                                    }
+                                  });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: AppText(
+                            text: Strings.registerNow,
+                            style: AppTextStyle.title,
+                            color: AppColors.bg,
+                            size: _scaler.getTextSize(10),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  if (!Navigator.of(context).canPop())
+                    Container(
+                      margin: EdgeInsets.only(
+                        top: _scaler.getHeight(0.5),
+                      ),
+                      alignment: Alignment.center,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context)
+                              .pushReplacementNamed(Routes.home);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: AppText(
+                            text: Strings.tourApp,
+                            style: AppTextStyle.title,
+                            color: Colors.white,
+                            underline: true,
+                            size: _scaler.getTextSize(10),
+                          ),
+                        ),
+                      ),
                     ),
-                  )
+                  SizedBox(
+                    height: _scaler.getHeight(3),
+                  ),
                 ],
               ),
-              // if(!Navigator.of(context).canPop())
-              //      Container(
-              //        margin: EdgeInsets.only(top: _scaler.getHeight(0.5),),
-              //   alignment: Alignment.center,
-              //   child: GestureDetector(
-              //     onTap: () {
-              //       Navigator.of(context).pushReplacementNamed(Routes.home);
-              //     },
-              //     child: Padding(
-              //       padding: const EdgeInsets.all(8.0),
-              //       child: AppText(
-              //         text: Strings.tourApp,
-              //         style: AppTextStyle.title,
-              //         color: Colors.white,
-              //         underline: true,
-              //         size: _scaler.getTextSize(10),
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              SizedBox(
-                height: _scaler.getHeight(3),
-              ),
+              _handleErrorMessage(),
+              _handleSuccessMessage(),
+              _userStore.loading
+                  ? CustomProgressIndicatorWidget()
+                  : Container(),
             ],
-          ),
-          _handleErrorMessage(),
-          _handleSuccessMessage(),
-          _userStore.loading ? CustomProgressIndicatorWidget() : Container(),
-        ],
-      );
-    });
+          );
+        });
   }
 
   Widget _handleSuccessMessage() {
@@ -350,7 +365,8 @@ class _LoginScreen extends State<LoginScreen> {
       if (Navigator.of(context).canPop())
         Navigator.of(context).pop();
       else
-        Navigator.of(context).pushReplacementNamed(Routes.home, arguments: widget.screenType);
+        Navigator.of(context)
+            .pushReplacementNamed(Routes.home, arguments: widget.screenType);
     });
 
     return Container();
@@ -387,7 +403,8 @@ class _LoginScreen extends State<LoginScreen> {
           "Phone number not verified! Please verify your phone number.")) {
         Navigator.of(context)
             .pushNamedAndRemoveUntil(Routes.verify, (route) => false);
-      }else if(_userStore.errorStore.errorMessage.contains("Email not confirmed! Please check email and confirm.")){
+      } else if (_userStore.errorStore.errorMessage
+          .contains("Email not confirmed! Please check email and confirm.")) {
         if (Navigator.of(context).canPop()) Navigator.of(context).pop();
       }
 
