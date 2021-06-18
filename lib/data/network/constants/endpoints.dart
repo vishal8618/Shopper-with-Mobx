@@ -29,22 +29,27 @@ class Endpoints {
   static const String removeWish = baseUrl + "like/unlike_product.json";
 
   static const String addFavourite = baseUrl + "favorites.json";
-  static const String removeFavourite = baseUrl + "favorite/remove_favorite.json";
+  static const String removeFavourite =
+      baseUrl + "favorite/remove_favorite.json";
 
   static const String addReport = baseUrl + "product_flag_reports.json";
-  static const String addMerchantReport = baseUrl + "merchant_flag_reports.json";
+  static const String addMerchantReport =
+      baseUrl + "merchant_flag_reports.json";
 
   static const String updateProfileDetail = baseUrl + "buyers/";
   static const String createOrder = baseUrl + "orders.json";
 
   static const String getReceipt = baseUrl + "orders";
-  static const String getReceiptDetail= baseUrl + "orders/";
+  static const String getReceiptDetail = baseUrl + "orders/";
+  static const String waitingForService = "/announce_waiting_for_pickup.json";
 
-  static const String registrationConfirmation= baseUrl + "registration/confirm_user.json";
+  static const String registrationConfirmation =
+      baseUrl + "registration/confirm_user.json";
 
-  static const String generate_otp_code="registration/generate_otp_code.json";
-  static const String phone_number_verify="registration/verify_phone_number.json";
+  static const String generate_otp_code = "registration/generate_otp_code.json";
+  static const String phone_number_verify =
+      "registration/verify_phone_number.json";
 
-  static const String order= "order/";
-  static const String cancelOrder= "/cancel_order";
+  static const String order = "order/";
+  static const String cancelOrder = "/cancel_order";
 }

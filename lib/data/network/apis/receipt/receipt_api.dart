@@ -39,6 +39,7 @@ class ReceiptApi {
   Future<ReceiptDetailModel> getReceiptDetail({String id,String uid}) async {
     try {
       final res = await _dioClient.get("${Endpoints.getReceiptDetail}$id.json?buyer_id=$uid");
+      // print("ppp ===> $res");
       return receiptDetailModelFromJson(json.encode(res.data));
     } catch (e) {
       print(e.toString());
@@ -46,6 +47,18 @@ class ReceiptApi {
     }
   }
 
+
+  /// waitingForService
+  void waitingForService({String orderId}) async {
+    try {
+      final res = await _dioClient.get(Endpoints.baseUrl + Endpoints.order + "$orderId" + Endpoints.waitingForService);
+      print("waitingForService Response===>  ${json.encode(res.data)}");
+      // return receiptDetailModelFromJson(json.encode(res.data));
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
 
 
   Future<LikeModel> cancelOrder(String orderId,

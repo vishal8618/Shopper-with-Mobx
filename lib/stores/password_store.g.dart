@@ -17,7 +17,7 @@ mixin _$PasswordStore on _PasswordStore, Store {
       .value;
 
   final _$fetchForgotPasswordFutureAtom =
-      Atom(name: '_UserStore.fetchForgotPasswordFuture');
+      Atom(name: '_PasswordStore.fetchForgotPasswordFuture');
 
   @override
   ObservableFuture<GeneralResponse> get fetchForgotPasswordFuture {
@@ -34,7 +34,7 @@ mixin _$PasswordStore on _PasswordStore, Store {
   }
 
   final _$resetPasswordFutureAtom =
-      Atom(name: '_UserStore.resetPasswordFuture');
+      Atom(name: '_PasswordStore.resetPasswordFuture');
 
   @override
   ObservableFuture<GeneralResponse> get resetPasswordFuture {
@@ -44,13 +44,12 @@ mixin _$PasswordStore on _PasswordStore, Store {
 
   @override
   set resetPasswordFuture(ObservableFuture<GeneralResponse> value) {
-    _$resetPasswordFutureAtom
-        .reportWrite(value, super.resetPasswordFuture, () {
+    _$resetPasswordFutureAtom.reportWrite(value, super.resetPasswordFuture, () {
       super.resetPasswordFuture = value;
     });
   }
 
-  final _$isEditingAtom = Atom(name: '_UserStore.isEditing');
+  final _$isEditingAtom = Atom(name: '_PasswordStore.isEditing');
 
   @override
   bool get isEditing {
@@ -65,7 +64,7 @@ mixin _$PasswordStore on _PasswordStore, Store {
     });
   }
 
-  final _$successAtom = Atom(name: '_UserStore.success');
+  final _$successAtom = Atom(name: '_PasswordStore.success');
 
   @override
   bool get success {
@@ -80,7 +79,7 @@ mixin _$PasswordStore on _PasswordStore, Store {
     });
   }
 
-  final _$errorAtom = Atom(name: '_UserStore.error');
+  final _$errorAtom = Atom(name: '_PasswordStore.error');
 
   @override
   bool get error {
@@ -95,20 +94,37 @@ mixin _$PasswordStore on _PasswordStore, Store {
     });
   }
 
-  final _$resetPasswordAsyncAction = AsyncAction('_UserStore.resetPassword');
-
-  @override
-  Future<dynamic> resetPassword({String email, String password, String confirmPassword}) {
-    return _$resetPasswordAsyncAction
-        .run(() => super.resetPassword(email: email, password: password, confirmPassword: confirmPassword));
-  }
-
-  final _$forgotPasswordAsyncAction = AsyncAction('_UserStore.forgotPassword');
+  final _$forgotPasswordAsyncAction =
+      AsyncAction('_PasswordStore.forgotPassword');
 
   @override
   Future<dynamic> forgotPassword({String email}) {
     return _$forgotPasswordAsyncAction
         .run(() => super.forgotPassword(email: email));
+  }
+
+  final _$resetPasswordAsyncAction =
+      AsyncAction('_PasswordStore.resetPassword');
+
+  @override
+  Future<dynamic> resetPassword(
+      {String email, String password, String confirmPassword}) {
+    return _$resetPasswordAsyncAction.run(() => super.resetPassword(
+        email: email, password: password, confirmPassword: confirmPassword));
+  }
+
+  final _$_PasswordStoreActionController =
+      ActionController(name: '_PasswordStore');
+
+  @override
+  dynamic updateIsEditing() {
+    final _$actionInfo = _$_PasswordStoreActionController.startAction(
+        name: '_PasswordStore.updateIsEditing');
+    try {
+      return super.updateIsEditing();
+    } finally {
+      _$_PasswordStoreActionController.endAction(_$actionInfo);
+    }
   }
 
   @override

@@ -46,7 +46,8 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
-  final _$fetchForgotPasswordFutureAtom = Atom(name: '_UserStore.fetchForgotPasswordFuture');
+  final _$fetchForgotPasswordFutureAtom =
+      Atom(name: '_UserStore.fetchForgotPasswordFuture');
 
   @override
   ObservableFuture<GeneralResponse> get fetchForgotPasswordFuture {
@@ -56,7 +57,8 @@ mixin _$UserStore on _UserStore, Store {
 
   @override
   set fetchForgotPasswordFuture(ObservableFuture<GeneralResponse> value) {
-    _$fetchForgotPasswordFutureAtom.reportWrite(value, super.fetchForgotPasswordFuture, () {
+    _$fetchForgotPasswordFutureAtom
+        .reportWrite(value, super.fetchForgotPasswordFuture, () {
       super.fetchForgotPasswordFuture = value;
     });
   }
@@ -231,22 +233,6 @@ mixin _$UserStore on _UserStore, Store {
         .run(() => super.login(email: email, password: password));
   }
 
-  // final _$resetPasswordAsyncAction = AsyncAction('_UserStore.resetPassword');
-  //
-  // @override
-  // Future<dynamic> resetPassword({String email, String password, String confirmPassword}) {
-  //   return _$resetPasswordAsyncAction
-  //       .run(() => super.login(email: email, password: password));
-  // }
-
-  final _$forgotPasswordAsyncAction = AsyncAction('_UserStore.forgotPassword');
-
-  @override
-  Future<dynamic> forgotPassword({String email}) {
-    return _$forgotPasswordAsyncAction
-        .run(() => super.forgotPassword(email: email));
-  }
-
   final _$userDetailsAsyncAction = AsyncAction('_UserStore.userDetails');
 
   @override
@@ -301,6 +287,14 @@ mixin _$UserStore on _UserStore, Store {
   Future<dynamic> phoneVerify({String phoneNumber, String otp, String uid}) {
     return _$phoneVerifyAsyncAction.run(
         () => super.phoneVerify(phoneNumber: phoneNumber, otp: otp, uid: uid));
+  }
+
+  final _$forgotPasswordAsyncAction = AsyncAction('_UserStore.forgotPassword');
+
+  @override
+  Future<dynamic> forgotPassword({String email}) {
+    return _$forgotPasswordAsyncAction
+        .run(() => super.forgotPassword(email: email));
   }
 
   final _$_UserStoreActionController = ActionController(name: '_UserStore');

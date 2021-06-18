@@ -6,6 +6,7 @@ import 'package:greetings_world_shopper/constants/assets.dart';
 import 'package:greetings_world_shopper/constants/colors.dart';
 import 'package:greetings_world_shopper/constants/strings.dart';
 import 'package:greetings_world_shopper/models/receipt/receipt_model.dart';
+import 'package:greetings_world_shopper/models/receipt_detail/receipt_detail_model.dart';
 import 'package:greetings_world_shopper/stores/receipt_store.dart';
 import 'package:greetings_world_shopper/stores/user_store.dart';
 import 'package:greetings_world_shopper/utils/error_bar.dart';
@@ -36,17 +37,14 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
   String orderPlaceTime = '';
   bool initial;
   bool showCancelledText = false;
+  ReceiptDetailModel receiptData;
 
   @override
   void initState() {
     super.initState();
     initial = true;
 
-    if (widget.receiptInfo.status.contains("Canceled")) {
-      showCancelledText = true;
-    } else {
-      showCancelledText = false;
-    }
+
   }
 
   @override
@@ -56,11 +54,23 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
     _userStore = Provider.of<UserStore>(context);
     _receiptStore = Provider.of<ReceiptStore>(context);
     if (!_receiptStore.receiptDetailLoading)
-      _receiptStore.getReceiptDetail(
-          id: widget.receiptInfo.id.toString(), uid: _userStore.uid);
+      _receiptStore.getReceiptDetail(id: widget.receiptInfo.id.toString(), uid: _userStore.uid).then((value){
+        // print("RECEIPT DATA: $value");
+        receiptData = value;
 
-    timeConverter(widget.receiptInfo.createdAt.toString());
-    initial = false;
+        if (receiptData.status.contains("Canceled")) {
+          showCancelledText = true;
+        } else {
+          showCancelledText = false;
+        }
+
+        timeConverter(receiptData.createdAt.toString());
+        initial = false;
+
+       if(mounted) setState(() {});
+      });
+
+
   }
 
   @override
@@ -100,7 +110,7 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
                           ),
                           child: Column(
                             children: [
-                              _buildReceiptDetailInfo(),
+                              receiptData != null ?  _buildReceiptDetailInfo() : Container(),
                             ],
                           ),
                         ),
@@ -111,8 +121,8 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
                     ),
                   ),
                 ),
-                _buildButtons(),
-                _receiptStore.cancelOrderLoading
+                receiptData != null ? _buildButtons() : Container(),
+                receiptData == null
                     ? CustomProgressIndicatorWidget()
                     : Container(),
               ],
@@ -136,9 +146,9 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
               height: _scaler.getHeight(20),
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: widget.receiptInfo.orderItems.productPhoto != null
+                      image: receiptData.orderItems != null && receiptData.orderItems.productPhoto != null
                           ? NetworkImage(
-                              widget.receiptInfo.orderItems.productPhoto)
+                          receiptData.orderItems.productPhoto)
                           : AssetImage(Assets.logo),
                       fit: BoxFit.cover)),
             ),
@@ -149,7 +159,7 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
           Align(
             alignment: Alignment.topLeft,
             child: AppText(
-              text: widget.receiptInfo.orderItems.product,
+              text: receiptData.orderItems.product,
               style: AppTextStyle.medium,
               size: _scaler.getTextSize(12),
             ),
@@ -201,7 +211,7 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
               Align(
                 alignment: Alignment.topRight,
                 child: AppText(
-                  text: "\$${widget.receiptInfo.totalAmount.toString()}",
+                  text: "\$${receiptData.totalAmount.toString()}",
                   style: AppTextStyle.medium,
                   size: _scaler.getTextSize(11),
                 ),
@@ -230,7 +240,7 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
                     child: InkWell(
                       onTap: () {
 
-                        if(widget.receiptInfo.status.contains("Canceled")){
+                        if(receiptData.status.contains("Canceled")){
                           showCancelOrderDialog();
                         }else{
                           _launchURL();
@@ -238,7 +248,7 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
 
                       },
                       child: AppText(
-                        text: widget.receiptInfo.trackingNumber ?? '',
+                        text: receiptData.trackingNumber ?? '',
                         style: AppTextStyle.medium,
                         size: _scaler.getTextSize(11),
                         color: Colors.blue,
@@ -272,7 +282,7 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
               color: showCancelledText ? Colors.red : AppColors.buttonBg,
               onPressed: () {
                 if (!_receiptStore.cancelOrderLoading)
-                  _receiptStore.cancelOrder(widget.receiptInfo.id.toString(),
+                  _receiptStore.cancelOrder(receiptData.id.toString(),
                       uid: _userStore.uid);
               },
               child: AppText(
@@ -332,7 +342,7 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
               ),
             ),
           ),
-          widget.receiptInfo.deliveryType != "Delivery" && widget.receiptInfo.status.compareTo("Ready") == 0 ? Container(
+          receiptData.deliveryType != "Delivery" && receiptData.status.compareTo("Ready") == 0 ? Container(
             width: _scaler.getWidth(100),
             margin: _scaler.getMargin(0, 3),
             child: MaterialButton(
@@ -345,7 +355,7 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
                     color: AppColors.buttonBg,
                   )),
               onPressed: () {
-                showReturnPolicyDialog();
+                _receiptStore.waitingForService(orderId: receiptData.id.toString());
               },
               child: AppText(
                 text: Strings.waitingForService,
@@ -355,7 +365,7 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
               ),
             ),
           ) : Container(),
-        ],
+        ],//
       ),
     );
   }
@@ -400,19 +410,19 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
   }
 
   _launchURL() async {
-    if (await canLaunch(widget.receiptInfo.trackingUrl)) {
-      await launch(widget.receiptInfo.trackingUrl);
+    if (await canLaunch(receiptData.trackingUrl)) {
+      await launch(receiptData.trackingUrl);
     } else {
-      throw 'Could not launch $widget.receiptInfo.trackingUrl';
+      throw 'Could not launch $receiptData.trackingUrl';
     }
   }
 
   _downloadLaunchURL() async {
     if (await canLaunch(
-        widget.receiptInfo.pdfUrl + "?buyer_id=${_userStore.uid}")) {
-      await launch(widget.receiptInfo.pdfUrl + "?buyer_id=${_userStore.uid}");
+        receiptData.pdfUrl + "?buyer_id=${_userStore.uid}")) {
+      await launch(receiptData.pdfUrl + "?buyer_id=${_userStore.uid}");
     } else {
-      throw 'Could not launch $widget.receiptInfo.pdfUrl';
+      throw 'Could not launch $receiptData.pdfUrl';
     }
   }
 
@@ -459,4 +469,5 @@ class _ReceiptDetailState extends State<ReceiptDetailScreen> {
     super.dispose();
     _userStore.successStore.dispose();
   }
+
 }

@@ -308,8 +308,14 @@ class Repository {
   // get list of products
   Future<ReceiptDetailModel> getReceiptDetail({String id, String uid}) async {
     return await _receiptApi.getReceiptDetail(id: id, uid: uid).then((model) {
+      // print("pp ===> $model");
       return model;
     }).catchError((error) => throw error);
+  }
+
+  // waitingForService
+  void waitingForService({String orderId}) async {
+     _receiptApi.waitingForService(orderId: orderId);
   }
 
   // get list of products

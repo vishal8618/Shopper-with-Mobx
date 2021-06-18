@@ -122,9 +122,18 @@ mixin _$ReceiptStore on _ReceiptStore, Store {
       AsyncAction('_ReceiptStore.getReceiptDetail');
 
   @override
-  Future<dynamic> getReceiptDetail({String id, String uid}) {
+  Future<ReceiptDetailModel> getReceiptDetail({String id, String uid}) {
     return _$getReceiptDetailAsyncAction
         .run(() => super.getReceiptDetail(id: id, uid: uid));
+  }
+
+  final _$waitingForServiceAsyncAction =
+      AsyncAction('_ReceiptStore.waitingForService');
+
+  @override
+  Future<dynamic> waitingForService({String orderId}) {
+    return _$waitingForServiceAsyncAction
+        .run(() => super.waitingForService(orderId: orderId));
   }
 
   final _$cancelOrderAsyncAction = AsyncAction('_ReceiptStore.cancelOrder');

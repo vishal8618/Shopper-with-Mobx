@@ -82,13 +82,23 @@ abstract class _ReceiptStore with Store {
 
   // actions:-------------------------------------------------------------------
   @action
-  Future getReceiptDetail({String id, String uid}) async {
+  Future<ReceiptDetailModel> getReceiptDetail({String id, String uid}) async {
     final future = _repository.getReceiptDetail(id: id, uid: uid);
     fetchReceiptDetailFuture = ObservableFuture(future);
+   return fetchReceiptDetailFuture.whenComplete(() => fetchReceiptDetailFuture.value);
 
-    future.then((receipt) {}).catchError((error) {
+    future.then((receipt) {
+      print("p ===> $receipt");
+
+    }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
     });
+  }
+
+
+  @action
+  Future waitingForService({String orderId}) async {
+    _repository.waitingForService(orderId: orderId);
   }
 
   //cancel order store
