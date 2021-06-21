@@ -277,4 +277,44 @@ class SharedPreferenceHelper {
     });
   }
 
+
+  // DeepLink Merchant ID
+  Future<int> get getMerchantID {
+    return _sharedPreference.then((prefs) {
+      return prefs.getInt(Preferences.merchant_id) ?? null;
+    });
+  }
+
+  Future<void> saveMerchantID(int value) async {
+    return _sharedPreference.then((preference) {
+      preference.setInt(Preferences.merchant_id, value);
+    });
+  }
+
+  // DeepLink Merchant ID
+  Future<int> get getOrderID {
+    return _sharedPreference.then((prefs) {
+      return prefs.getInt(Preferences.order_id) ?? null;
+    });
+  }
+
+  Future<void> saveOrderID(int value) async {
+    return _sharedPreference.then((preference) {
+      preference.setInt(Preferences.order_id, value);
+    });
+  }
+
+  // DeepLink Merchant Tab
+  Future<int> get getMerchantTab {
+    return _sharedPreference.then((prefs) {
+      return prefs.getInt(Preferences.merchant_tab) ?? null;
+    });
+  }
+
+  Future<void> saveMerchantTab(int value) async {
+    return _sharedPreference.then((preference) {
+      preference.setInt(Preferences.merchant_tab, value);
+    });
+  }
+
 }

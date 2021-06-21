@@ -5,6 +5,9 @@ import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:greetings_world_shopper/constants/assets.dart';
 import 'package:greetings_world_shopper/constants/colors.dart';
 import 'package:greetings_world_shopper/constants/deep_link_navigation_helper.dart';
+import 'package:greetings_world_shopper/data/sharedpref/shared_preference_helper.dart';
+import 'package:greetings_world_shopper/models/merchants/merchant_model.dart';
+import 'package:greetings_world_shopper/models/receipt/receipt_model.dart';
 import 'package:greetings_world_shopper/routes.dart';
 import 'package:greetings_world_shopper/stores/cart_store.dart';
 import 'package:greetings_world_shopper/stores/home_store.dart';
@@ -19,6 +22,7 @@ import 'package:greetings_world_shopper/widgets/app_text.dart';
 import 'package:greetings_world_shopper/widgets/image_view.dart';
 import 'package:greetings_world_shopper/widgets/nav_cart_button.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -42,7 +46,34 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if(widget.screenType != null && widget.screenType == DeepLinkNavigationHelper.openSettingScreen){
         _homeStore.selectTab(2);
+      } else if(widget.screenType != null && widget.screenType == Routes.cart){
+        Navigator.of(context).pushNamed(Routes.cart);
+      } else if(widget.screenType != null && widget.screenType == Routes.merchantDetail) {
+        Future<SharedPreferences> sharedPref = SharedPreferences.getInstance();
+        SharedPreferenceHelper _sharedPrefsHelper = new SharedPreferenceHelper(sharedPref);
+        _sharedPrefsHelper.getMerchantID.then((value){
+          // print("Home Merchant ID: $value");
+
+          MerchantModel merchantModel = new MerchantModel();
+          merchantModel.id = value;
+
+          Navigator.of(context)
+              .pushNamed(Routes.merchantDetail, arguments: merchantModel);
+        });
+      } else if(widget.screenType != null && widget.screenType == Routes.receiptDetail) {
+        Future<SharedPreferences> sharedPref = SharedPreferences.getInstance();
+        SharedPreferenceHelper _sharedPrefsHelper = new SharedPreferenceHelper(sharedPref);
+        _sharedPrefsHelper.getOrderID.then((value){
+          // print("Home Order ID: $value");
+
+          ReceiptModel receipt = ReceiptModel();
+          receipt.id = value;
+
+          Navigator.of(context)
+              .pushNamed(Routes.receiptDetail, arguments: receipt);
+        });
       }
+
     });
   }
 

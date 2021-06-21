@@ -59,6 +59,7 @@ class CommonDialogs {
              // Navigator.of(context).pushNamed(Routes.login);
             }));
   }
+
   static showLogoutDialog(parentContext) {
     showDialog(
         context: parentContext,

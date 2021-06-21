@@ -28,6 +28,16 @@ class ProductsApi {
     }
   }
 
+  Future<MerchantModel> getMerchantDetail({String merchantID}) async{
+    try {
+      final res = await _dioClient.get("${Endpoints.getProducts}$merchantID.json");
+      return MerchantModel.fromJson(res.data);
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
   Future<LikeModel> addWish({String uid, String productId}) async {
     try {
       var map = HashMap<String, dynamic>();

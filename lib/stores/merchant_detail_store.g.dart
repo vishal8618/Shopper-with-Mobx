@@ -66,9 +66,15 @@ mixin _$MerchantDetailStore on _MerchantDetailStore, Store {
       AsyncAction('_MerchantDetailStore.getProducts');
 
   @override
-  Future<dynamic> getProducts({String id, String uid}) {
+  Future<List<ProductModel>> getProducts({String id, String uid}) {
     return _$getProductsAsyncAction
         .run(() => super.getProducts(id: id, uid: uid));
+  }
+
+  @override
+  Future<MerchantModel> getMerchantDetail({String merchantID}) {
+    return _$getProductsAsyncAction
+        .run(() => super.getMerchantDetail(merchantID: merchantID));
   }
 
   final _$_MerchantDetailStoreActionController =

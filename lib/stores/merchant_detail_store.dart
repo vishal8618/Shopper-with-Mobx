@@ -1,4 +1,5 @@
 import 'package:greetings_world_shopper/data/repository.dart';
+import 'package:greetings_world_shopper/models/merchants/merchant_model.dart';
 import 'package:greetings_world_shopper/models/products/product_model.dart';
 import 'package:greetings_world_shopper/utils/dio/dio_error_util.dart';
 import 'package:mobx/mobx.dart';
@@ -23,8 +24,13 @@ abstract class _MerchantDetailStore with Store {
   int tab = 0;
 
   // store variables:-----------------------------------------------------------
-  static ObservableFuture<List<ProductModel>> emptyProductsResponse =
-      ObservableFuture.value(null);
+  static ObservableFuture<List<ProductModel>> emptyProductsResponse = ObservableFuture.value(null);
+
+  static ObservableFuture<MerchantModel> merchantResponse = ObservableFuture.value(null);
+
+  @observable
+  ObservableFuture<MerchantModel> fetchMerchantFuture =
+  ObservableFuture<MerchantModel>(merchantResponse);
 
   @observable
   ObservableFuture<List<ProductModel>> fetchProductsFuture =
@@ -38,7 +44,7 @@ abstract class _MerchantDetailStore with Store {
 
   // actions:-------------------------------------------------------------------
   @action
-  Future getProducts({String id, String uid}) async {
+  Future<List<ProductModel>> getProducts({String id, String uid}) async {
     final future = _repository.getProducts(id: id,uid: uid);
     fetchProductsFuture = ObservableFuture(future);
 
@@ -47,6 +53,23 @@ abstract class _MerchantDetailStore with Store {
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
     });
+
+    return fetchProductsFuture.whenComplete(() => fetchProductsFuture.value);
+  }
+
+  // Get Merchant Detail
+  @action
+  Future<MerchantModel> getMerchantDetail({String merchantID}) async {
+    final future = _repository.getMerchantDetail(merchantID: merchantID);
+    fetchMerchantFuture = ObservableFuture(future);
+
+    future.then((merchantsList) {
+
+    }).catchError((error) {
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+    });
+
+    return fetchMerchantFuture.whenComplete(() => fetchMerchantFuture.value);
   }
 
 

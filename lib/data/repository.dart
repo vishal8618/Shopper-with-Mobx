@@ -153,6 +153,15 @@ class Repository {
     }).catchError((error) => throw error);
   }
 
+  // get Merchant Detail
+  Future<MerchantModel> getMerchantDetail({String merchantID}) async {
+    return await _productsApi
+        .getMerchantDetail(merchantID: merchantID)
+        .then((data) {
+      return data;
+    }).catchError((error) => throw error);
+  }
+
   // add wish
   Future<LikeModel> addWish({String uid, String productId}) async {
     return await _productsApi

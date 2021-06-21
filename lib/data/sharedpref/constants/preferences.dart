@@ -20,5 +20,8 @@ class Preferences {
   static const String email = "email";
   static const String phone_number = "phone_number";
   static const String deep_link_url = "deep_link_url";
+  static const String merchant_id = "merchant_id";
+  static const String order_id = "order_id";
+  static const String merchant_tab = "merchant_tab";
 
 }
