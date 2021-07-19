@@ -110,7 +110,7 @@ class LoginTextField extends StatelessWidget {
 
   static TextStyle textFieldStyle(double size) {
     return TextStyle(
-        color: Colors.black,
+        color: Colors.white,
         fontFamily: FontFamily.lato,
         fontWeight: FontWeight.w500,
         fontSize: size);
