@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:greetings_world_shopper/routes.dart';
 import 'package:greetings_world_shopper/stores/user_store.dart';
 import 'package:greetings_world_shopper/utils/dynamic_link_service.dart';
-
 
 abstract class Bloc {
   void dispose();

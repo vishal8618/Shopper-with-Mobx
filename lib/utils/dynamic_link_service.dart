@@ -2,8 +2,6 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:greetings_world_shopper/constants/deep_link_navigation_helper.dart';
 import 'package:greetings_world_shopper/data/sharedpref/shared_preference_helper.dart';
-import 'package:greetings_world_shopper/models/merchants/merchant_model.dart';
-import 'package:greetings_world_shopper/models/receipt/receipt_model.dart';
 import 'package:greetings_world_shopper/routes.dart';
 import 'package:greetings_world_shopper/stores/user_store.dart';
 import 'package:greetings_world_shopper/ui/deep_link/bloc.dart';
