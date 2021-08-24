@@ -31,6 +31,7 @@ class ReceiptDetailModel {
     this.url,
     this.pdfUrl,
     this.orderItems,
+    this.address
   });
 
   int id;
@@ -54,6 +55,7 @@ class ReceiptDetailModel {
   String url;
   String pdfUrl;
   OrderItems orderItems;
+  dynamic address;
 
   factory ReceiptDetailModel.fromJson(Map<String, dynamic> json) => ReceiptDetailModel(
     id: json["id"],
@@ -77,6 +79,7 @@ class ReceiptDetailModel {
     url: json["url"],
     pdfUrl: json["pdf_url"],
     orderItems: OrderItems.fromJson(json["order_items"]),
+    address: json.containsKey("address") ? json["address"] : ""
   );
 
   Map<String, dynamic> toJson() => {
@@ -101,6 +104,7 @@ class ReceiptDetailModel {
     "url": url,
     "pdf_url": pdfUrl,
     "order_items": orderItems.toJson(),
+    "address" : address
   };
 }
 

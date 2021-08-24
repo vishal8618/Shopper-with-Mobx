@@ -29,6 +29,7 @@ class ProductModel {
     this.likes,
     this.favorites,
     this.deliverTypes,
+    this.likesCount
   });
 
   int id;
@@ -50,6 +51,7 @@ class ProductModel {
   Likes likes;
   Favorites favorites;
   List<String> deliverTypes;
+  dynamic likesCount;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
     id: json["id"],
@@ -71,6 +73,7 @@ class ProductModel {
     likes: json["likes"] == null ? null : Likes.fromJson(json["likes"]),
     favorites: json["favorites"] == null ? null : Favorites.fromJson(json["favorites"]),
     deliverTypes: json["delivery_types"] == null ? null : List<String>.from(json["delivery_types"].map((x) => x)),
+    likesCount: json.containsKey("likes_count") ? json["likes_count"] : ""
   );
 
   Map<String, dynamic> toJson() => {
@@ -93,6 +96,7 @@ class ProductModel {
     "likes": likes.toJson(),
     "favorites": favorites.toJson(),
     "delivery_types": deliverTypes == null ? null : List<dynamic>.from(deliverTypes.map((x) => x)),
+    "likes_count": likesCount
   };
 }
 class Favorites {

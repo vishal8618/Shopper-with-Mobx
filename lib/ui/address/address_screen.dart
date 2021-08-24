@@ -266,7 +266,7 @@ class _AddressScreenState extends State<AddressScreen> {
         components: [
           new Component(Component.country, "us"),
         ]);
-    print("Prediction Data: ===>  2");
+    print("Prediction Data: 2===>  $p");
     print("Prediction Data: $mounted, ${p.placeId}");
     getPlaceDetails(p);
   }

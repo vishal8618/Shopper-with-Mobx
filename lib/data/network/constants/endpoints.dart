@@ -4,7 +4,7 @@ class Endpoints {
   Endpoints._();
 
 // base url
-  //static const String baseUrl = "http://192.168.1.155:3000/";
+//   static const String baseUrl = "http://192.168.1.155:3002/";
   static const String baseUrl = "https://htm-app.herokuapp.com/";
 
   static const String products = "/products.json";

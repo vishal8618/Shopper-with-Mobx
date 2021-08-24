@@ -313,6 +313,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       ),
     );
   }
+
   Widget _handleSuccessPhoneMessage() {
     return Observer(
       builder: (context) {
@@ -347,7 +348,6 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       },
     );
   }
-
 
   Widget navigate(BuildContext context) {
     Future.delayed(Duration(milliseconds: 0), () {
