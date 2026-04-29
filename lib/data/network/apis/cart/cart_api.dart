@@ -69,10 +69,13 @@ class CartApi {
     }
   }
 
-  Future<List<CartItemModel>> getCart({String uid}) async {
+  Future<List<CartItemModel>> getCart({String uid,double shippingAmount,double taxCharges,double serviceCharges}) async {
     try {
       var map = HashMap<String, dynamic>();
       map["buyer_id"] = uid;
+      map["shipping_amount"] = shippingAmount;
+      map["tax_charges"] = taxCharges;
+      map["service_charges"] = serviceCharges;
 
       final res =
           await _dioClient.get(Endpoints.cartList, queryParameters: map);

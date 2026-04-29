@@ -16,7 +16,7 @@ import 'package:greetings_world_shopper/widgets/common_message_dialog.dart';
 import 'package:greetings_world_shopper/widgets/progress_indicator_widget.dart';
 import 'package:provider/provider.dart';
 
-import 'package:stripe_payment/stripe_payment.dart';
+// import 'package:stripe_payment/stripe_payment.dart';
 
 import '../../routes.dart';
 
@@ -43,6 +43,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_cartStore.loading) _cartStore.getCart(uid: _userStore.uid);
     });
+
   }
 
   @override
@@ -51,8 +52,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     _userStore = Provider.of<UserStore>(context);
     _cartStore = Provider.of<CartStore>(context);
     initial = false;
-    print(
-        "addressCheckout====>${_userStore.address1 + "," + _userStore.state + "," + _userStore.userCity + "," + _userStore.userZip}");
+   // print('deliverType==============>${_cartStore.deliveryType}');
+  //  print("addressCheckout====>${_userStore.address1 + "," + _userStore.state + "," + _userStore.userCity + "," + _userStore.userZip}");
   }
 
   @override
@@ -313,19 +314,19 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             "\$${_cartStore.taxCharges.toDouble().toStringAsFixed(2).trim()}"),
         getAmountCell(Strings.shipping, "",
             "\$${_cartStore.shippingAmount.toStringAsFixed(2).trim()}"),
-        getAmountCell(Strings.convinceFee, "",
-            "\$${_cartStore.convenienceFee.toDouble()}"),
+
+        getAmountCell(Strings.convinceFee, "", "\$${_cartStore.convenienceFee.toDouble()}"),
         SizedBox(
           height: _scaler.getHeight(2),
         ),
         getAmountCell(Strings.yourTotal, "",
             "\$${_cartStore.cartSubTotal.toStringAsFixed(2).trim()}",
             bold: true),
-        getAmountCell(
-          Strings.estimatedDelivery,
-          "",
-          _cartStore.deliveryEstimated.toString(),
-        ),
+
+       _cartStore.deliveryType.contains('In-Store Pickup')?Container():getAmountCell(Strings.estimatedDelivery,
+         "",
+         _cartStore.deliveryEstimated.toString(),
+       ),
       ],
     );
   }
@@ -483,5 +484,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   Future<bool> pop() async {
     Navigator.of(context).pop();
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _cartStore.convenienceFee;
   }
 }

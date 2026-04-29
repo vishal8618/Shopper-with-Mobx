@@ -24,8 +24,6 @@ import 'package:greetings_world_shopper/widgets/image_view.dart';
 import 'package:greetings_world_shopper/widgets/progress_indicator_widget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:validators/validators.dart';
-import 'package:validators/sanitizers.dart';
 
 class SignupScreen extends StatefulWidget {
   final bool sendResult;
@@ -55,8 +53,10 @@ class _SignupScreenState extends State<SignupScreen> {
   // ImagePicker _imagePicker;
 
   bool initial;
-  Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
- String deviceType = "";
+  Pattern pattern =
+      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+  String deviceType = "";
+  bool showErrorText = false;
 
   @override
   void initState() {
@@ -76,7 +76,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Routes.context=context;
+    Routes.context = context;
     if (scaler == null) scaler = new ScreenScaler()..init(context);
 
     if (Platform.isAndroid) {
@@ -200,8 +200,13 @@ class _SignupScreenState extends State<SignupScreen> {
                                 ),
                               );
                             }),
+                            showErrorText
+                                ? _userStore.image == null
+                                    ? showImageError()
+                                    : Container()
+                                : Container(),
                             SizedBox(
-                              height: scaler.getHeight(3),
+                              height: scaler.getHeight(2),
                             ),
                             Focus(
                               onFocusChange: (has) {
@@ -213,7 +218,6 @@ class _SignupScreenState extends State<SignupScreen> {
                                 hintText: Strings.fullName,
                                 controller: nameController,
                                 inputType: TextInputType.name,
-
                                 prefix: Icon(
                                   Icons.account_circle,
                                   color: nameFocus
@@ -241,7 +245,6 @@ class _SignupScreenState extends State<SignupScreen> {
                               child: AppTextField(
                                 hintText: Strings.email,
                                 controller: emailController,
-
                                 inputType: TextInputType.emailAddress,
                                 prefix: Icon(
                                   Icons.email,
@@ -250,15 +253,13 @@ class _SignupScreenState extends State<SignupScreen> {
                                       : AppColors.textColorDark,
                                   size: scaler.getTextSize(14),
                                 ),
-
                                 validate: (text) {
                                   RegExp regex = new RegExp(pattern);
                                   if (text.trim().isEmpty) {
                                     return AppLocalizations.of(context)
                                         .translate(Strings.emailError);
-                                  } else if (!(text.contains(regex))){
+                                  } else if (!(text.contains(regex))) {
                                     return "Invalid Email";
-
                                   } else {
                                     return null;
                                   }
@@ -269,7 +270,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 },
                               ),
                             ),
-                      /*      SizedBox(
+                            /*      SizedBox(
                               height: scaler.getHeight(2),
                             ),
                             Focus(
@@ -343,15 +344,23 @@ class _SignupScreenState extends State<SignupScreen> {
                     height: scaler.getHeight(3.5),
                     color: AppColors.buttonBg,
                     onPressed: () {
+                      print('showError====>$showErrorText');
+                      if (_userStore.image == null) {
+                        showErrorText = true;
+                      } else if (_userStore.image != null) {
+                        showErrorText = false;
+                      }
+                      setState(() {
+
+                      });
                       if (formKey.currentState.validate()) {
                         DeviceUtils.hideKeyboard(context);
 
                         _userStore.signUp(
-                          password: passwordController.text,
-                          fullName: nameController.text,
-                          email: emailController.text,
-                          deviceType: deviceType
-                        );
+                            password: passwordController.text,
+                            fullName: nameController.text,
+                            email: emailController.text,
+                            deviceType: deviceType);
                       }
                     },
                     child: AppText(
@@ -399,11 +408,11 @@ class _SignupScreenState extends State<SignupScreen> {
     Future.delayed(Duration(milliseconds: 100), () {
       _cartStore.getCart(uid: _userStore.uid);
       CommonDialogs.showConfirmationDialog(context);
-     /* if (widget.sendResult) {
+      /* if (widget.sendResult) {
         Navigator.of(context).pop();
       } else
        */
-    //  Navigator.of(context).pushReplacementNamed(Routes.login);
+      //  Navigator.of(context).pushReplacementNamed(Routes.login);
 
       /*  Navigator.of(context).pushNamedAndRemoveUntil(
             Routes.login, (Route<dynamic> route) => false);*/
@@ -415,5 +424,19 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Widget showImageError() {
+    return Container(
+      margin: EdgeInsets.only(left: 0, top: 4),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          'Please select image',
+          style: TextStyle(color: Colors.red, fontSize: 12),
+          textAlign: TextAlign.left,
+        ),
+      ),
+    );
   }
 }

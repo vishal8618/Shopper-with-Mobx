@@ -188,6 +188,7 @@ abstract class _UserStore with Store {
           fetchForgotPasswordFuture.status == FutureStatus.pending ||
       fetchProfileDetailsFuture.status == FutureStatus.pending ||
       fetchAddressDetailsFuture.status == FutureStatus.pending ||
+      fetchGenerateOtpCodeFuture.status == FutureStatus.pending ||
       fetchConfirmationRegisterFuture.status == FutureStatus.pending;
 
   // actions:-------------------------------------------------------------------
@@ -245,6 +246,10 @@ abstract class _UserStore with Store {
     future.then((user) {
       _repository.saveIsLoggedIn(true);
       _repository.saveConfirmUser(user.confirmedUser);
+
+      if(user.buyer != null){
+
+      }
       _repository.saveUserId(user.buyer.id);
       if (user.buyer.buyerPhoto != null) {
         _repository.saveImage(user.buyer.buyerPhoto);
@@ -272,6 +277,7 @@ abstract class _UserStore with Store {
       isLoggedIn = true;
       userImage = user.buyer.buyerPhoto;
       uid = user.buyer.id.toString();
+      print('uid===========>$uid');
       name =
           "${user.buyer.firstName.toString()} ${user.buyer.lastName.toString()}";
       userEmail = user.user.email.toString();
@@ -283,6 +289,7 @@ abstract class _UserStore with Store {
       state = user.buyerAddress.stateName.toString();
       userZip = user.buyerAddress.zip.toString();
       country = user.buyerAddress.countryName.toString();
+
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
       this.success = false;
@@ -434,6 +441,7 @@ abstract class _UserStore with Store {
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
       this.success = false;
+      this.error = true;
     });
   }
 
@@ -446,6 +454,7 @@ abstract class _UserStore with Store {
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
       this.success = false;
+      this.error = true;
     });
   }
 
@@ -458,6 +467,7 @@ abstract class _UserStore with Store {
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
       this.success = false;
+      this.error = true;
     });
   }
 

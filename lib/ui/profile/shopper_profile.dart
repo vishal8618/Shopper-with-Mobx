@@ -224,7 +224,7 @@ class _ShopperProfileState extends State<ShopperProfile> {
             ),
             GestureDetector(
               onTap: () {
-                // Navigator.of(context).pushNamed(Routes.creditCard);
+                 Navigator.of(context).pushNamed(Routes.creditCard);
               },
               child: Container(
                 margin:
@@ -235,7 +235,7 @@ class _ShopperProfileState extends State<ShopperProfile> {
                 height: _scaler.getWidth(25),
                 decoration: getDecoration(),
                 child: AppText(
-                  text: "Bank Information",
+                  text: "Banking Information",
                   style: AppTextStyle.medium,
                   align: true,
                 ),

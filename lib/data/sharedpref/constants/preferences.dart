@@ -23,5 +23,7 @@ class Preferences {
   static const String merchant_id = "merchant_id";
   static const String order_id = "order_id";
   static const String merchant_tab = "merchant_tab";
+  static const String product_id = "product_id";
+  static const String is_deepLink = "is_deepLink";
 
 }

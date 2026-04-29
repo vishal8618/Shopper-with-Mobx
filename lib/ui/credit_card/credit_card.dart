@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:credit_card_type_detector/credit_card_type_detector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/credit_card_form.dart';
@@ -14,7 +16,7 @@ import 'package:greetings_world_shopper/utils/error_bar.dart';
 import 'package:greetings_world_shopper/utils/success_bar.dart';
 import 'package:greetings_world_shopper/widgets/progress_indicator_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:stripe_payment/stripe_payment.dart';
+// import 'package:stripe_payment/stripe_payment.dart';
 
 import '../../routes.dart';
 
@@ -48,6 +50,9 @@ class _CreditCardState extends State<CreditCardScreen> {
   CartStore _cartStore;
   UserStore _userStore;
   bool cardCheck = true;
+
+  bool canPayNow = true;
+
   @override
   initState() {
     super.initState();
@@ -67,7 +72,7 @@ class _CreditCardState extends State<CreditCardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Routes.context=context;
+    Routes.context = context;
     if (_scaler == null) _scaler = new ScreenScaler()..init(context);
 
     return Scaffold(
@@ -77,15 +82,27 @@ class _CreditCardState extends State<CreditCardScreen> {
           IconButton(
               icon: Icon(Icons.check),
               onPressed: () {
-                setState(() {
-                  cardCheck = true ;
-                  DeviceUtils.hideKeyboard(context);
-                  if (formKey.currentState.validate()) {
-                    //  Navigator.of(context).pop(creditCardModel);
+                if (canPayNow) {
+                  setState(() {
+                    cardCheck = true;
                     DeviceUtils.hideKeyboard(context);
-                    token();
-                  }
+                    if (formKey.currentState.validate()) {
+                      //  Navigator.of(context).pop(creditCardModel);
+                      DeviceUtils.hideKeyboard(context);
+                      canPayNow = false;
+                      token();
+                    }
+                  });
+                }
+
+                Timer(Duration(seconds: 3), () {
+
+                  setState(() {
+
+                  });
+
                 });
+
 
               })
         ],
@@ -115,42 +132,41 @@ class _CreditCardState extends State<CreditCardScreen> {
                   cardType: _cardType,
                   obscureCardCvv: true,
                 ),
-               Container(
-                 child: Column(
-                   children: [
-                     CreditCardForm(
-                       formKey: formKey,
-                       obscureCvv: true,
-                       obscureNumber: true,
-                       cardNumber: cardNumberController.text.trim(),
-                       cardNumberDecoration: const InputDecoration(
-                         border: OutlineInputBorder(),
-                         labelText: 'Number',
-                         hintText: 'XXXX XXXX XXXX XXXX',
-                       ),
-                       expiryDate: expMonthController.text.trim(),
-                       expiryDateDecoration: const InputDecoration(
-                         border: OutlineInputBorder(),
-                         labelText: 'Expired Date',
-                         hintText: 'MM/YY',
-                       ),
-                       cvvCode: cvvCodeController.text.trim(),
-                       cvvCodeDecoration: const InputDecoration(
-                         border: OutlineInputBorder(),
-                         labelText: 'CVV',
-                         hintText: 'XXX',
-                       ),
-                       cardHolderName: cardHolderController.text.trim(),
-
-                       cardHolderDecoration: const InputDecoration(
-                         border: OutlineInputBorder(),
-                         labelText: 'Card Holder',
-                       ),
-                       onCreditCardModelChange: onCreditCardModelChange,
-                     ),
-                   ],
-                 ),
-               )
+                Container(
+                  child: Column(
+                    children: [
+                      CreditCardForm(
+                        formKey: formKey,
+                        obscureCvv: true,
+                        obscureNumber: true,
+                        cardNumber: cardNumberController.text.trim(),
+                        cardNumberDecoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Number',
+                          hintText: 'XXXX XXXX XXXX XXXX',
+                        ),
+                        expiryDate: expMonthController.text.trim(),
+                        expiryDateDecoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Expired Date',
+                          hintText: 'MM/YY',
+                        ),
+                        cvvCode: cvvCodeController.text.trim(),
+                        cvvCodeDecoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'CVV',
+                          hintText: 'XXX',
+                        ),
+                        cardHolderName: cardHolderController.text.trim(),
+                        cardHolderDecoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Card Holder',
+                        ),
+                        onCreditCardModelChange: onCreditCardModelChange,
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
             _handleErrorMessage(),
@@ -201,9 +217,15 @@ class _CreditCardState extends State<CreditCardScreen> {
     int year = int.parse(arr[1]);
     print(date.toString() + " " + year.toString());
     print('============>Month$expiryDate');
-    final testCard = CreditCard(number: cardNumber, expMonth: date, expYear: year);
+    final testCard =
+        CreditCard(number: cardNumber, expMonth: date, expYear: year);
 
     StripePayment.createTokenWithCard(testCard).then((token) {
+
+      setState(() {
+        canPayNow = true;
+      });
+
       print(token.tokenId);
       print("carttotal===>${_cartStore.cartTotal.toString()} ");
       _cartStore.processPayment(
@@ -236,7 +258,6 @@ class _CreditCardState extends State<CreditCardScreen> {
             ? SuccessBar.showMessage(
                 _cartStore.successStore.successMessage, context)
             : SizedBox.shrink();
-
       },
     );
   }

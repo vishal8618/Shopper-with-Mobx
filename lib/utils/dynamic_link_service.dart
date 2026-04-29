@@ -83,6 +83,21 @@ class DynamicLinkService {
           navigateToMerchantProductsScreen(userStore, navigatorKey, merchantId);
         }
       }
+    }else if (uri.contains("productid")) {
+      var queryParameters = deepLink.queryParameters;
+      var link = queryParameters["link"];
+
+      if (link != null) {
+        var data = link.split("=");
+        var data2 = data[1].split("_");
+        if (data2 != null && data2.length > 0) {
+          var merchantId = data2[0];
+          var productID = data2[1];
+
+          // print('===> link ELSE LAST: $queryParameters :- $link :- $merchantId');
+          navigateToMerchantProductsDetailsScreen(userStore, navigatorKey, merchantId , productID);
+        }
+      }
     }
   }
 
@@ -147,6 +162,29 @@ class DynamicLinkService {
 
     Future.delayed(Duration(milliseconds: 100)).then((value) {
       if (userStore.isLoggedIn) {
+        Navigator.of(navigatorKey.currentContext).pushNamedAndRemoveUntil(
+            Routes.home, (route) => false,
+            arguments: Routes.merchantDetail);
+      } else {
+        Navigator.of(navigatorKey.currentContext).pushNamedAndRemoveUntil(
+            Routes.login, (route) => false,
+            arguments: Routes.merchantDetail);
+      }
+    });
+  }
+
+  void navigateToMerchantProductsDetailsScreen(UserStore userStore,
+      GlobalKey<NavigatorState> navigatorKey, String merchantId, String productId) async {
+
+    Future<SharedPreferences> sharedPref = SharedPreferences.getInstance();
+    SharedPreferenceHelper _sharedPrefsHelper = new SharedPreferenceHelper(sharedPref);
+    _sharedPrefsHelper.saveMerchantID(int.parse(merchantId));
+    _sharedPrefsHelper.saveMerchantTab(1);
+    _sharedPrefsHelper.saveProductID(int.parse(productId));
+
+    Future.delayed(Duration(milliseconds: 100)).then((value) {
+      if (userStore.isLoggedIn) {
+        _sharedPrefsHelper.saveDeepLink(true);
         Navigator.of(navigatorKey.currentContext).pushNamedAndRemoveUntil(
             Routes.home, (route) => false,
             arguments: Routes.merchantDetail);

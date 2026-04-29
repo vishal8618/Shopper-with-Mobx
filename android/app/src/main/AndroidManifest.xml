@@ -21,9 +21,10 @@
         android:icon="@mipmap/ic_launcher">
 
 
+<!--        <meta-data android:name="com.google.android.geo.API_KEY"-->
+<!--            android:value="AIzaSyBotqZp8T6mT_tTuZB25YOe2RcTPUTMsUo"/>-->
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBotqZp8T6mT_tTuZB25YOe2RcTPUTMsUo"/>
-
+            android:value="AIzaSyCu21puUrpwfL_ZTInHrB-cGD0RKmg4u38"/>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"

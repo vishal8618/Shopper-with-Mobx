@@ -207,6 +207,21 @@ mixin _$CartStore on _CartStore, Store {
     });
   }
 
+  final _$deliveryTypeAtom = Atom(name: '_CartStore.deliveryType');
+
+  @override
+  String get deliveryType {
+    _$deliveryTypeAtom.reportRead();
+    return super.deliveryType;
+  }
+
+  @override
+  set deliveryType(String value) {
+    _$deliveryTypeAtom.reportWrite(value, super.deliveryType, () {
+      super.deliveryType = value;
+    });
+  }
+
   final _$convenienceFeeAtom = Atom(name: '_CartStore.convenienceFee');
 
   @override
@@ -321,6 +336,7 @@ cartItems: ${cartItems},
 cartList: ${cartList},
 cartSubTotal: ${cartSubTotal},
 deliveryEstimated: ${deliveryEstimated},
+deliveryType: ${deliveryType},
 convenienceFee: ${convenienceFee},
 isEditing: ${isEditing},
 loading: ${loading},

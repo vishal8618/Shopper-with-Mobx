@@ -1,11 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:greetings_world_shopper/constants/colors.dart';
 import 'package:greetings_world_shopper/constants/strings.dart';
 import 'package:greetings_world_shopper/data/network/constants/constants.dart';
@@ -271,8 +268,8 @@ class _AddressScreenState extends State<AddressScreen> {
     getPlaceDetails(p);
   }
 
-/*
-  void getPlaceDetails(Prediction prediction) async {
+
+  /*void getPlaceDetails(Prediction prediction) async {
     GoogleMapsPlaces _places = new GoogleMapsPlaces(
         apiKey: Constants.googleApiKey); //Same API_KEY as above
     PlacesDetailsResponse detail =
@@ -303,8 +300,8 @@ class _AddressScreenState extends State<AddressScreen> {
     } on PlatformException catch (e) {
       print(e);
     }
-  }
-*/
+  }*/
+
 
   void getPlaceDetails(Prediction prediction) async {
     print("Location Data: $mounted, ${prediction.placeId}");
@@ -316,12 +313,19 @@ class _AddressScreenState extends State<AddressScreen> {
       address1Controller.text =
           "${placeDetails.streetNumber == null ? "" : placeDetails.streetNumber}  "
           "${placeDetails.street == null ? "" : placeDetails.street}";
-      stateController.text = placeDetails.administrativeArea;
-      cityController.text = placeDetails.city;
-      print('City==========>${placeDetails.city}');
+       stateController.text = placeDetails.administrativeArea;
+       cityController.text = placeDetails.city;
+       print('City==========>${placeDetails.city}');
       print('zipCode==========>${placeDetails.zipCode}');
       zipController.text = placeDetails.zipCode;
       countryName = placeDetails.country;
+
+      // setState(() {
+      //   address1Controller.text = placeDetails.street;
+      //   cityController.text = placeDetails.city;
+      //   zipController.text = placeDetails.zipCode;
+      // });
+
 
       address1Controller.text.trim().isEmpty
           ? zipCodeCheck = true

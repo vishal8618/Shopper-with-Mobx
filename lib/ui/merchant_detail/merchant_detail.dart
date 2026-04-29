@@ -96,8 +96,60 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
         // productsList = value;
         // print("Merchant Data:- $value");
         isGetListData = true;
-        if (mounted) setState(() {});
+        if (mounted) setState(() async{
+          bool ab = false;
+          ab = await _sharedPrefsHelper.isDeepLink;
+          //getIsDeeplinking = true;
+          if(ab == true){
+            _sharedPrefsHelper.saveDeepLink(false);
+            ProductModel newmodal = getProductDetails(value, -10);
+            _sharedPrefsHelper.getProductID.then((idd) => {
+              newmodal = getProductDetails(value, idd),
+
+            Navigator.pushNamed(context, Routes.productDetail,
+                arguments: ProductDetailArgs(
+                    productModel: newmodal, merchantModel: widget.merchantInfo))
+                .then((value) {
+
+              var data = value as ProductModel;
+
+              _merchantDetailStore.productsList
+                  .lastWhere((element) => element.id == data.id)
+                  .likes = data.likes;
+
+              _merchantDetailStore.productsList
+                  .lastWhere((element) => element.id == data.id)
+                  .favorites = data.favorites;
+
+              setState(() {});
+            })
+
+            });
+
+
+
+
+
+          }
+
+
+        });
       });
+  }
+
+  ProductModel getProductDetails(List<ProductModel> arr, int id) {
+    for ( var i=0; i<arr.length; i++ ) {
+      if (arr[i].id == id) {
+        return arr[i];
+      }
+    }
+  }
+
+  Future<int> fetProductId() async {
+    int av = 0;
+    _sharedPrefsHelper.getProductID.then((value) => {
+      av = value
+    });
   }
 
   @override
@@ -223,11 +275,12 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
       left: 0,
       right: 0,
       child: Container(
-        width: _scaler.getWidth(100),
-        margin: _scaler.getMarginLTRB(12, 0, 4, 0),
+        //width: _scaler.getWidth(100),
+        //margin: _scaler.getMarginLTRB(10, 0, 4, 0),
+margin: EdgeInsets.symmetric(horizontal: 10),
         child: Row(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _handleErrorFollowMessage(),
             _handleSuccessFollowMessage(),
@@ -291,6 +344,7 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
                 ),
               ),
             ),
+            Spacer(),
             Row(
               children: [
                 CommonDecorations.getSocialIcon(_scaler, Assets.ggIcon),
@@ -537,8 +591,9 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
               title: "Website",
               desc: GestureDetector(
                 onTap: () {
-                  Navigator.of(context).pushNamed(Routes.webView,
-                      arguments: widget.merchantInfo.website);
+                  // Navigator.of(context).pushNamed(Routes.webView,
+                  //     arguments: widget.merchantInfo.website);
+                  _launchwebsite(widget.merchantInfo.website);
                 },
                 child: AppText(
                   text: widget.merchantInfo.website ?? "",
@@ -749,9 +804,12 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
                               size: _scaler.getTextSize(14),
                             ),
                             onTap: () async {
+                              var urldata = "https://greetingsworld.page.link/?link=https://greetingsworld.page/?link%3Dproductid=${product.merchantId}${"_"}${product.id}%26apn%3Dcom.greetingsworld.greetings_world_shopper%255B%26ibi%3Dcom.hashtag.shopper%255D%255B%26isi%3D1547560234%255D&apn=com.greetingsworld.greetings_world_shopper&isi=1547560234&ibi=com.hashtag.shopper";
                               await FlutterShare.share(
+
                                   title: 'Shopper share to',
-                                  linkUrl: product.url,
+                                  // linkUrl: product.url,
+                                  linkUrl: urldata,
                                   chooserTitle: 'Shopper share to');
                             },
                           ),
@@ -963,6 +1021,17 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
       await launch(url);
     } else {
       throw 'Could not launch $url';
+    }
+  }
+
+  void _launchwebsite(String weburl) async{
+    if (await canLaunch(weburl)) {
+      await launch(weburl);
+    } else {
+      return ErrorBar.showMessage(
+          "$weburl is not valid website", context);
+      //throw 'Could not launch $weburl';
+
     }
   }
 

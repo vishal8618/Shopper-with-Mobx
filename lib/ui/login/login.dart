@@ -8,11 +8,9 @@ import 'package:greetings_world_shopper/constants/strings.dart';
 import 'package:greetings_world_shopper/data/repository.dart';
 import 'package:greetings_world_shopper/stores/cart_store.dart';
 import 'package:greetings_world_shopper/stores/user_store.dart';
-import 'package:greetings_world_shopper/ui/deep_link/bloc.dart';
 import 'package:greetings_world_shopper/utils/device/device_utils.dart';
 import 'package:greetings_world_shopper/utils/error_bar.dart';
 import 'package:greetings_world_shopper/utils/locale/app_localization.dart';
-import 'package:greetings_world_shopper/utils/success_bar.dart';
 import 'package:greetings_world_shopper/widgets/app_text.dart';
 import 'package:greetings_world_shopper/widgets/image_view.dart';
 import 'package:greetings_world_shopper/widgets/login_text_feild.dart';
@@ -380,7 +378,6 @@ class _LoginScreen extends State<LoginScreen> {
   }
 
   Widget _handleErrorMessage() {
-    print("Error=========>${_userStore.errorStore.errorMessage}");
     return Observer(
       builder: (context) {
         return _userStore.error ? navigates(context) : SizedBox.shrink();

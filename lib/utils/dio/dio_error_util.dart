@@ -21,7 +21,7 @@ class DioErrorUtil {
             errorDescription = "Receive timeout in connection with API server";
             break;
           case DioErrorType.RESPONSE:
-            errorDescription =                error.response.data["error"];
+            errorDescription = error.response.data["error"];
             // errorDescription =                "Received invalid status code: ${error.response.statusCode}";
             break;
           case DioErrorType.SEND_TIMEOUT:
@@ -33,6 +33,6 @@ class DioErrorUtil {
       }
       return errorDescription;
     } else
-      return "Json Parsing error";
+      return "Json Parsing error $error-";
   }
 }

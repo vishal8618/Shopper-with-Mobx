@@ -43,6 +43,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
+
+
     _userStore = Provider.of<UserStore>(context);
     _cartStore = Provider.of<CartStore>(context);
     _productStore = Provider.of<ProductStore>(context);
@@ -52,7 +55,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget build(BuildContext context) {
     Routes.context = context;
     _scaler = ScreenScaler()..init(context);
-
     return WillPopScope(
       child: Observer(builder: (context) {
         return Scaffold(
@@ -242,7 +244,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       onTap: () async {
                         await FlutterShare.share(
                             title: 'Shopper share to',
-                            linkUrl: widget.args.productModel.url,
+                            linkUrl: "https://greetingsworld.page.link/?link=https://greetingsworld.page/?link%3Dproductid=${ widget.args.productModel.merchantId }${"_"}${widget.args.productModel.id}%26apn%3Dcom.greetingsworld.greetings_world_shopper%255B%26ibi%3Dcom.hashtag.shopper%255D%255B%26isi%3D1547560234%255D&apn=com.greetingsworld.greetings_world_shopper&isi=1547560234&ibi=com.hashtag.shopper",
                             chooserTitle: 'Shopper share to');
                       },
                     ),

@@ -63,11 +63,15 @@ class _DashboardState extends State<DashboardScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     //  initialising stores
+
+
     _cartStore = Provider.of<CartStore>(context);
     _merchantStore = Provider.of<MerchantStore>(context);
     _userStore = Provider.of<UserStore>(context);
     if (!_merchantStore.loading && Routes.currentRoute == Routes.home)
       _cartStore.getCart(uid: _userStore.uid);
+
+    _merchantStore.tab = 0;
   }
 
   @override

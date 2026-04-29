@@ -6,7 +6,7 @@ import 'package:greetings_world_shopper/models/orders/create_order_model.dart';
 import 'package:greetings_world_shopper/stores/success_store.dart';
 import 'package:greetings_world_shopper/utils/dio/dio_error_util.dart';
 import 'package:mobx/mobx.dart';
-import 'package:stripe_payment/stripe_payment.dart';
+// import 'package:stripe_payment/stripe_payment.dart';
 
 import 'error_store.dart';
 
@@ -71,6 +71,13 @@ abstract class _CartStore with Store {
   int cartTotal = 0;
 
   @observable
+  double cartTaxCharges = 0;
+
+  @observable
+  double cartServiceCharges = 0;
+
+
+  @observable
   double taxCharges = 0.0;
 
   @observable
@@ -87,6 +94,10 @@ abstract class _CartStore with Store {
 
   @observable
   String deliveryEstimated = " ";
+
+  @observable
+  String deliveryType = " ";
+
 
   @observable
   double convenienceFee = 0.0;
@@ -162,6 +173,8 @@ abstract class _CartStore with Store {
             .cartItem
             .deliveryEstimatedDays
             .toString();
+
+
       }
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
@@ -226,6 +239,8 @@ abstract class _CartStore with Store {
   @action
   Future getCart({String uid}) async {
     cartTotal = 0;
+    cartTaxCharges = 0;
+    cartServiceCharges = 0;
     final future = _repository.getCart(id: uid);
     fetchCartFuture = ObservableFuture(future);
     future.then((model) {
@@ -243,9 +258,10 @@ abstract class _CartStore with Store {
       }
       if (hasCart) {
         cartList.forEach((element) {
-          var taxAmount = (element.cartItem.subTotal / 100) * 9.25;
-          taxCharges = taxAmount;
-          print("$taxAmount");
+         // var taxAmount = (element.cartItem.subTotal / 100) * 9.25;
+          cartTaxCharges +=  element.cartItem.taxCharges;
+          taxCharges = cartTaxCharges;
+         // print("=========>TaxCharges!!$cartTaxCharges");
         });
 
         /*double sum = cartList
@@ -267,11 +283,19 @@ abstract class _CartStore with Store {
           deliveryEstimated = element.cartItem.deliveryEstimatedDays;
         });
       }
+      if (hasCart) {
+        cartList.forEach((element) {
+          deliveryType = element.cartItem.deliveryType;
+        });
+      }
 
       if (hasCart) {
         cartList.forEach((element) {
-          var convenienceAmount = (element.cartItem.subTotal / 100) * 2;
-          convenienceFee = convenienceAmount;
+          cartServiceCharges += element.cartItem.serviceCharges;
+         // var convenienceAmount = (element.cartItem.subTotal / 100) * 2;
+          convenienceFee = cartServiceCharges;
+        // print("=========>cartServiceCharges!!$convenienceFee");
+        // print("=========>convenienceFee!!${element.cartItem.serviceCharges}");
         });
       }
 

@@ -60,7 +60,7 @@ class LoginTextField extends StatelessWidget {
       ]
           : inputType == TextInputType.emailAddress
           ? [
-        new FilteringTextInputFormatter.allow(RegExp('[a-z0-9@.]')),
+        new FilteringTextInputFormatter.allow(RegExp('[a-z0-9@.-_]')),
       ]
           : null,
       controller: controller,

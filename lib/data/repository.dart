@@ -247,8 +247,8 @@ class Repository {
   }
 
   // return cart items
-  Future<List<CartItemModel>> getCart({String id}) async {
-    return await _cartApi.getCart(uid: id).then((model) {
+  Future<List<CartItemModel>> getCart({String id,double shippingAmount,double taxCharges,double serviceCharges}) async {
+    return await _cartApi.getCart(uid: id,shippingAmount: shippingAmount,taxCharges: taxCharges,serviceCharges: serviceCharges).then((model) {
       return model;
     }).catchError((error) => throw error);
   }
@@ -352,8 +352,7 @@ class Repository {
   }
 
   // get otp
-  Future<GenerateOtpModel> phoneVerify(
-      {String phoneNumber, String otp, String uid}) async {
+  Future<GenerateOtpModel> phoneVerify({String phoneNumber, String otp, String uid}) async {
     return await _userApi
         .phoneNumberVerify(phoneNumber: phoneNumber, otp: otp, uid: uid)
         .then((model) {

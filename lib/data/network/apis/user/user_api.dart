@@ -63,10 +63,11 @@ class UserApi {
       var map = Map<String, dynamic>();
       map["email"] = email;
       map["password"] = password;
+      map["user_type"] = "buyer";
 
-      final res =
-          await _dioClient.post(Endpoints.login, data: map, options: null);
-      return loginModelFromJson(json.encode(res.data));
+      final res = await _dioClient.post(Endpoints.login, data: map, options: null);
+      // return loginModelFromJson(json.encode(res.data));
+      return LoginModel.fromJson(res.data);
     } catch (e) {
       print(e.toString());
       throw e;

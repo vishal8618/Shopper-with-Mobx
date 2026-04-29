@@ -43,6 +43,7 @@ class CartItem {
     this.shippingAmount,
     this.shipmentId,
     this.taxCharges,
+    this.serviceCharges,
     this.deliveryEstimatedDays,
   });
 
@@ -55,6 +56,7 @@ class CartItem {
   double shippingAmount;
   String shipmentId;
   double taxCharges;
+  double serviceCharges;
   String deliveryEstimatedDays;
 
   factory CartItem.fromJson(Map<String, dynamic> json) => CartItem(
@@ -67,6 +69,7 @@ class CartItem {
     shippingAmount: json["shipping_amount"] == null ? 0.0 : json["shipping_amount"],
     shipmentId: json["shipment_id"]== null ? null : json["shipment_id"],
     taxCharges: json["tax_charges"]== null ? 0.0 : json["tax_charges"],
+    serviceCharges: json["service_charges"]== null ? 0.0 : json["service_charges"],
     deliveryEstimatedDays: json["delivery_estimated_days"]== null ? null : json["delivery_estimated_days"],
   );
 
@@ -80,6 +83,7 @@ class CartItem {
     "shipping_amount": shippingAmount,
     "shipment_id": shipmentId,
     "tax_charges": taxCharges,
+    "service_charges": serviceCharges,
     "delivery_estimated_days": deliveryEstimatedDays,
   };
 }

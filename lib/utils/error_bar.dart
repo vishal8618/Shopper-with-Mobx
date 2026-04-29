@@ -8,7 +8,7 @@ import 'package:flutter/cupertino.dart';
       if (message != null && message.isNotEmpty) {
         FlushbarHelper.createError(
           message: message,
-          duration: duration ?? Duration(seconds: 1),
+          duration: duration ?? Duration(seconds: 3),
         )..show(context);
       }
     });
